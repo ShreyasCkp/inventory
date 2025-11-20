@@ -48,14 +48,8 @@ jobs:
           DB_SSLMODE: ${{ secrets.DB_SSLMODE }}
           ALLOWED_HOSTS: ${{ secrets.ALLOWED_HOSTS }}
         run: |
-          # collectstatic in CI to validate static collection can run (will attempt to connect DB only if apps require it)
-          python manage.py collectstatic --noinput || true
-
-      - name: Upload repo file-list artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: repo-file-list
-          path: file-list.txt
+          # try collecting static to confirm there are no issues (ignore failures)
+          python manage.py collectstatic --noinput || echo "collectstatic failed or skipped"
 
       - name: Create file list for inspection
         run: |
@@ -66,6 +60,12 @@ jobs:
           echo "" >> file-list.txt
           echo "All files (recursive):" >> file-list.txt
           find . -maxdepth 4 -type f -not -path "./antenv/*" -print >> file-list.txt
+
+      - name: Upload repo file-list artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: repo-file-list
+          path: file-list.txt
 
   deploy:
     runs-on: ubuntu-latest
@@ -107,9 +107,16 @@ jobs:
           echo "DB_SSLMODE=${{ secrets.DB_SSLMODE }}" >> $GITHUB_ENV
           echo "ALLOWED_HOSTS=${{ secrets.ALLOWED_HOSTS }}" >> $GITHUB_ENV
 
+      - name: Make migrations (safe)
+        env:
+          DJANGO_SETTINGS_MODULE: ${{ env.DJANGO_SETTINGS_MODULE }}
+          SECRET_KEY: ${{ secrets.SECRET_KEY }}
+        run: |
+          # create migrations locally if there are model changes; harmless if none
+          python manage.py makemigrations --noinput || echo "no migrations to create"
+
       - name: Run migrations (retry until DB ready)
         env:
-          # reuse secrets from $GITHUB_ENV
           DJANGO_SETTINGS_MODULE: ${{ env.DJANGO_SETTINGS_MODULE }}
           SECRET_KEY: ${{ secrets.SECRET_KEY }}
           DB_NAME: ${{ secrets.DB_NAME }}
@@ -120,7 +127,6 @@ jobs:
           DB_SSLMODE: ${{ secrets.DB_SSLMODE }}
         run: |
           set -e
-          # try to apply migrations; retry if DB not yet ready (up to ~5 minutes)
           n=0
           until [ $n -ge 10 ]
           do
@@ -155,7 +161,7 @@ jobs:
           subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
 
       - name: Deploy to Azure Web App
-        uses: azure/webapps-deploy@v4
+        uses: azure/webapps-deploy@v3
         id: deploy-to-webapp
         with:
           app-name: 'inventory1'          # <-- keep or change to your Azure App name
