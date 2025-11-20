@@ -1,0 +1,318 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
+  <PropertyGroup>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
+    <Name>LG</Name>
+    <RootNamespace>LG</RootNamespace>
+    <InterpreterId>Global|PythonCore|3.9</InterpreterId>
+    <SuppressPackageInstallationPrompt>True</SuppressPackageInstallationPrompt>
+    <TestFramework>Pytest</TestFramework>
+  </PropertyGroup>
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>7477ecf9-1046-4e14-94d2-180103328af2</ProjectGuid>
+    <ProjectHome>.</ProjectHome>
+    <ProjectTypeGuids>{5F0BE9CA-D677-4A4D-8806-6076C0FAAD37};{349c5851-65df-11da-9384-00065b846f21};{888888a0-9f3d-457c-b088-3a5042f75d52}</ProjectTypeGuids>
+    <StartupFile>manage.py</StartupFile>
+    <SearchPath>
+    </SearchPath>
+    <WorkingDirectory>.</WorkingDirectory>
+    <WebBrowserUrl>http://localhost</WebBrowserUrl>
+    <LaunchProvider>Django launcher</LaunchProvider>
+    <DjangoSettingsModule>LG.settings</DjangoSettingsModule>
+    <OutputPath>.</OutputPath>
+    <SuppressCollectPythonCloudServiceFiles>true</SuppressCollectPythonCloudServiceFiles>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+    <DebugSymbols>true</DebugSymbols>
+    <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+    <DebugSymbols>true</DebugSymbols>
+    <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="Administrator_settings\apps.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Administrator_settings\forms.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Administrator_settings\models.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Administrator_settings\urls.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Administrator_settings\views.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Administrator_settings\__init__.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="asset_management\forms.py" />
+    <Compile Include="asset_management\apps.py" />
+    <Compile Include="asset_management\migrations\__init__.py" />
+    <Compile Include="asset_management\models.py" />
+    <Compile Include="asset_management\urls.py" />
+    <Compile Include="asset_management\views.py" />
+    <Compile Include="asset_management\__init__.py" />
+    <Compile Include="dashboard\admin.py" />
+    <Compile Include="dashboard\apps.py" />
+    <Compile Include="dashboard\migrations\__init__.py" />
+    <Compile Include="dashboard\models.py" />
+    <Compile Include="dashboard\tests.py" />
+    <Compile Include="dashboard\urls.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="dashboard\views.py" />
+    <Compile Include="dashboard\__init__.py" />
+    <Compile Include="finished_goods\forms.py" />
+    <Compile Include="finished_goods\apps.py" />
+    <Compile Include="finished_goods\migrations\__init__.py" />
+    <Compile Include="finished_goods\models.py" />
+    <Compile Include="finished_goods\urls.py" />
+    <Compile Include="finished_goods\views.py" />
+    <Compile Include="finished_goods\__init__.py" />
+    <Compile Include="manage.py" />
+    <Compile Include="LG\__init__.py" />
+    <Compile Include="LG\settings.py" />
+    <Compile Include="LG\urls.py" />
+    <Compile Include="LG\wsgi.py" />
+    <Compile Include="master\forms.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="master\models.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="master\urls.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="master\views.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="master\__init__.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="packing_materials\forms.py" />
+    <Compile Include="packing_materials\apps.py" />
+    <Compile Include="packing_materials\migrations\__init__.py" />
+    <Compile Include="packing_materials\models.py" />
+    <Compile Include="packing_materials\urls.py" />
+    <Compile Include="packing_materials\views.py" />
+    <Compile Include="packing_materials\__init__.py" />
+    <Compile Include="raw_material\forms.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="raw_material\models.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="raw_material\urls.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="raw_material\utils.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="raw_material\views.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="raw_material\__init__.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="reports\admin.py" />
+    <Compile Include="reports\apps.py" />
+    <Compile Include="reports\migrations\__init__.py" />
+    <Compile Include="reports\models.py" />
+    <Compile Include="reports\tasks.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="reports\urls.py" />
+    <Compile Include="reports\views.py" />
+    <Compile Include="reports\__init__.py" />
+    <Compile Include="stock_statement\admin.py" />
+    <Compile Include="stock_statement\apps.py" />
+    <Compile Include="stock_statement\migrations\__init__.py" />
+    <Compile Include="stock_statement\models.py" />
+    <Compile Include="stock_statement\urls.py" />
+    <Compile Include="stock_statement\utils.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="stock_statement\views.py" />
+    <Compile Include="stock_statement\__init__.py" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Administrator_settings\migrations\" />
+    <Folder Include="Administrator_settings\migrations\templates\" />
+    <Folder Include="Administrator_settings\migrations\templates\Administrator_settings\" />
+    <Folder Include="asset_management\" />
+    <Folder Include="asset_management\migrations\" />
+    <Folder Include="asset_management\templates\" />
+    <Folder Include="asset_management\templates\asset_management\" />
+    <Folder Include="dashboard\" />
+    <Folder Include="dashboard\migrations\" />
+    <Folder Include="dashboard\templates\" />
+    <Folder Include="dashboard\templates\dashboard\" />
+    <Folder Include="finished_goods\" />
+    <Folder Include="finished_goods\migrations\" />
+    <Folder Include="finished_goods\templates\" />
+    <Folder Include="finished_goods\templates\finished_goods\" />
+    <Folder Include="LG\" />
+    <Folder Include="LG\templates\" />
+    <Folder Include="LG\templates\Administrator_settings\" />
+    <Folder Include="master\" />
+    <Folder Include="master\migrations\" />
+    <Folder Include="master\templates\" />
+    <Folder Include="master\templates\master\" />
+    <Folder Include="Administrator_settings\" />
+    <Folder Include="packing_materials\" />
+    <Folder Include="packing_materials\migrations\" />
+    <Folder Include="packing_materials\templates\" />
+    <Folder Include="packing_materials\templates\packing_materials\" />
+    <Folder Include="raw_material\" />
+    <Folder Include="raw_material\migrations\" />
+    <Folder Include="raw_material\templates\" />
+    <Folder Include="raw_material\templates\raw_material\" />
+    <Folder Include="reports\" />
+    <Folder Include="reports\migrations\" />
+    <Folder Include="reports\templates\" />
+    <Folder Include="reports\templates\reports\" />
+    <Folder Include="stock_statement\" />
+    <Folder Include="stock_statement\migrations\" />
+    <Folder Include="stock_statement\templates\" />
+    <Folder Include="stock_statement\templates\stock_statement\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Administrator_settings\migrations\templates\Administrator_settings\user_form.html" />
+    <Content Include="Administrator_settings\migrations\templates\Administrator_settings\user_list.html" />
+    <Content Include="asset_management\templates\asset_management\am_inward_material_form.html" />
+    <Content Include="asset_management\templates\asset_management\am_inward_material_list.html" />
+    <Content Include="asset_management\templates\asset_management\asset_material_issue_form.html" />
+    <Content Include="asset_management\templates\asset_management\asset_material_issue_list.html" />
+    <Content Include="dashboard\templates\dashboard\dashboard.html" />
+    <Content Include="finished_goods\templates\finished_goods\create_fg_label.html" />
+    <Content Include="finished_goods\templates\finished_goods\create_packing_slip.html" />
+    <Content Include="finished_goods\templates\finished_goods\delete_fg_label.html" />
+    <Content Include="finished_goods\templates\finished_goods\delete_packing_slip.html" />
+    <Content Include="finished_goods\templates\finished_goods\edit_fg_label.html" />
+    <Content Include="finished_goods\templates\finished_goods\edit_packing_slip.html" />
+    <Content Include="finished_goods\templates\finished_goods\fg_label_view.html" />
+    <Content Include="finished_goods\templates\finished_goods\finished_inward_material_form.html" />
+    <Content Include="finished_goods\templates\finished_goods\fg_label_form.html" />
+    <Content Include="finished_goods\templates\finished_goods\fg_label_list.html" />
+    <Content Include="finished_goods\templates\finished_goods\finished_inward_material_list.html" />
+    <Content Include="finished_goods\templates\finished_goods\packing_slip_form.html" />
+    <Content Include="finished_goods\templates\finished_goods\packing_slip_list.html" />
+    <Content Include="finished_goods\templates\finished_goods\print_fg_label.html" />
+    <Content Include="LG\templates\Administrator_settings\user_form.html" />
+    <Content Include="LG\templates\Administrator_settings\user_list.html" />
+    <Content Include="LG\templates\base.html" />
+    <Content Include="master\templates\master\bag_boxes_detail_form.html" />
+    <Content Include="master\templates\master\bag_boxes_list.html" />
+    <Content Include="master\templates\master\category_form.html" />
+    <Content Include="master\templates\master\category_list.html" />
+    <Content Include="master\templates\master\company_form.html" />
+    <Content Include="master\templates\master\customer_detail_form.html" />
+    <Content Include="master\templates\master\customer_list.html" />
+    <Content Include="master\templates\master\forgot_password.html" />
+    <Content Include="master\templates\master\item_form.html" />
+    <Content Include="master\templates\master\item_list.html" />
+    <Content Include="master\templates\master\login.html" />
+    <Content Include="master\templates\master\store_detail_form.html" />
+    <Content Include="master\templates\master\store_list.html" />
+    <Content Include="master\templates\master\vendor_form.html" />
+    <Content Include="master\templates\master\vendor_list.html" />
+    <Content Include="packing_materials\templates\packing_materials\create_pm_label.html" />
+    <Content Include="packing_materials\templates\packing_materials\delete_pm_label.html" />
+    <Content Include="packing_materials\templates\packing_materials\edit_pm_label.html" />
+    <Content Include="packing_materials\templates\packing_materials\packing_material_form.html" />
+    <Content Include="packing_materials\templates\packing_materials\packing_material_list.html" />
+    <Content Include="packing_materials\templates\packing_materials\pm_label_list.html" />
+    <Content Include="packing_materials\templates\packing_materials\pm_material_issue_form.html" />
+    <Content Include="packing_materials\templates\packing_materials\pm_material_issue_list.html" />
+    <Content Include="packing_materials\templates\packing_materials\pm_purchase_order_form.html" />
+    <Content Include="packing_materials\templates\packing_materials\pm_purchase_order_list.html" />
+    <Content Include="packing_materials\templates\packing_materials\print_pm_label.html" />
+    <Content Include="packing_materials\templates\packing_materials\purchase_order_confirm_delete.html" />
+    <Content Include="packing_materials\templates\packing_materials\purchase_order_detail.html" />
+    <Content Include="packing_materials\templates\packing_materials\purchase_order_form.html" />
+    <Content Include="packing_materials\templates\packing_materials\purchase_order_list.html" />
+    <Content Include="raw_material\templates\raw_material\delete_rm_label.html" />
+    <Content Include="raw_material\templates\raw_material\edit_rm_label.html" />
+    <Content Include="raw_material\templates\raw_material\inward_material_form.html" />
+    <Content Include="raw_material\templates\raw_material\inward_material_list.html" />
+    <Content Include="raw_material\templates\raw_material\print_rm_label.html" />
+    <Content Include="raw_material\templates\raw_material\rm_label_list.html" />
+    <Content Include="raw_material\templates\raw_material\rm_material_issue_form.html" />
+    <Content Include="raw_material\templates\raw_material\rm_material_issue_list.html" />
+    <Content Include="raw_material\templates\raw_material\create_rm_label.html" />
+    <Content Include="reports\templates\reports\fg_inward_material_report.html" />
+    <Content Include="reports\templates\reports\packing_slip_report.html" />
+    <Content Include="reports\templates\reports\pm_material_issue_report.html" />
+    <Content Include="reports\templates\reports\report.html" />
+    <Content Include="reports\templates\reports\rm_issuance_report.html" />
+    <Content Include="reports\templates\reports\stock_dashboard.html" />
+    <Content Include="requirements.txt" />
+    <Content Include="db.sqlite3" />
+    <Content Include="stock_statement\templates\stock_statement\stock_statement.html" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="readme.html">
+      <SubType>WebBrowser</SubType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Interpreter Include="env1\">
+      <Id>env1</Id>
+      <Version>3.13</Version>
+      <Description>env1 (Python 3.13 (64-bit))</Description>
+      <InterpreterPath>Scripts\python.exe</InterpreterPath>
+      <WindowsInterpreterPath>Scripts\pythonw.exe</WindowsInterpreterPath>
+      <PathEnvironmentVariable>PYTHONPATH</PathEnvironmentVariable>
+      <Architecture>X64</Architecture>
+    </Interpreter>
+  </ItemGroup>
+  <ItemGroup>
+    <InterpreterReference Include="Global|PythonCore|3.9" />
+  </ItemGroup>
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.Django.targets" />
+  <!-- Specify pre- and post-build commands in the BeforeBuild and 
+       AfterBuild targets below. -->
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
+        <WebProjectProperties>
+          <AutoAssignPort>True</AutoAssignPort>
+          <UseCustomServer>True</UseCustomServer>
+          <CustomServerUrl>http://localhost</CustomServerUrl>
+          <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
+        </WebProjectProperties>
+      </FlavorProperties>
+      <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}" User="">
+        <WebProjectProperties>
+          <StartPageUrl>
+          </StartPageUrl>
+          <StartAction>CurrentPage</StartAction>
+          <AspNetDebugging>True</AspNetDebugging>
+          <SilverlightDebugging>False</SilverlightDebugging>
+          <NativeDebugging>False</NativeDebugging>
+          <SQLDebugging>False</SQLDebugging>
+          <ExternalProgram>
+          </ExternalProgram>
+          <StartExternalURL>
+          </StartExternalURL>
+          <StartCmdLineArguments>
+          </StartCmdLineArguments>
+          <StartWorkingDirectory>
+          </StartWorkingDirectory>
+          <EnableENC>False</EnableENC>
+          <AlwaysStartWebServerOnDebug>False</AlwaysStartWebServerOnDebug>
+        </WebProjectProperties>
+      </FlavorProperties>
+    </VisualStudio>
+  </ProjectExtensions>
+</Project>

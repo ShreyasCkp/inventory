@@ -1,0 +1,204 @@
+{% extends 'base.html' %}
+
+{% block title %}Edit FG Label{% endblock %}
+
+{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit FG Label</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f2f5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 100px;
+            box-sizing: border-box;
+        }
+
+        .form-container {
+            background-color: #f4f4f4;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2);
+            width: 90%;
+            max-width: 600px;
+            animation: fadeIn 0.5s ease;
+            border: 2px solid transparent;
+            background-clip: padding-box, border-box;
+            background-origin: border-box;
+            background-image: linear-gradient(#f4f4f4, #f4f4f4), linear-gradient(45deg, #0077b6, #0096c7);
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        h6 {
+            text-align: left;
+            margin-bottom: 8px;
+            font-size: 12px;
+            color: black;
+            font-weight: 100;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+        }
+
+            .form-grid input[type="text"],
+            .form-grid input[type="number"],
+            .form-grid select {
+                width: 100%;
+                padding: 4px 6px;
+                border: 1px solid #ccc;
+                border-radius: 4px;
+                box-sizing: border-box;
+                transition: border-color 0.3s;
+                font-size: 10px;
+            }
+
+        .button-group {
+            grid-column: span 3;
+            display: flex;
+            justify-content: flex-end;
+            gap: 6px;
+            margin-top: 12px;
+        }
+
+            .button-group button,
+            .close-button {
+                padding: 6px 10px;
+                border: none;
+                border-radius: 4px;
+                cursor: pointer;
+                font-size: 10px;
+                color: white;
+                background: linear-gradient(45deg, #0077b6, #0096c7);
+                transition: background 0.3s, box-shadow 0.3s;
+            }
+
+                .button-group button:hover,
+                .close-button:hover {
+                    background: linear-gradient(45deg, #005f86, #0077b6);
+                    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+                }
+
+        @media (max-width: 600px) {
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .button-group {
+                flex-direction: column;
+                gap: 6px;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="form-container">
+        <h6 style="color: black; font-size: 12px; font-weight: 100;">Edit FG Label</h6>
+        <form method="POST">
+            {% csrf_token %}
+            <div class="form-grid">
+
+                <!-- Item Code Dropdown -->
+                <select name="item_code" id="item_code" required>
+                    <option value="">Select Item Code</option>
+                    {% for item in items %}
+                    <option value="{{ item.id }}" data-name="{{ item.item_name }}"
+                            {% if fg_label.item_code.id == item.id %}selected{% endif %}>
+                        {{ item.item_code }}
+                    </option>
+                    {% endfor %}
+                </select>
+
+                <!-- Item Name Dropdown -->
+                <select name="item_name" id="item_name" required>
+                    <option value="">Select Item Name</option>
+                    {% for item in items %}
+                    <option value="{{ item.id }}" data-code="{{ item.item_code }}"
+                            {% if fg_label.item_code.id == item.id %}selected{% endif %}>
+                        {{ item.item_name }}
+                    </option>
+                    {% endfor %}
+                </select>
+
+                <!-- Lot/Batch No -->
+                <input type="text" name="batch_no" placeholder="Batch No"
+                       value="{{ fg_label.batch_no }}" required>
+
+                <!-- Packing Qty -->
+                <input type="number" name="packing_qty" placeholder="Packing Qty"
+                       value="{{ fg_label.packing_qty }}" required>
+
+                <!-- No of Bags -->
+                <input type="number" name="no_of_bags" placeholder="No of Bags"
+                       value="{{ fg_label.no_of_bags }}" required>
+
+                <!-- Next Bag No -->
+                <input type="text" name="next_bag_no" placeholder="Next Bag No"
+                       value="{{ fg_label.next_bag_no }}" required>
+
+                <!-- Date of Packing -->
+                <div class="date-field">
+                    <label for="date_of_packing">Date of Packing</label>
+                    <input type="date" name="date_of_packing"
+                           value="{{ fg_label.date_of_packing|date:'Y-m-d' }}" required>
+                </div>
+
+                <!-- Date of Expiry -->
+                <div class="date-field">
+                    <label for="date_of_expiry">Date of Expiry</label>
+                    <input type="date" name="date_of_expiry"
+                           value="{{ fg_label.date_of_expiry|date:'Y-m-d' }}" required>
+                </div>
+
+            </div>
+
+            <div class="button-group">
+                <button type="submit">Update</button>
+                <a href="{% url 'fg_label_list' %}" class="button close-button">Back</a>
+            </div>
+        </form>
+    </div>
+
+    <!-- JavaScript to sync dropdowns -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const itemCodeSelect = document.getElementById('item_code');
+            const itemNameSelect = document.getElementById('item_name');
+
+            itemCodeSelect.addEventListener('change', function () {
+                const selectedId = this.value;
+                itemNameSelect.value = selectedId;
+            });
+
+            itemNameSelect.addEventListener('change', function () {
+                const selectedId = this.value;
+                itemCodeSelect.value = selectedId;
+            });
+        });
+    </script>
+</body>
+
+</html>
+{% endblock %}

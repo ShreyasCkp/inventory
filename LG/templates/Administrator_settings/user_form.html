@@ -1,0 +1,365 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block content %}
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f0f2f5;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        margin: 0;
+        padding: 100px;
+        box-sizing: border-box;
+    }
+
+    .form-container {
+        background-color: #f4f4f4;
+        padding: 15px;
+        border-radius: 8px;
+        box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2);
+        width: 90%;
+        max-width: 600px;
+        animation: fadeIn 0.5s ease;
+        border: 2px solid transparent;
+        background-clip: padding-box, border-box;
+        background-origin: border-box;
+        background-image: linear-gradient(#f4f4f4, #f4f4f4), linear-gradient(45deg, #0077b6, #0096c7);
+    }
+
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(-10px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    h6 {
+        color: black;
+        font-size: 12px;
+        font-weight: 100;
+    }
+
+    .form-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 8px;
+    }
+
+        .form-grid input[type="text"],
+        .form-grid input[type="email"],
+        .form-grid input[type="password"],
+        .form-grid select {
+            width: 100%;
+            padding: 4px 6px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+            transition: border-color 0.3s;
+            font-size: 10px;
+            height: 28px;
+            background-color: white;
+        }
+
+    .form-group {
+        display: flex;
+        flex-direction: column;
+        font-size: 10px;
+    }
+
+    .button-group {
+        grid-column: span 3;
+        display: flex;
+        justify-content: flex-end;
+        gap: 6px;
+        margin-top: 12px;
+        font-size: 10px;
+        font-weight: 100;
+    }
+
+        .button-group button {
+            padding: 6px 10px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 10px;
+            font-weight: 100;
+            color: white;
+            background: linear-gradient(45deg, #0077b6, #0096c7);
+            transition: background 0.3s, box-shadow 0.3s;
+        }
+
+            .button-group button:hover {
+                background: linear-gradient(45deg, #005f86, #0077b6);
+                box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+            }
+
+    .close-button {
+        padding: 6px 10px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 10px;
+        font-weight: 100;
+        color: white;
+        text-decoration: none;
+        text-align: center;
+        background: linear-gradient(45deg, #0077b6, #0096c7);
+        transition: background 0.3s, box-shadow 0.3s;
+    }
+
+        .close-button:hover {
+            background: linear-gradient(45deg, #9d0208, #6a040f);
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+        }
+
+    @media (max-width: 600px) {
+        .form-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .button-group {
+            flex-direction: column;
+            gap: 6px;
+            justify-content: center;
+        }
+    }
+
+    .floating-label {
+        position: relative;
+        margin-bottom: 1.5rem;
+    }
+
+        .floating-label select {
+            width: 100%;
+            padding: 0px 0px 1px 7px;
+            font-size: 9px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            background-color: white;
+            appearance: none;
+            height: 28px;
+        }
+
+        .floating-label label {
+            position: absolute;
+            top: 50%;
+            left: 3px;
+            transform: translateY(-50%);
+            /* background-color: white;
+            padding: 0 4px;*/
+            color: #777;
+            font-size: 9px;
+            transition: 0.2s ease all;
+            pointer-events: none;
+            /*backdrop-filter: blur(3px);*/
+        }
+
+        .floating-label select:focus + label,
+        .floating-label select.has-value + label {
+            top: -4px;
+            left: 4px;
+            font-size: 9px;
+            color: black;
+        }
+
+        .floating-label input[type="text"] {
+            width: 100%;
+            padding: 0px 0px 1px 7px;
+            font-size: 9px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            background-color: white;
+            height: 28px;
+            /*box-sizing: border-box;*/
+        }
+
+        .floating-label input:focus + label,
+        .floating-label input.has-value + label {
+            top: -4px;
+            left: 4px;
+            font-size: 9px;
+            color: black;
+        }
+
+        .floating-label input:focus + label,
+        .floating-label input.has-value + label,
+        .floating-label select:focus + label,
+        .floating-label select.has-value + label {
+            top: -4px;
+            left: 4px;
+            font-size: 9px;
+            color: black;
+        }
+</style>
+
+<div class="form-container">
+    <h6>{{ title }}</h6>
+    <form method="POST" id="userForm">
+        {% csrf_token %}
+        <div class="form-grid">
+
+            <div class="floating-label">
+                <input type="text" name="name" id="nameInput" required
+                       value="{{ form.name.value|default:'' }}"
+                       {% if view_mode %}readonly{% endif %}
+                       oninput="checkNameCapitalization(); checkValue(this);">
+                <label for="nameInput">Name*</label>
+                <small id="nameWarning" style="color: red; display: none;">First letter should be capital.</small>
+            </div>
+
+            <div class="floating-label">
+                <select id="locationSelect" name="location" required
+                        onfocus="this.classList.add('has-value')"
+                        onblur="checkSelectValue(this)"
+                        onchange="checkSelectValue(this)"
+                        {% if view_mode %}disabled{% endif %}>
+                    <option value="" disabled selected hidden></option>
+                    {% for location in locations %}
+                    <option value="{{ location.id }}"
+                            {% if form.instance.location == location.name %}selected{% endif %}>
+                        {{ location.name }}
+                    </option>
+                    {% endfor %}
+                </select>
+                <label for="locationSelect">Location*</label>
+            </div>
+
+
+
+            <div class="floating-label">
+                <input type="text" name="password" id="passwordInput" required
+                       value="{{ form.password.value|default:'' }}"
+                       {% if view_mode %}readonly{% endif %}
+                       oninput="validatePasswordStrength(); checkValue(this);">
+                <label for="passwordInput">Password*</label>
+                <small id="passwordWarning" style="color: red; display: none;">
+                    Password must be at least 6 characters and include:<br>
+                    - 1 uppercase letter<br>
+                    - 1 lowercase letter<br>
+                    - 1 number<br>
+                    - 1 special character (e.g., @, #, $)
+                </small>
+            </div>
+
+        </div>
+
+        <div class="button-group">
+            {% if not view_mode %}
+                <button type="submit" id="submitButton">
+                    {% if request.resolver_match.url_name == 'user_edit' %} Update {% else %} Save {% endif %}
+                </button>
+            {% endif %}
+            <a href="{% url 'user_list' %}" class="close-button">Close</a>
+        </div>
+
+    </form>
+
+    <script>
+        function checkNameCapitalization() {
+            const input = document.getElementById("nameInput");
+            const warning = document.getElementById("nameWarning");
+            const value = input.value;
+
+            if (value.length > 0 && value[0] !== value[0].toUpperCase()) {
+                warning.style.display = "inline";
+                input.style.borderColor = "red";
+            } else {
+                warning.style.display = "none";
+                input.style.borderColor = "#ccc";
+            }
+
+            updateSubmitButtonState();
+        }
+
+        function validatePasswordStrength() {
+            const passwordInput = document.getElementById("passwordInput");
+            const password = passwordInput.value;
+            const warning = document.getElementById("passwordWarning");
+
+            const pattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*#?&]).{6,}$/;
+
+            if (!pattern.test(password)) {
+                warning.style.display = "inline";
+                passwordInput.style.borderColor = "red";
+            } else {
+                warning.style.display = "none";
+                passwordInput.style.borderColor = "#ccc";
+            }
+
+            updateSubmitButtonState();
+        }
+
+        function updateSubmitButtonState() {
+            const nameWarning = document.getElementById("nameWarning").style.display === "inline";
+            const passwordWarning = document.getElementById("passwordWarning").style.display === "inline";
+            const locationSelect = document.getElementById("locationSelect");
+            const submitButton = document.getElementById("submitButton");
+
+            if (nameWarning || passwordWarning || locationSelect.value === "") {
+                submitButton.disabled = true;
+            } else {
+                submitButton.disabled = false;
+            }
+        }
+
+        document.addEventListener("DOMContentLoaded", function () {
+            updateSubmitButtonState();
+        });
+
+        function checkValue(inputElement) {
+            if (inputElement.value.trim() !== "") {
+                inputElement.classList.add('has-value');
+            } else {
+                inputElement.classList.remove('has-value');
+            }
+        }
+
+        function checkSelectValue(selectElement) {
+            if (selectElement.value !== "") {
+                selectElement.classList.add('has-value');
+            } else {
+                selectElement.classList.remove('has-value');
+            }
+
+            updateSubmitButtonState();
+        }
+
+        document.addEventListener("DOMContentLoaded", function () {
+            updateSubmitButtonState();
+
+            // Add floating effect if value is already filled
+            document.querySelectorAll('.floating-label input').forEach(function (input) {
+                toggleHasValue(input);
+            });
+        });
+
+        document.addEventListener("DOMContentLoaded", function () {
+            const inputs = document.querySelectorAll('.floating-label input, .floating-label select');
+
+            inputs.forEach(function (input) {
+                if (input.value.trim() !== "") {
+                    input.classList.add("has-value");
+                }
+
+                input.addEventListener("input", function () {
+                    if (this.value.trim() !== "") {
+                        this.classList.add("has-value");
+                    } else {
+                        this.classList.remove("has-value");
+                    }
+                });
+            });
+        });
+    </script>
+
+</div>
+{% endblock %}

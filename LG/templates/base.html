@@ -1,0 +1,1549 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Master{% endblock %}</title>
+    <title>Fixed Topbar & Hover Sidebar</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <script src="https://kit.fontawesome.com/7898df3e59.js" crossorigin="anonymous"></script>
+    <style>
+        :root {
+            --sidebar-width: 250px;
+            --transition-speed: 0.3s;
+            --table-font-size: 12px;
+            --table-header-font-size: 10px;
+            /*--master-font-size: 14px;*/
+        }
+
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: none !important;
+            color: #333;
+            font-size: 12px;
+            min-height: 100vh;
+        }
+
+        /* Sidebar trigger area */
+        .sidebar-trigger-area {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 20px;
+            height: 100vh;
+            z-index: 9999;
+            background: transparent;
+        }
+
+        /* Sidebar */
+        /* Sidebar */
+        #sidebar {
+            position: fixed;
+            top: 0;
+            left: calc(-1 * var(--sidebar-width));
+            width: var(--sidebar-width);
+            height: 100vh; /* Ensure the sidebar takes the full height of the viewport */
+            background-color: #f4f4f4;
+            /*    background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);*/
+            border-right: 1px solid #ddd;
+            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+            transition: left var(--transition-speed) ease;
+            z-index: 9998;
+            padding-top: 0px;
+            /*overflow-y: auto; */ /* Enable vertical scrolling */
+        }
+
+            /* Make sure the sidebar list is scrollable when content overflows */
+            #sidebar ul {
+                list-style: none;
+                padding: 0;
+                margin: 0;
+                max-height: calc(100vh - 50px); /* Set max height to account for padding or other fixed content */
+                padding-bottom: 15px;
+                overflow-y: auto; /* Enable vertical scrolling */
+            }
+
+            #sidebar li {
+                padding: 8px 12px;
+                border-bottom: 1px solid #ddd;
+                transition: all 0.2s ease;
+                font-size: var(--table-font-size);
+            }
+
+                /* Sidebar links hover effect */
+                #sidebar li:hover {
+                    background-color: rgba(59, 130, 246, 0.1);
+                    padding-left: 20px;
+                }
+
+            /* Sidebar link */
+            #sidebar a {
+                color: #333;
+                text-decoration: none;
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                font-size: var(--table-font-size);
+            }
+
+        /* Top Bar */
+        .topbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 50px;
+            background: linear-gradient(135deg, #ff00cc, #3333ff); /* 🔥 Gradient fixed */
+            display: flex;
+            align-items: center;
+            padding: 0 20px;
+            color: white;
+            font-size: 18px;
+            z-index: 1000;
+        }
+
+
+        .current-section-container {
+            display: flex;
+            align-items: center;
+            color: white;
+            font-size: 18px;
+            transition: padding-left var(--transition-speed) ease;
+        }
+
+        /* .topbar .user-container {
+            margin-left: auto;
+        }*/
+        /* Ensure icons are styled appropriately */
+        .icon {
+            width: 16px;
+            text-align: center;
+            color: #3b82f6;
+        }
+        /* Main content */
+        .main-content {
+            transition: all var(--transition-speed) ease; /* Smooth content transition */
+            padding: 20px; /* Adds padding around content */
+            width: 100%; /* Full width */
+            min-height: 100vh; /* Ensures full height */
+            display: flex; /* Uses flexbox for layout */
+            justify-content: center; /* Centers content horizontally */
+            align-items: flex-start; /* Aligns items to the top */
+            box-sizing: border-box; /* Includes padding in width calculations */
+            padding-left: var(--sidebar-width); /* Adjusts space for sidebar */
+        }
+
+        .tables {
+            width: 100%; /* Ensures tables take full width */
+            max-width: 1200px; /* Limits table width */
+            transition: all var(--transition-speed) ease; /* Smooth transitions */
+            background: none !important; /* Removes background */
+            font-size: var(--table-font-size); /* Sets default table font size */
+            margin: 0 auto; /* Centers the table */
+        }
+
+        from here
+        .main-content.shifted .tables {
+            margin-left: 20px;
+            max-width: calc(100% - 40px);
+        }
+
+        .table {
+            width: 100%;
+            margin: 0 auto;
+            background: none !important;
+            border-collapse: collapse;
+            font-size: var(--table-font-size) !important;
+        }
+
+            .table th {
+                font-size: var(--table-header-font-size) !important;
+                font-weight: 600;
+                background: none !important;
+                border-color: rgba(0, 0, 0, 0.1);
+                padding: 6px !important;
+                white-space: nowrap;
+            }
+
+            .table td {
+                font-size: var(--table-font-size) !important;
+                background: none !important;
+                border-color: rgba(0, 0, 0, 0.1);
+                padding: 4px !important;
+            }
+
+        /* Forms */
+        form {
+            width: 100%;
+            max-width: 800px;
+            margin: 0 auto;
+            transition: all var(--transition-speed) ease;
+            background: none !important;
+            font-size: var(--table-font-size);
+        }
+
+        .form-control, .form-select {
+            font-size: var(--table-font-size) !important;
+            padding: 4px 8px !important;
+            height: auto !important;
+        }
+
+        /* Navbar */
+        .navbar {
+            margin-right: 1px; /* Adjust space as needed */
+            background: linear-gradient(135deg, #ff00cc, #3333ff); /* 🔥 Gradient */
+            padding: 8px;
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .navbar-brand {
+            /*padding-left: 30px;*/ /* Adjust spacing */
+            color: white;
+            font-size: 1rem;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+        }
+
+        /* Sidebar links */
+        #sidebar ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        #sidebar li {
+            padding: 8px 12px;
+            border-bottom: 1px solid #ddd;
+            transition: all 0.2s ease;
+            font-size: var(--table-font-size);
+        }
+
+            #sidebar li:hover {
+                background-color: rgba(59, 130, 246, 0.1);
+                padding-left: 20px;
+            }
+
+        #sidebar a {
+            color: #333;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: var(--table-font-size);
+        }
+
+        #masterLink a, #inventoryLink a, #rawMaterialLink a, #packingMaterialLink a, #finishedGoodsLink a, #productionLink a, #assetManagementLink a, #adminLink a, #reportLink a {
+            /*font-size: var(--master-font-size) !important;*/
+            /*font-size: 14px;
+          font-weight: bold;*/
+
+            color: #333333; /* or #005073 for a blue shade */
+            font-weight: bold; /* Makes the text slightly bolder  510*/
+            font-size: 15px /* Adjust the size as needed */
+        }
+        /*    #adminLinks a {
+            font-size: 12px !important;    user,userright,customer
+            font-weight: 649;
+        }*/
+
+        /* Icons */
+        .icon {
+            width: 16px;
+            text-align: center;
+            color: #3b82f6;
+        }
+
+        /* Loading spinner */
+        .loading {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 10000;
+            display: none;
+        }
+
+        /* Logout button */
+        #logout-btn {
+            position: fixed;
+            top: 8px;
+            right: 15px;
+            z-index: 10000;
+            background: linear-gradient(135deg, #f44336 0%, #d32f2f 100%);
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: var(--table-font-size);
+        }
+
+            #logout-btn:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            }
+
+        /* Lock/Unlock button */
+        #lock-btn {
+            background: linear-gradient(135deg, #ff9800 0%, #f57c00 100%);
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: var(--table-font-size);
+            display: flex;
+            align-items: center;
+        }
+
+            #lock-btn.locked { /*change*/
+                background: linear-gradient(135deg, #4caf50 0%, #388e3c 100%);
+            }
+
+            #lock-btn:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            }
+
+        /* Override backgrounds */
+        .bg-light, .bg-white, .bg-transparent,
+        .table-striped tbody tr:nth-of-type(odd),
+        .table-hover tbody tr:hover {
+            background: none !important;
+        }
+
+        /* Table cell padding override */
+        .table > :not(caption) > * > * {
+            padding: 4px !important;
+        }
+
+        /* Form controls in tables */
+        .table input,
+        .table select,
+        .table textarea {
+            font-size: var(--table-font-size) !important;
+            padding: 2px 4px !important;
+            height: auto !important;
+        }
+
+        .fa-chevron-right {
+            transition: transform 0.2s;
+        }
+
+            .fa-chevron-right.rotate {
+                transform: rotate(90deg);
+            }
+
+        li a i {
+            background: linear-gradient(45deg, #0077b6, #0096c7); /* Deep blue to cyan */
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        li a {
+            color: #333333; /* or #005073 for a blue shade */
+            font-weight: 450;
+        }
+
+        .user-container {
+            position: relative;
+            cursor: pointer;
+        }
+
+        /* Small User Avatar (Fixed in Topbar) */
+        .user-avatar {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            border: 2px solid white;
+        }
+
+        /* User Popup Card */
+        .user-popup {
+            display: none;
+            position: absolute;
+            top: 50px;
+            right: 10px;
+            width: 200px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+            padding: 15px;
+            text-align: center;
+            z-index: 1000;
+        }
+
+        /* Large Avatar Inside Popup */
+        .user-avatar-large {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            margin-bottom: 10px;
+        }
+
+        .user-popup p {
+            margin: 5px 0;
+            font-size: 14px;
+        }
+
+        .logout-btn {
+            display: block;
+            margin-top: 10px;
+            padding: 5px;
+            color: red;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+            .logout-btn:hover {
+                text-decoration: underline;
+            }
+
+        .user-container {
+            position: relative;
+            display: inline-block;
+            cursor: pointer;
+            gap: 15px; /* Space between search bar and user icon */
+        }
+
+        .user-icon {
+            font-size: 24px;
+            color: white;
+            cursor: pointer;
+        }
+
+        .user-popup {
+            display: none;
+            position: absolute;
+            top: 40px;
+            right: 0;
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+            width: 200px;
+        }
+
+            .user-popup p {
+                margin: 7px 12px;
+                font-size: 14px;
+                color: #333;
+            }
+
+            .user-popup .logout-btn {
+                align-items: center;
+                color: red;
+                font-size: 14px;
+                text-decoration: none;
+                margin-top: 0px;
+            }
+
+                .user-popup .logout-btn i {
+                    margin-right: 5px;
+                }
+
+        .user-icon-large {
+            font-size: 50px;
+            background: linear-gradient(135deg, #ff00cc, #3333ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            display: block;
+            margin: auto;
+        }
+
+
+        .modal {
+            display: none; /* Hidden by default */
+            position: fixed; /* Stay in place */
+            z-index: 1; /* Sit on top */
+            left: 0;
+            top: 0;
+            width: 100%; /* Full width */
+            height: 100%; /* Full height */
+            overflow: auto; /* Enable scroll if needed */
+            background-color: rgb(0,0,0); /* Fallback color */
+            background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+            transition: left var(--transition-speed) ease;
+        }
+
+        .modal-content {
+            background: linear-gradient(135deg, #ff00cc, #3333ff); /* 🔥 Gradient fixed */
+            margin: 15% auto; /* 15% from the top and centered */
+            padding: 20px;
+            border: 1px solid #888;
+            width: 58%; /* Could be more or less, depending on screen size */
+            position: relative; /* To position the close button inside */
+        }
+
+
+        .close {
+            position: absolute;
+            right: 8px;
+            top: -3px;
+            color: #aaa;
+            font-size: 22px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+            .close:hover,
+            .close:focus {
+                color: white;
+                text-decoration: none;
+            }
+
+        .user-popup {
+            display: none; /* Hidden by default */
+        }
+
+        .modal-content h2 {
+            font-size: 20px;
+        }
+
+        .modal-content p:first-of-type {
+            font-size: 14px;
+        }
+
+        .modal-content p,
+        .modal-content ul {
+            font-size: 12px; /* Set remaining sizes */
+        }
+
+        .help-icon {
+            font-size: 18px; /* Adjust the size as needed */
+            color: #3498db; /* Adjust the color as needed */
+            cursor: pointer;
+            margin-top: 19px;
+            margin-right: 13px;
+            margin-left: -10px;
+        }
+
+        .search-container {
+            display: flex;
+            align-items: center;
+            height: 100%;
+            margin-left: auto; /* Push it to the right, if needed */
+        }
+
+        #search-bar {
+            height: 30px;
+            border: none;
+            border-radius: 15px;
+            padding: 0 12px;
+            font-size: 14px;
+            transition: all 0.2s ease-in-out;
+        }
+
+            #search-bar:focus {
+                outline: none;
+                box-shadow: 0 0 5px rgba(59, 130, 246, 0.5);
+            }
+
+        .search-container {
+            position: relative;
+            width: 200px; /* Match input width */
+        }
+
+        #search-bar {
+            width: 90%;
+            padding: 9px;
+            box-sizing: border-box;
+        }
+
+        .suggestions-box {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            background: linear-gradient(135deg, #ff00cc, #3333ff); /* ✅ Corrected */
+            z-index: 1000;
+            max-height: 150px;
+            overflow-y: auto;
+            width: 90%;
+            border-radius: 6px;
+        }
+
+        .suggestion-item {
+            padding: 1px;
+            cursor: pointer;
+            color: white;
+            font-size: 9px;
+            text-align: left;
+            /*border-radius: 9px;*/
+        }
+
+            /* Only apply hover color when NOT highlighted */
+            .suggestion-item:hover:not(.highlighted) {
+                background-color: rgba(255, 255, 255, 0.2);
+            }
+
+            /* Arrow-key-selected item */
+            .suggestion-item.highlighted {
+                background-color: rgba(255, 255, 255, 0.4);
+            }
+
+        .highlight {
+            background: linear-gradient(135deg, #ff00cc, #3333ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: bold;
+        }
+
+
+
+        .user-popup {
+            background: #fff;
+            padding: 16px;
+            border-radius: 8px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+            width: 250px;
+        }
+
+        .user-info {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .user-icon-large {
+            font-size: 50px;
+            color: #0077b6;
+            margin-bottom: 10px;
+        }
+
+        .logout-btn {
+            margin-top: 10px;
+            /*background: #0077b6;*/
+            color: white;
+            padding: 6px 12px;
+            text-decoration: none;
+            border-radius: 4px;
+            transition: background 0.3s ease;
+        }
+
+        .navbar-logo {
+            height: 24px;
+            width: auto;
+        }
+
+        .menu a, .menu a .icon {
+            background: linear-gradient(135deg, #ff00cc, #3333ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            color: transparent; /* Fallback */
+            font-weight: bold;
+            text-decoration: none;
+        }
+
+        .menu li {
+            list-style: none;
+            margin: 10px 0;
+        }
+
+        /* Sidebar icons */
+        #sidebar a i,
+        .help-icon {
+            background: linear-gradient(135deg, #ff00cc, #3333ff); /* 🔥 Gradient */
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+    </style>
+</head>
+<body>
+    <!--topbar-->
+    {% load static %}
+
+    <div class="topbar">
+
+        <div id="current-section">Home</div>
+
+        <div class="search-container">
+            <input type="text" id="search-bar" placeholder="Search...">
+            <div id="suggestions" class="suggestions-box"></div>
+        </div>
+        <p><strong></strong> <a href="#" id="help-link"><i class="fas fa-question-circle help-icon"></i></a></p>
+
+
+        <div class="user-container">
+
+            <!-- User Icon -->
+            <i class="fas fa-user-circle user-icon" id="user-icon"></i>
+
+            <!-- User Profile Popup -->
+            <div class="user-popup" id="user-popup">
+                <div class="user-info">
+                    <i class="fas fa-user-circle user-icon-large"></i>
+                    <p><strong>Username:</strong> <span class="highlight">{{ request.session.username }}</span></p>
+                    <p><strong>Location:</strong> <span class="highlight">{{ request.session.location }}</span></p>
+                    <a href="{% url 'logout' %}" class="logout-btn">
+                        <i class="fas fa-power-off"></i> Logout
+                    </a>
+                </div>
+            </div>
+
+            <!-- Help Modal Popup -->
+            <div id="help-modal" class="modal">
+                <div class="modal-content">
+                    <span class="close">&times;</span>
+                    <h2>Welcome to help 🙏</h2>
+                    <p>Here's is the information how to use this application:</p>
+                    <ul>
+                        <li>Step 1: Log in to the application.</li>
+                        <li>Step 2: Navigate to the inventory section.</li>
+                        <li>Step 3: Add or update inventory items as needed.</li>
+                        <li>Step 4: Save your changes.</li>
+                        <li>Step 5: Log out when done.</li>
+                    </ul>
+                    <p>If you have any questions, please contact support.</p>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <!--Loading spinner-->
+    <div class="loading">
+        <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">Loading...</span>
+        </div>
+    </div>
+
+    <!--Sidebar trigger area-->
+    <div class="sidebar-trigger-area"></div>
+
+    <!--Sidebar-->
+    <div id="sidebar">
+        <div class="navbar">
+            <span class="navbar-brand">
+                <img src="/static/images/logo.png.png" class="navbar-logo">
+                &nbsp;CKP
+            </span>
+            <!--Lock/Unlock button-->
+            <button id="lock-btn" class="locked">
+                <i class="fa-solid fa-lock-open"></i>
+            </button>
+        </div>
+
+        <ul>
+            <li id="adminLink">
+                <a href="javascript:void(0);" onclick="toggleAdminLinks()" data-section="Administrator Settings">
+                    <i class="fas fa-user-cog"></i>
+                    Administrator Settings
+                    <i class="fas fa-chevron-right"></i>
+                </a>
+            </li>
+            <div id="adminLinks" style="display: none;">
+            <li>
+                <a href="{% url 'user_list' %}" data-page="inward_material" data-section="Administrator Settings">
+                    <i class="fa-solid fa-user icon"></i>
+                    Users
+                </a>
+            </li>
+            <!--<li>
+                <a href="{% url 'item_list' %}" data-page="packing_slip" data-section="Administrator Settings">
+                    <i class="fa-solid fa-user-shield icon"></i>
+                    User Rights
+                </a>
+            </li>-->
+    </div>
+
+    <li id="masterLink">
+        <a href="javascript:void(0);" onclick="toggleMasterLinks()" data-section="Master">
+            <i class="fas fa-database icon"></i>
+            Master
+            <i class="fas fa-chevron-right"></i>
+        </a>
+    </li>
+    <div id="masterLinks" style="display: none;">
+        <li>
+            <a href="{% url 'company_form' %}" data-page="company" data-section="Master">
+                <i class="fas fa-briefcase icon"></i>
+                Company Details
+            </a>
+        </li>
+        <li>
+            <a href="{% url 'customer_list' %}" data-page="customer" data-section="Master">
+                <i class="fas fa-users icon"></i>
+                Customers
+            </a>
+        </li>
+        <li>
+            <a href="{% url 'vendor_list' %}" data-page="vendor" data-section="Master">
+                <i class="fas fa-handshake icon"></i>
+                Vendor
+            </a>
+        </li>
+        <li>
+            <a href="{% url 'category_list' %}" data-page="category" data-section="Master">
+                <i class="fas fa-folder-tree icon"></i>
+                Category
+            </a>
+        </li>
+        <li>
+            <a href="{% url 'item_list' %}" data-page="item" data-section="Master">
+                <i class="fas fa-cubes icon"></i>
+                Items
+            </a>
+        </li>
+        <li>
+            <a href="{% url 'store_list' %}" data-page="store" data-section="Master">
+                <i class="fas fa-store icon"></i>
+                Stores
+            </a>
+        </li>
+        <li>
+            <a href="{% url 'bag_boxes_list' %}" data-page="boxes" data-section="Master">
+                <i class="fas fa-box icon"></i>
+                Bag/Box
+            </a>
+        </li>
+    </div>
+
+    <li id="inventoryLink">
+        <a href="javascript:void(0);" onclick="toggleInventoryLinks()" data-section="Inventory">
+            <i class="fas fa-warehouse icon"></i>
+            Inventory
+            <i class="fas fa-chevron-right"></i>
+        </a>
+    </li>
+    <div id="inventoryLinks" style="display: none;">
+        <li>
+            <a href="{% url 'stock_statement' %}" data-page="stock_statement" data-section="Inventory">
+                <i class="fas fa-chart-bar icon"></i>
+                Stock Statement
+            </a>
+        </li>
+        <li>
+            <a href="{% url 'dashboard' %}" data-page="dashboard" data-section="Inventory">
+                <i class="fas fa-chart-bar icon"></i>
+                Dashboard
+            </a>
+        </li>
+    </div>
+
+    <li id="rawMaterialLink">
+        <a href="javascript:void(0);" onclick="toggleRawMaterialLinks()" data-section=" Raw Material">
+            <i class="fas fa-boxes icon"></i>
+            Raw Material
+            <i class="fas fa-chevron-right"></i>
+        </a>
+    </li>
+    <div id="rawMaterialLinks" style="display: none;">
+        <li>
+            <a href="{% url 'inward_material_list' %}" data-page="raw_material_inward" data-section=" Raw Material">
+                <i class="fas fa-truck-loading icon"></i>
+                Inward Material
+            </a>
+        </li>
+        <li>
+            <a href="{% url 'rm_material_issue_list' %}" data-page="raw_material_issue" data-section=" Raw Material">
+                <i class="fas fa-share-square icon"></i>
+                Material Issue
+            </a>
+        </li>
+        <li>
+            <a href="{% url 'rm_label_list' %}" data-page="raw_material_label_generation" data-section=" Raw Material">
+                <i class="fas  fa-barcode icon"></i>
+                Label Generation
+            </a>
+        </li>
+    </div>
+
+    <li id="packingMaterialLink">
+        <a href="javascript:void(0);" onclick="togglePackingMaterialLinks()" data-section="Packing Material">
+            <i class="fas fa-box-open icon"></i>
+            Packing Material
+            <i class="fas fa-chevron-right"></i>
+        </a>
+    </li>
+    <div id="packingMaterialLinks" style="display: none;">
+        <li>
+            <a href="{% url 'packing_material_list' %}" data-page="packing_material_inward" data-section="Packing Material">
+                <i class="fas fa-dolly-box icon"></i>
+                Inward Material
+            </a>
+        </li>
+        <li>
+            <a href="{% url 'pm_material_issue_list' %}" data-page="packing_material_issue" data-section="Packing Material">
+                <i class="fas fa-boxes-packing icon"></i>
+                Material Issue
+            </a>
+        </li>
+        <li>
+            <a href="{% url 'pm_label_list' %}" data-page="packing_material_purchase_order" data-section="Packing Material">
+                <i class="fas fa-barcode icon"></i>
+                Packing Material Label
+            </a>
+        </li>
+        <li>
+            <a href="{% url 'purchase_order_list' %}" data-page="packing_material_purchase_order" data-section="Packing Material">
+                <i class="fas fa-file-invoice icon"></i>
+                Purchase Order
+            </a>
+        </li>
+    </div>
+
+    <li id="finishedGoodsLink">
+        <a href="javascript:void(0);" onclick="toggleFinishedGoodsLinks()" data-section="Finished Goods">
+            <i class="fas fa-archive icon"></i>
+            Finished Goods
+            <i class="fas fa-chevron-right"></i>
+        </a>
+    </li>
+    <div id="finishedGoodsLinks" style="display: none;">
+        <li>
+            <a href="{% url 'finished_inward_material_list' %}" data-page="inward_material" data-section="Finished Goods">
+                <i class="fas fa-inbox icon"></i>
+                Inward Material
+            </a>
+        </li>
+        <li>
+            <a href="{% url 'packing_slip_list' %}" data-page="packing_slip" data-section="Finished Goods">
+                <i class="fas fa-file-alt icon"></i>
+                Packing Slip
+            </a>
+        </li>
+        <li>
+            <a href="{% url 'fg_label_list' %}" data-page="fg_label_generation" data-section="Finished Goods">
+                <i class="fas fa-barcode icon"></i>
+                FG Label Generation
+            </a>
+        </li>
+    </div>
+
+
+    <!-- AssetManagement -->
+    <li id="assetManagementLink">
+        <a href="javascript:void(0);" onclick="toggleAssetManagementLinks()" data-section="Asset Managements">
+            <i class="fa-solid fa-cubes icon"></i>
+            Asset Managements
+            <i class="fas fa-chevron-right"></i>
+        </a>
+    </li>
+    <div id="assetManagementLinks" style="display: none;">
+        <li>
+            <a href="{% url 'am_inward_material_list' %}" data-page="inward_material" data-section="Asset Managements">
+                <i class="fa-solid fa-warehouse icon"></i>
+                Inward Material
+            </a>
+        </li>
+        <li>
+            <a href="{% url 'asset_material_issue_list' %}" data-page="packing_slip" data-section="Asset Managements">
+                <i class="fa-solid fa-exchange-alt icon"></i>
+                Material Issue
+            </a>
+        </li>
+    </div>
+
+    <li id="reportLink">
+        <a href="javascript:void(0);" onclick="toggleReportLinks(event)" data-section="Reports">
+            <i class="fa-solid fa-chart-line icon"></i>
+            Reports
+            <i class="fas fa-chevron-right"></i>
+        </a>
+    </li>
+    <div id="reportLinks" style="display: none;">
+        <!-- Report links go here -->
+        <li>
+            <a href="{% url 'rm_issuance_report' %}" data-page="stock_statement" data-section="Reports">
+                <i class="fa-solid fa-file-alt icon"></i>
+                RM Issuance Report
+            </a>
+        </li>
+        <li>
+            <a href="{% url 'generate_report' %}" data-page="stock_statement" data-section="Reports">
+                <i class="fa-solid fa-file-invoice icon"></i>
+                GRN Report
+            </a>
+        </li>
+        <li>
+            <a href="{% url 'pm_material_issue_report' %}" data-page="stock_statement" data-section="Reports">
+                <i class="fa-solid fa-file-archive icon"></i>
+                PM Issuance Report
+            </a>
+        </li>
+        <li>
+            <a href="{% url 'packing_slip_report' %}" data-page="stock_statement" data-section="Reports">
+                <i class="fa-solid fa-clipboard-list icon"></i>
+                Packing Slip Report
+            </a>
+        </li>
+        <li>
+            <a href="{% url 'fg_inward_material_report' %}" data-page="stock_statement" data-section="Reports">
+                <i class="fa-solid fa-clipboard-check icon"></i>
+                Fg Inward Report
+            </a>
+        </li>
+    </div>
+
+    </ul>
+    </div>
+
+    <!--Main content-->
+    <main class="main-content">
+        <div class="tables">
+            {% block content %}
+            <!--Content will be dynamically loaded here-->
+            {% endblock %}
+        </div>
+    </main>
+
+
+    <script>
+        // DOM Elements
+        const sidebar = document.getElementById('sidebar');
+        const mainContent = document.querySelector('.main-content');
+        const triggerArea = document.querySelector('.sidebar-trigger-area');
+        const lockBtn = document.getElementById('lock-btn');
+        const currentSectionElement = document.getElementById('current-section');
+        const loadingSpinner = document.querySelector('.loading');
+        const breadcrumbContainer = document.createElement('div');
+        //breadcrumbContainer.id = 'breadcrumb-container';
+        //document.querySelector('.topbar').insertBefore(breadcrumbContainer, currentSectionElement);
+
+        // Sidebar lock state, default is false
+        let isLocked = localStorage.getItem('sidebarLocked') === 'true';
+
+        // Initialize the lock button and sidebar based on the lock state
+        updateLockState();
+
+
+        // Initialize the current section and breadcrumb on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            updateCurrentSection();
+            updateBreadcrumb();
+            removeBackgrounds();
+            adjustTableSizes();
+        });
+
+        // Function to update the current section
+        function updateCurrentSection() {
+            const currentPath = window.location.pathname;
+            const link = document.querySelector(`#sidebar a[href="${currentPath}"]`);
+            const currentSection = link ? link.getAttribute('data-section') : 'Home';
+            currentSectionElement.textContent = currentSection;
+        }
+
+        // Function to update the breadcrumb based on the current path
+        function updateBreadcrumb() {
+            const currentPath = window.location.pathname;
+            const breadcrumbContainer = document.getElementById('breadcrumb-container');
+            const currentSectionElement = document.getElementById('current-section');
+
+            if (!breadcrumbContainer || !currentSectionElement) return;
+
+            const pathSegments = currentPath.split('/').filter(segment => segment);
+
+            let breadcrumbHTML = 'Home';
+
+            if (pathSegments.length === 0 || currentPath === '/' || currentPath === '/dashboard/') {
+                breadcrumbContainer.innerHTML = breadcrumbHTML;
+                currentSectionElement.innerText = 'Home';
+                return;
+            }
+
+            let lastValidSegment = 'Home';
+
+            pathSegments.forEach(segment => {
+                if (!isNaN(segment)) return; // skip IDs like 66
+                const cleanSegment = capitalizeFirstLetter(segment);
+                breadcrumbHTML += ` → ${cleanSegment}`;
+                lastValidSegment = cleanSegment;
+            });
+
+            breadcrumbContainer.innerHTML = breadcrumbHTML;
+            currentSectionElement.innerText = lastValidSegment;
+        }
+
+
+        // Helper function to capitalize the first letter of a string
+        function capitalizeFirstLetter(string) {
+            return string.charAt(0).toUpperCase() + string.slice(1);
+        }
+
+        // Page navigation    change sticking left
+        document.querySelectorAll('#sidebar a[data-page]').forEach(link => {
+            link.addEventListener('click', async (e) => {
+                e.preventDefault(); // Prevent default navigation
+                const loadingSpinner = document.querySelector('.loading');
+                loadingSpinner.style.display = 'block';
+
+                try {
+                    const response = await fetch(link.href); // Fetch the content dynamically
+                    if (!response.ok) throw new Error('Failed to load content');
+
+                    const content = await response.text();
+                    document.querySelector('.tables').innerHTML = content;
+
+                    // Reapply necessary styles and layout adjustments
+                    adjustTableAlignment();
+                } catch (error) {
+                    console.error('Error loading page:', error);
+                    alert('Error loading page. Please refresh and try again.');
+                } finally {
+                    loadingSpinner.style.display = 'none';
+                }
+            });
+        });
+
+        function adjustTableAlignment() {
+            const table = document.querySelector('.tables .table'); // Find the table
+            if (table) {
+                table.style.margin = 'auto'; // Center the table
+                table.style.width = '90%'; // Adjust width if necessary
+            }
+        }
+
+        document.querySelectorAll('#sidebar a[data-page]').forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                window.location.href = link.href; // Force a full page reload
+            });
+        });
+
+        // Show sidebar function
+        function showSidebar() {
+            sidebar.style.left = '0';
+            mainContent.classList.add('shifted');
+        }
+
+        // Hide sidebar function, but only if not locked
+        function hideSidebar() {
+            if (!isLocked) {
+                sidebar.style.left = `calc(-1 * var(--sidebar-width))`;
+                mainContent.classList.remove('shifted');
+            }
+        }
+
+        // Trigger sidebar visibility when mouse enters the sidebar trigger area
+        triggerArea.addEventListener('mouseenter', () => {
+            if (!isLocked) {
+                showSidebar();
+            }
+        });
+
+        // Trigger sidebar hide when mouse leaves sidebar
+        sidebar.addEventListener('mouseleave', () => {
+            hideSidebar();
+        });
+
+        // Lock/Unlock the sidebar when the button is clicked
+        lockBtn.addEventListener('click', function () {
+            // Toggle the lock state
+            isLocked = !isLocked;
+
+            // Save the new lock state in localStorage
+            localStorage.setItem('sidebarLocked', isLocked);
+
+            // Update the lock button state and sidebar behavior
+            updateLockState();
+        });
+
+        // Function to update the lock button and sidebar state
+        function updateLockState() {
+            if (isLocked) {
+                // Locked state: Sidebar should be visible and button shows locked icon
+                lockBtn.classList.add('locked');
+                lockBtn.innerHTML = '<i class="fa-solid fa-lock"></i>';  // Lock icon
+                showSidebar();  // Keep the sidebar visible
+            } else {
+                // Unlocked state: Sidebar can hide and button shows unlocked icon
+                lockBtn.classList.remove('locked');
+                lockBtn.innerHTML = '<i class="fa-solid fa-lock-open"></i>';  // Unlock icon
+                hideSidebar();  // Allow sidebar to hide
+            }
+        }
+
+        // Function to dynamically load content and update the current section and breadcrumb
+        async function loadContent(url) {
+            loadingSpinner.style.display = 'block';
+            try {
+                const response = await fetch(url);
+                if (!response.ok) throw new Error('Network response was not ok');
+
+                const content = await response.text();
+                document.querySelector('.tables').innerHTML = content;
+                removeBackgrounds();
+                adjustTableSizes();
+
+                // ❌ Remove currentSection logic here — we handle it in updateBreadcrumb
+                updateBreadcrumb();
+            } catch (error) {
+                console.error('Error loading content:', error);
+            } finally {
+                loadingSpinner.style.display = 'none';
+            }
+        }
+
+        // Add event listener to handle delete functionality
+        document.addEventListener('click', function (e) {
+            if (e.target && e.target.classList.contains('delete-button')) {
+                e.preventDefault();
+                const url = e.target.getAttribute('href');
+                if (confirm('Are you sure you want to delete this item?')) {
+                    fetch(url, {
+                        method: 'DELETE',
+                        headers: {
+                            'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value, // Corrected CSRF token
+                            'Content-Type': 'application/json'
+                        }
+                    })
+                        .then(response => {
+                            if (response.ok) {
+                                alert('Item deleted successfully.');
+                                loadContent(window.location.pathname); // Reload the current page
+                            } else {
+                                alert('Failed to delete the item.');
+                            }
+                        })
+                        .catch(error => console.error('Error deleting item:', error));
+                }
+            }
+        });
+
+        document.addEventListener("DOMContentLoaded", function () {
+            var userIcon = document.getElementById("user-icon");
+            var userPopup = document.getElementById("user-popup");
+
+            userIcon.addEventListener("click", function (event) {
+                userPopup.style.display = (userPopup.style.display === "block") ? "none" : "block";
+                event.stopPropagation(); // Prevent closing immediately
+            });
+
+            document.addEventListener("click", function (event) {
+                if (!userPopup.contains(event.target) && event.target !== userIcon) {
+                    userPopup.style.display = "none";
+                }
+            });
+
+            // Initialize the lock button and sidebar based on the lock state
+            updateLockState();
+        });
+
+        // Toggle admin links
+        function toggleAdminLinks() {
+            const adminLinks = document.getElementById('adminLinks');
+            const icon = document.querySelector('#adminLink .fa-chevron-right');
+
+            if (adminLinks.style.display === 'none') {
+                adminLinks.style.display = 'block';
+                icon.classList.add('rotate');
+            } else {
+                adminLinks.style.display = 'none';
+                icon.classList.remove('rotate');
+            }
+        }
+
+        // Toggle master links
+        function toggleMasterLinks() {
+            const masterLinks = document.getElementById('masterLinks');
+            const icon = document.querySelector('#masterLink .fa-chevron-right');
+
+            if (masterLinks.style.display === 'none') {
+                masterLinks.style.display = 'block';
+                icon.classList.add('rotate');
+            } else {
+                masterLinks.style.display = 'none';
+                icon.classList.remove('rotate');
+            }
+        }
+
+        // Toggle inventory links
+        function toggleInventoryLinks() {
+            const inventoryLinks = document.getElementById('inventoryLinks');
+            const icon = document.querySelector('#inventoryLink .fa-chevron-right');
+
+            if (inventoryLinks.style.display === 'none') {
+                inventoryLinks.style.display = 'block';
+                icon.classList.add('rotate');
+            } else {
+                inventoryLinks.style.display = 'none';
+                icon.classList.remove('rotate');
+            }
+        }
+
+        // Toggle raw material links
+        function toggleRawMaterialLinks() {
+            const rawMaterialLinks = document.getElementById('rawMaterialLinks');
+            const icon = document.querySelector('#rawMaterialLink .fa-chevron-right');
+
+            if (rawMaterialLinks.style.display === 'none') {
+                rawMaterialLinks.style.display = 'block';
+                icon.classList.add('rotate');
+            } else {
+                rawMaterialLinks.style.display = 'none';
+                icon.classList.remove('rotate');
+            }
+        }
+
+        // Toggle packing material links
+        function togglePackingMaterialLinks() {
+            const packingMaterialLinks = document.getElementById('packingMaterialLinks');
+            const icon = document.querySelector('#packingMaterialLink .fa-chevron-right');
+
+            if (packingMaterialLinks.style.display === 'none') {
+                packingMaterialLinks.style.display = 'block';
+                icon.classList.add('rotate');
+            } else {
+                packingMaterialLinks.style.display = 'none';
+                icon.classList.remove('rotate');
+            }
+        }
+
+        // Toggle finished goods links
+        function toggleFinishedGoodsLinks() {
+            const finishedGoodsLinks = document.getElementById('finishedGoodsLinks');
+            const icon = document.querySelector('#finishedGoodsLink .fa-chevron-right');
+
+            if (finishedGoodsLinks.style.display === 'none') {
+                finishedGoodsLinks.style.display = 'block';
+                icon.classList.add('rotate');
+            } else {
+                finishedGoodsLinks.style.display = 'none';
+                icon.classList.remove('rotate');
+            }
+        }
+
+        // Toggle production links
+        function toggleProductionLinks() {
+            const productionLinks = document.getElementById('productionLinks');
+            const icon = document.querySelector('#productionLink .fa-chevron-right');
+
+            if (productionLinks.style.display === 'none') {
+                productionLinks.style.display = 'block';
+                icon.classList.add('rotate');
+            } else {
+                productionLinks.style.display = 'none';
+                icon.classList.remove('rotate');
+            }
+        }
+
+        // Toggle asset management links
+        function toggleAssetManagementLinks() {
+            const assetManagementLinks = document.getElementById('assetManagementLinks');
+            const icon = document.querySelector('#assetManagementLink .fa-chevron-right');
+
+            if (assetManagementLinks.style.display === 'none') {
+                assetManagementLinks.style.display = 'block';
+                icon.classList.add('rotate');
+            } else {
+                assetManagementLinks.style.display = 'none';
+                icon.classList.remove('rotate');
+            }
+        }
+
+        // Toggle report links
+        function toggleReportLinks(event) {
+            event.preventDefault();  // Prevents page from navigating to #
+            const reportLinks = document.getElementById('reportLinks');
+            const icon = document.querySelector('#reportLink .fa-chevron-right');
+
+            if (reportLinks.style.display === 'none') {
+                reportLinks.style.display = 'block';
+                icon.classList.add('rotate');
+            } else {
+                reportLinks.style.display = 'none';
+                icon.classList.remove('rotate');
+            }
+        }
+
+        // Remove backgrounds
+        function removeBackgrounds() {
+            document.querySelectorAll('.table, .table *, .container, .main-content, .tables')
+                .forEach(el => el.style.background = 'none');
+        }
+
+        // Adjust table sizes
+        function adjustTableSizes() {
+            document.querySelectorAll('.table').forEach(table => {
+                table.style.fontSize = 'var(--table-font-size)';
+                table.querySelectorAll('th, td').forEach(cell => {
+                    cell.style.padding = '4px';
+                });
+            });
+        }
+
+        document.addEventListener("DOMContentLoaded", function () {
+            document.getElementById("logout-btn").addEventListener("click", function () {
+                fetch("{% url 'logout' %}", {
+                    method: "POST",
+                    headers: {
+                        "X-CSRFToken": document.querySelector('[name=csrfmiddlewaretoken]').value // Corrected CSRF token
+                    }
+                }).then(response => {
+                    if (response.redirected) {
+                        window.location.href = response.url;  // Redirect after logout
+                    }
+                }).catch(error => console.error("Logout failed:", error));
+            });
+        });
+
+        // Observe DOM changes
+        const observer = new MutationObserver(() => {
+            removeBackgrounds();
+            adjustTableSizes();
+        });
+
+        observer.observe(document.body, {
+            childList: true,
+            subtree: true
+        });
+
+        // Get the modal
+        var modal = document.getElementById("help-modal");
+
+        // Get the link that opens the modal
+        var helpLink = document.getElementById("help-link");
+
+        // Get the <span> element that closes the modal
+        var span = document.getElementsByClassName("close")[0];
+
+        // Get the user popup
+        var userPopup = document.getElementById("user-popup");
+
+        // When the user clicks the link, open the modal and hide the user popup
+        helpLink.onclick = function (event) {
+            event.preventDefault();
+            modal.style.display = "block";
+            userPopup.style.display = "none";
+        }
+
+        // When the user clicks on <span> (x), close the modal and show the user popup
+        span.onclick = function () {
+            modal.style.display = "none";
+            userPopup.style.display = "block";
+        }
+
+        // When the user clicks anywhere outside of the modal, close it and show the user popup
+        window.onclick = function (event) {
+            if (event.target == modal) {
+                modal.style.display = "none";
+                userPopup.style.display = "block";
+            }
+        }
+
+        document.addEventListener("DOMContentLoaded", function () {
+            const searchBar = document.getElementById("search-bar");
+            const suggestionsBox = document.getElementById("suggestions");
+
+            const searchRoutes = {
+                "User": "{% url 'user_list' %}",
+                "Company Details": "{% url 'company_form' %}",
+                "Customers": "{% url 'customer_list' %}",
+                "Vendors": "{% url 'vendor_list' %}",
+                "Category": "{% url 'category_list' %}",
+                "Items": "{% url 'item_list' %}",
+                "Stores": "{% url 'store_list' %}",
+                "Bagbox": "{% url 'bag_boxes_list' %}",
+                "RM Inward Material": "{% url 'inward_material_list' %}",
+                "RM Material Issue": "{% url 'rm_material_issue_list' %}",
+                "RM Label Generation": "{% url 'rm_label_list' %}",
+                "PM Inward Material": "{% url 'packing_material_list' %}",
+                "PM Material Issue": "{% url 'pm_material_issue_list' %}",
+                "PM Label Generation": "{% url 'pm_label_list' %}",
+                "Purchase Order": "{% url 'purchase_order_list' %}",
+                "FG Inward Material": "{% url 'finished_inward_material_list' %}",
+                "Packing Slip": "{% url 'packing_slip_list' %}",
+                "FG Label Generation": "{% url 'fg_label_list' %}",
+                "AM Inward Material": "{% url 'am_inward_material_list' %}",
+                "AM Material Issue": "{% url 'asset_material_issue_list' %}",
+                "RM Issuance Report": "{% url 'rm_issuance_report' %}",
+                "PM Issuance Report": "{% url 'pm_material_issue_report' %}",
+                "Packing Slip Report": "{% url 'packing_slip_report' %}",
+                "FG Inward Report": "{% url 'fg_inward_material_report' %}",
+            };
+
+            const searchKeys = Object.keys(searchRoutes);
+            let selectedIndex = -1;
+            let currentSuggestions = [];
+
+            function renderSuggestions(input) {
+                suggestionsBox.innerHTML = "";
+                selectedIndex = -1;
+                currentSuggestions = [];
+
+                const matches = searchKeys.filter(key => key.toLowerCase().includes(input));
+                matches.forEach(match => {
+                    const div = document.createElement("div");
+                    div.textContent = match;
+                    div.classList.add("suggestion-item");
+                    div.addEventListener("click", function () {
+                        window.location.href = searchRoutes[match];
+                    });
+                    suggestionsBox.appendChild(div);
+                    currentSuggestions.push(div);
+                });
+            }
+
+            function highlightSuggestion(index) {
+                currentSuggestions.forEach((div, i) => {
+                    div.classList.toggle("highlighted", i === index);
+                });
+
+                if (index >= 0 && currentSuggestions[index]) {
+                    currentSuggestions[index].scrollIntoView({
+                        behavior: "smooth",
+                        block: "nearest"
+                    });
+                }
+            }
+
+            searchBar.addEventListener("input", function () {
+                const input = searchBar.value.toLowerCase().trim();
+                if (input === "") {
+                    suggestionsBox.innerHTML = "";
+                    return;
+                }
+                renderSuggestions(input);
+            });
+
+            searchBar.addEventListener("keydown", function (event) {
+                if (event.key === "ArrowDown") {
+                    if (selectedIndex < currentSuggestions.length - 1) {
+                        selectedIndex++;
+                        highlightSuggestion(selectedIndex);
+                    }
+                    event.preventDefault();
+                } else if (event.key === "ArrowUp") {
+                    if (selectedIndex > 0) {
+                        selectedIndex--;
+                        highlightSuggestion(selectedIndex);
+                    }
+                    event.preventDefault();
+                } else if (event.key === "Enter") {
+                    const input = searchBar.value.toLowerCase().trim();
+                    if (selectedIndex >= 0 && currentSuggestions[selectedIndex]) {
+                        const selectedText = currentSuggestions[selectedIndex].textContent;
+                        window.location.href = searchRoutes[selectedText];
+                    } else {
+                        const exactMatchKey = searchKeys.find(key => key.toLowerCase() === input);
+                        if (exactMatchKey) {
+                            window.location.href = searchRoutes[exactMatchKey];
+                        } else {
+                            alert("No matching page found for your search.");
+                        }
+                    }
+                    suggestionsBox.innerHTML = "";
+                    event.preventDefault();
+                }
+            });
+
+            document.addEventListener("click", function (event) {
+                if (!searchBar.contains(event.target) && !suggestionsBox.contains(event.target)) {
+                    suggestionsBox.innerHTML = "";
+                }
+            });
+        });
+
+
+    </script>
+</body>
+</html>
+
+    <!--background: linear-gradient(135deg, #00ffd4, #fffc33);-->

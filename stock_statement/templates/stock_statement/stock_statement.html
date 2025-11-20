@@ -1,0 +1,239 @@
+{% extends 'base.html' %}
+
+{% block title %}RM Material List{% endblock %}
+
+{% block content %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% load static %} <!-- Add this line to load static files -->
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>📦 Stock Statement</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 39px;
+            padding: 20px;
+        }
+
+        h2 {
+            text-align: center;
+            color: #007BFF;
+        }
+
+        form, .top-controls {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        select, button, input[type="text"] {
+            padding: 8px;
+            font-size: 16px;
+            margin: 5px;
+            border-radius: 5px;
+            border: 1px solid #007BFF;
+        }
+
+        input[type="text"] {
+            width: 200px;
+        }
+
+        button {
+            background-color: #007BFF;
+            color: white;
+            cursor: pointer;
+            border: none;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: center;
+        }
+
+        th {
+            background-color: #007BFF;
+            color: white;
+        }
+
+        @keyframes blink {
+            0% { background-color: #ff4d4d; }
+            50% { background-color: #ffcccc; }
+            100% { background-color: #ff4d4d; }
+        }
+
+        .low-stock {
+            animation: blink 1s infinite;
+            color: white;
+            font-weight: bold;
+        }
+
+        .reorder {
+            color: yellow;
+            font-weight: bold;
+            font-size: 16px;
+        }
+
+        .highlight-issue {
+            background-color: #f7c9c9;
+            color: red;
+        }
+
+        @media (max-width: 768px) {
+            table { font-size: 14px; }
+            th, td { padding: 8px; }
+            input[type="text"] { width: 100%; }
+        }
+        @keyframes blink {
+            0% {
+                background-color: #ff4d4d;
+            }
+
+            50% {
+                background-color: #ffcccc;
+            }
+
+            100% {
+                background-color: #ff4d4d;
+            }
+        }
+
+        .low-stock {
+            animation: blink 5s infinite; /* Updated from 1s to 5s */
+            color: white;
+            font-weight: bold;
+        }
+
+    </style>
+</head>
+<body>
+
+    <h2>📦 Stock Statement</h2>
+
+    <div class="top-controls">
+        <form method="GET" style="display:inline-block;">
+            <label for="category">Filter by Category:</label>
+            <select name="category" id="category">
+                <option value="all" {% if category_filter == "all" %}selected{% endif %}>All</option>
+                <option value="raw_material" {% if category_filter == "raw_material" %}selected{% endif %}>Raw Material</option>
+                <option value="packing_material" {% if category_filter == "packing_material" %}selected{% endif %}>Packing Material</option>
+                <option value="finished_goods" {% if category_filter == "finished_goods" %}selected{% endif %}>Finished Goods</option>
+            </select>
+            <button type="submit">Filter</button>
+        </form>
+
+        <input type="text" id="searchInput" placeholder="🔍 Search Item..." onkeyup="searchTable()" />
+
+        <button onclick="window.print()">🖨 Print / Save PDF</button>
+    </div>
+
+    <table id="stockTable">
+        <thead>
+            <tr>
+                <th>Item Code</th>
+                <th>Item Name</th>
+                <th>Category</th>
+                <th>ROL</th>
+                <th>Balance Qty</th>
+                <th>Inward Stock</th>
+                <th>Issued Stock</th>
+                <th>Closing Stock</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in stock_data %}
+            <tr class="{% if item.needs_reorder %}low-stock{% endif %}">
+                <td>{{ item.item_code }}</td>
+                <td>{{ item.item_name }}</td>
+                <td>{{ item.category }}</td>
+                <td>{{ item.rol }}</td>
+                <td>{{ item.balance_qty }}</td>
+                <td>{{ item.inward_stock }}</td>
+                <td class="{% if item.highlight_issue %}highlight-issue{% endif %}">
+                    {{ item.issued_stock }}
+                    {% if item.highlight_issue %}
+                        <div>⚠ Balance Quantity is less than Issued Stock</div>
+                    {% endif %}
+                </td>
+                <td>{{ item.closing_stock }}</td>
+                <td>
+                    {% if item.needs_reorder %}
+                        <span class="reorder">⚠ Reorder Needed</span>
+                    {% else %}
+                        ✅ Sufficient Stock
+                    {% endif %}
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="9">No data available.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <!-- Audio -->
+    <audio id="beep-sound" preload="auto">
+        <source src="{% static 'beep-01a.wav' %}" type="audio/mpeg">
+                Your browser does not support the audio element.
+    </audio>
+    <!-- JS -->
+    <script>
+        function searchTable() {
+            let input = document.getElementById("searchInput").value.toUpperCase();
+            let rows = document.getElementById("stockTable").getElementsByTagName("tr");
+
+            for (let i = 1; i < rows.length; i++) {
+                let cells = rows[i].getElementsByTagName("td");
+                let match = false;
+
+                for (let j = 0; j < cells.length; j++) {
+                    if (cells[j].textContent.toUpperCase().includes(input)) {
+                        match = true;
+                        break;
+                    }
+                }
+
+                rows[i].style.display = match ? "" : "none";
+            }
+        }
+
+        document.addEventListener("DOMContentLoaded", function () {
+            const beep = document.getElementById("beep-sound");
+            let lowStockItems = [];
+
+            {% for item in stock_data %}
+                {% if item.play_beep %}
+                    lowStockItems.push("⚠ {{ item.item_name }} ({{ item.item_code }}) requires attention!");
+                {% endif %}
+            {% endfor %}
+
+            if (lowStockItems.length > 0) {
+                alert(lowStockItems.join('\n'));
+                if (beep) {
+                    beep.volume = 1.0;
+                    beep.muted = false;
+                    beep.play().catch(err => console.warn("Autoplay blocked:", err));
+                }
+            }
+        });
+    </script>
+
+</body>
+</html>
+{% endblock %}

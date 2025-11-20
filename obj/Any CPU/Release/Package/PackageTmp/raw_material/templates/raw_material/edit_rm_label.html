@@ -1,0 +1,274 @@
+{% extends 'base.html' %}
+
+{% block title %}Create RM Label{% endblock %}
+
+{% block content %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create RM Label</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f2f5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 100px;
+            box-sizing: border-box;
+        }
+
+        .form-container {
+            background-color: #f4f4f4;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2);
+            width: 90%;
+            max-width: 600px;
+            animation: fadeIn 0.5s ease;
+            border: 2px solid transparent;
+            background-clip: padding-box, border-box;
+            background-origin: border-box;
+            background-image: linear-gradient(#f4f4f4, #f4f4f4), linear-gradient(45deg, #0077b6, #0096c7);
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        h4 {
+            text-align: left;
+            margin-bottom: 8px;
+            font-size: 20px;
+            color: #333;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+        }
+
+            /* Input styles */
+            .form-grid input[type="text"],
+            .form-grid input[type="email"],
+            .form-grid input[type="number"],
+            .form-grid select,
+            .form-grid textarea {
+                width: 100%;
+                padding: 4px 6px;
+                border: 1px solid #ccc;
+                border-radius: 4px;
+                box-sizing: border-box;
+                transition: border-color 0.3s;
+                font-size: 10px;
+            }
+
+            .form-grid input[type="text"] {
+                height: 28px;
+            }
+
+        .button-group {
+            grid-column: span 3;
+            display: flex;
+            justify-content: flex-end;
+            gap: 6px;
+            margin-top: 12px;
+        }
+
+            .button-group button {
+                padding: 6px 10px;
+                border: none;
+                border-radius: 4px;
+                cursor: pointer;
+                font-size: 10px;
+                color: white;
+                background: linear-gradient(45deg, #0077b6, #0096c7);
+                transition: background 0.3s, box-shadow 0.3s;
+            }
+
+                .button-group button:hover {
+                    background: linear-gradient(45deg, #005f86, #0077b6);
+                    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+                }
+
+        @media (max-width: 600px) {
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .button-group {
+                flex-direction: column;
+                gap: 6px;
+                justify-content: center;
+            }
+        }
+
+        .close-button {
+            padding: 6px 10px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 10px;
+            font-weight: 100;
+            color: white;
+            text-decoration: none;
+            text-align: center;
+            background: linear-gradient(45deg, #0077b6, #0096c7);
+            transition: background 0.3s, box-shadow 0.3s;
+        }
+
+            .close-button:hover {
+                background: linear-gradient(45deg, #005f86, #0077b6); /* Darker shades on hover */
+                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            }
+    </style>
+</head>
+
+<body>
+    <div class="form-container">
+        <h6 style="color: black; font-size: 12px; font-weight: 100;">Edit RM Label</h6>
+        <form method="POST">
+            {% csrf_token %}
+
+            <div class="form-grid">
+                <!-- Vendor Code Dropdown -->
+                <select id="vendor_code" name="vendor_code" required {% if view_mode %}disabled{% endif %} onchange="updateVendorName(this)">
+                    <option value="">Vendor Code*</option>
+                    {% for vendor in vendors %}
+                    <option value="{{ vendor.vendor_code }}" data-name="{{ vendor.vendor_name }}"
+                            {% if form.vendor_code.value == vendor.vendor_code %}selected{% endif %}>
+                        {{ vendor.vendor_code }}
+                    </option>
+                    {% endfor %}
+                </select>
+
+                <!-- Vendor Name Dropdown -->
+                <select id="vendor_name" name="vendor_name" required {% if view_mode %}disabled{% endif %} onchange="updateVendorCode(this)">
+                    <option value="">Vendor Name*</option>
+                    {% for vendor in vendors %}
+                    <option value="{{ vendor.vendor_name }}" data-code="{{ vendor.vendor_code }}"
+                            {% if form.vendor_name.value == vendor.vendor_name %}selected{% endif %}>
+                        {{ vendor.vendor_name }}
+                    </option>
+                    {% endfor %}
+                </select>
+
+                <!-- Item Code Dropdown -->
+                <select id="item_code" name="item_code" required {% if view_mode %}disabled{% endif %} onchange="updateItemName(this)">
+                    <option value="">Item Code*</option>
+                    {% for item_detail in item_master %}
+                    <option value="{{ item_detail.item_code }}" data-name="{{ item_detail.item_name }}"
+                            {% if form.item_code.value == item_detail.item_code %}selected{% endif %}>
+                        {{ item_detail.item_code }}
+                    </option>
+                    {% endfor %}
+                </select>
+
+                <!-- Item Name Dropdown -->
+                <select id="item_name" name="item_name" required {% if view_mode %}disabled{% endif %} onchange="updateItemCode(this)">
+                    <option value="">Item Name*</option>
+                    {% for item_detail in item_master %}
+                    <option value="{{ item_detail.item_name }}" data-code="{{ item_detail.item_code }}"
+                            {% if form.item_name.value == item_detail.item_name %}selected{% endif %}>
+                        {{ item_detail.item_name }}
+                    </option>
+                    {% endfor %}
+                </select>
+
+                <!-- Additional Fields -->
+                <input type="text" name="rm_code" placeholder="Raw Material Code" required
+                       value="{{ form.rm_code.value|default:'' }}">
+                <input type="text" name="no_of_bags" placeholder="Number of Bags" required
+                       value="{{ form.no_of_bags.value|default:'' }}">
+                <input type="text" name="next_bag_no" placeholder="Next Bag Number"
+                       value="{{ form.next_bag_no.value|default:'' }}">
+                <input type="text" name="invoice_no" placeholder="Invoice Number" required
+                       value="{{ form.invoice_no.value|default:'' }}">
+                <input type="date" name="invoice_date" placeholder="Invoice Date*" required
+                       value="{{ form.invoice_date.value|date:'Y-m-d' }}">
+
+                <input type="text" name="batch_no" placeholder="Batch Number" value="{{ form.batch_no.value|default:'' }}">
+            </div>
+
+            <!-- Button Group -->
+            <div class="button-group">
+                <button type="submit">Update</button>
+                <a href="{% url 'rm_label_list' %}" class="close-button">Back</a>
+            </div>
+        </form>
+    </div>
+
+    <!-- JavaScript for Auto-Selection -->
+    <script>
+        function updateVendorName(selectElement) {
+            var selectedCode = selectElement.value;
+            var vendorNameDropdown = document.getElementById("vendor_name");
+
+            for (var i = 0; i < vendorNameDropdown.options.length; i++) {
+                var option = vendorNameDropdown.options[i];
+                if (option.getAttribute("data-code") === selectedCode) {
+                    vendorNameDropdown.value = option.value;
+                    break;
+                }
+            }
+        }
+
+        function updateVendorCode(selectElement) {
+            var selectedName = selectElement.value;
+            var vendorCodeDropdown = document.getElementById("vendor_code");
+
+            for (var i = 0; i < vendorCodeDropdown.options.length; i++) {
+                var option = vendorCodeDropdown.options[i];
+                if (option.getAttribute("data-name") === selectedName) {
+                    vendorCodeDropdown.value = option.value;
+                    break;
+                }
+            }
+        }
+
+        function updateItemName(selectElement) {
+            var selectedCode = selectElement.value;
+            var itemNameDropdown = document.getElementById("item_name");
+
+            for (var i = 0; i < itemNameDropdown.options.length; i++) {
+                var option = itemNameDropdown.options[i];
+                if (option.getAttribute("data-code") === selectedCode) {
+                    itemNameDropdown.value = option.value;
+                    break;
+                }
+            }
+        }
+
+        function updateItemCode(selectElement) {
+            var selectedName = selectElement.value;
+            var itemCodeDropdown = document.getElementById("item_code");
+
+            for (var i = 0; i < itemCodeDropdown.options.length; i++) {
+                var option = itemCodeDropdown.options[i];
+                if (option.getAttribute("data-name") === selectedName) {
+                    itemCodeDropdown.value = option.value;
+                    break;
+                }
+            }
+        }
+    </script>
+</body>
+
+</html>
+
+{% endblock %}

@@ -1,0 +1,692 @@
+{% extends 'base.html' %}
+
+{% block title %}Create Packing Slip{% endblock %}
+
+{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Packing Slip</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f2f5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 100px;
+            box-sizing: border-box;
+        }
+
+        .form-container {
+            background-color: #f4f4f4;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2);
+            width: 90%;
+            max-width: 600px;
+            animation: fadeIn 0.5s ease;
+            border: 2px solid transparent;
+            background-clip: padding-box, border-box;
+            background-origin: border-box;
+            background-image: linear-gradient(#f4f4f4, #f4f4f4), linear-gradient(45deg, #0077b6, #0096c7);
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        h4 {
+            text-align: left;
+            margin-bottom: 8px;
+            font-size: 20px;
+            color: #333;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+        }
+
+            /* Smaller input and textarea styles */
+            .form-grid input[type="text"],
+            .form-grid input[type="email"],
+            .form-grid input[type="number"],
+            .form-grid textarea {
+                width: 100%;
+                padding: 4px 6px;
+                border: 1px solid #ccc;
+                border-radius: 4px;
+                box-sizing: border-box;
+                padding: 1px 2px;
+                font-size: 9px;
+                transition: border-color 0.3s;
+            }
+
+            .form-grid input[type="email"],
+            .form-grid input[type="text"] {
+                height: 28px;
+            }
+
+            .form-grid .address {
+                height: 28px;
+                font-size: 11px;
+                resize: none;
+            }
+
+        .button-group {
+            grid-column: span 3;
+            display: flex;
+            justify-content: flex-end;
+            gap: 6px;
+            margin-top: 12px;
+            font-size: 10px;
+            font-weight: 100;
+        }
+
+            /* Smaller button styles */
+            .button-group button {
+                padding: 6px 10px;
+                border: none;
+                border-radius: 4px;
+                cursor: pointer;
+                font-size: 10px;
+                font-weight: 100;
+                color: white;
+                background: linear-gradient(45deg, #0077b6, #0096c7);
+                transition: background 0.3s, box-shadow 0.3s;
+            }
+
+                .button-group button:hover {
+                    background: linear-gradient(45deg, #005f86, #0077b6);
+                    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+                }
+
+        /* Corrected close button styles */
+        .close-button {
+            padding: 6px 10px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 10px;
+            font-weight: 100;
+            color: white;
+            text-decoration: none;
+            text-align: center;
+            background: linear-gradient(45deg, #0077b6, #0096c7);
+            transition: background 0.3s, box-shadow 0.3s;
+        }
+
+            .close-button:hover {
+                background: linear-gradient(45deg, #9d0208, #6a040f);
+                box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+            }
+
+        @media (max-width: 600px) {
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .button-group {
+                flex-direction: column;
+                gap: 6px;
+                justify-content: center;
+            }
+        }
+        /* Style for invalid fields after submit */
+        .invalid {
+            border-color: red !important;
+        }
+
+            .invalid::placeholder {
+                color: red !important;
+            }
+
+        .button-group .button {
+            padding: 6px 10px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 10px;
+            font-weight: 100;
+            color: white;
+            text-decoration: none; /* Removes underline from the link */
+            background: linear-gradient(45deg, #0077b6, #0096c7);
+            transition: background 0.3s, box-shadow 0.3s;
+        }
+
+            .button-group .button:hover {
+                background: linear-gradient(45deg, #005f86, #0077b6);
+                box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+            }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f6f9; /* Soft Gray-Blue */
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 900px;
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0px 3px 10px rgba(0, 0, 0, 0.1);
+            margin-top: 15px; /* Moves the container slightly downward */
+        }
+
+        h2 {
+            text-align: left;
+            margin-bottom: 20px;
+            font-size: 28px;
+            color: #333;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+            .form-grid input[type="text"],
+            .form-grid input[type="date"],
+            .form-grid input[type="number"],
+            .form-grid textarea,
+            .form-grid select {
+                width: 100%;
+                padding: 2px;
+                font-size: 9px;
+                border: 1px solid #ccc;
+                border-radius: 4px;
+                box-sizing: border-box;
+                height: 25px; /* Ensures same height as child table */
+                transition: border-color 0.3s;
+            }
+
+                .form-grid input:focus,
+                .form-grid textarea:focus,
+                .form-grid select:focus {
+                    border-color: #007bff;
+                    outline: none;
+                    box-shadow: 0 0 5px rgba(0, 123, 255, 0.3);
+                }
+
+            .form-grid textarea {
+                grid-column: span 2;
+                resize: vertical;
+                min-height: 50px;
+            }
+
+        .full-width {
+            grid-column: span 2;
+        }
+
+        .button-group {
+            display: flex;
+            justify-content: space-between;
+            grid-column: span 2;
+        }
+
+            .button-group button,
+            .button-group .close-button {
+                padding: 6px 10px;
+                border: none;
+                border-radius: 4px;
+                cursor: pointer;
+                font-size: 10px;
+                font-weight: 100;
+                color: white;
+                text-decoration: none;
+                text-align: center;
+                background: linear-gradient(45deg, #0077b6, #0096c7);
+                transition: background 0.3s, box-shadow 0.3s;
+            }
+
+                .button-group button:hover,
+                .button-group .close-button:hover {
+                    background: linear-gradient(45deg, #005f86, #0077b6); /* Darker shades on hover */
+                    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+                }
+
+        /* Child Form Container */
+        .child-form-container {
+            width: 100%;
+            margin-top: 35px;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2);
+            border: 1.5px solid #005f86; /* Updated border color */
+            background-color: #ffffff;
+            overflow-x: auto;
+        }
+
+        /* Child Table Styling */
+        .child-table {
+            width: 100%;
+            table-layout: fixed; /* Keeps column widths consistent */
+            border-collapse: collapse;
+            margin-top: 8px;
+            background: transparent; /* Removes unnecessary background */
+        }
+
+            /* Table Header */
+            .child-table thead {
+                background-color: #0077b6;
+                color: white;
+                font-size: 11px;
+            }
+
+            /* Alternate Row Color */
+            .child-table tbody tr:nth-child(even) {
+                background-color: #e0f7fa;
+            }
+
+            .child-table tbody tr:nth-child(odd) {
+                background-color: #bde0fe;
+                transition: 0.3s ease-in-out;
+            }
+
+            /* Styling for Table Cells */
+            .child-table th,
+            .child-table td {
+                padding: 4px;
+                font-size: 9px; /* Reduced font size */
+                border: 1px solid #ddd;
+                text-align: center;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                background: transparent;
+                position: relative; /* Ensures elements stay inside boundaries */
+            }
+
+            /* Ensure input & select fields fit inside table cells */
+            .child-table input,
+            .child-table select {
+                width: 100%;
+                height: 100%;
+                border: none;
+                outline: none;
+                background: transparent;
+                font-size: 9px;
+                padding: 4px;
+                box-sizing: border-box; /* Prevents overflow issues */
+            }
+
+            /* Set a fixed height to prevent inputs from overflowing */
+            .child-table input,
+            .child-table select {
+                min-height: 20px;
+                max-height: 24px; /* Ensures inputs fit neatly */
+            }
+
+            /* Remove extra padding inside cells */
+            .child-table td {
+                padding: 0;
+                text-align: center;
+                vertical-align: middle;
+            }
+
+            /* Optional: Add a slight border-bottom effect for better UX */
+            .child-table input:focus,
+            .child-table select:focus {
+                border-bottom: 1px solid #005f86;
+            }
+
+        /* Remove Extra Box Styling */
+        .child-form-container table {
+            border: none;
+            box-shadow: none;
+        }
+
+
+        .add-btn {
+            padding: 5px 9px; /* Same padding */
+            font-size: 12px;
+            border-radius: 4px; /* Equal corners */
+            border: none;
+            cursor: pointer;
+            transition: 0.3s;
+            font-weight: bold;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #0077b6;
+            margin-top: 15px;
+        }
+
+            .add-btn:hover {
+                background-color: #005f86;
+            }
+
+        .btn-danger {
+            background: #005f86; /* Deep cyan-blue */
+            color: white;
+            border: none;
+            border-radius: 4px;
+            padding: 3px 5px;
+            cursor: pointer;
+            align-items: center;
+            justify-content: center;
+        }
+
+            .btn-danger:hover {
+                background: #004766; /* Slightly darker shade on hover */
+                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            }
+
+            .btn-danger i {
+                font-size: 12px;
+            }
+        .form-grid label {
+            font-size: 8px;
+            font-weight: bold;
+            color: #333;
+            display: block;
+            margin-bottom: 2px;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h6 style="color: black; font-size: 12px; font-weight: 100;">Create Packing Slip</h6>
+        <form method="post">
+            {% csrf_token %}
+
+            <!-- Packing Slip Form Fields -->
+            <div class="form-grid">
+                <div>
+                    <label for="ps_no">PS No</label>
+                    <input type="text" name="ps_no" id="ps_no" placeholder="Enter PS No"
+                           value="{{ form.ps_no.value|default:'' }}" {% if view_mode %}disabled{% endif %}>
+                </div>
+
+                <div>
+                    <label for="ps_date">PS Date</label>
+                    <input type="date" name="ps_date" id="ps_date"
+                           value="{{ form.instance.ps_date|date:'Y-m-d' }}" {% if view_mode %}disabled{% endif %}>
+                </div>
+
+                <div>
+                    <label for="po_no">PO No</label>
+                    <input type="text" name="po_no" id="po_no" placeholder="Enter PO No"
+                           value="{{ form.po_no.value|default:'' }}" {% if view_mode %}disabled{% endif %}>
+                </div>
+
+                <div>
+                    <label for="po_date">PO Date</label>
+                    <input type="date" name="po_date" id="po_date"
+                           value="{{ form.instance.po_date|date:'Y-m-d' }}" {% if view_mode %}disabled{% endif %}>
+                </div>
+
+                <div>
+                    <label for="customer">Customer</label>
+                    <select name="customer" id="customer" {% if view_mode %}disabled{% endif %} required>
+                        <option value="">Select Customer</option>
+                        {% for customer in customers %}
+                        <option value="{{ customer.id }}" {% if form.instance.customer.id == customer.id %}selected{% endif %}>
+                            {{ customer.customer_name }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div>
+                    <label for="mode_of_transport">Mode of Transport</label>
+                    <input type="text" name="mode_of_transport" id="mode_of_transport" placeholder="Enter Mode of Transport"
+                           value="{{ form.mode_of_transport.value|default:'' }}" {% if view_mode %}disabled{% endif %}>
+                </div>
+
+                <div>
+                    <label for="transport_form">Transport From</label>
+                    <input type="text" name="transport_form" id="transport_form" placeholder="Enter Transport From"
+                           value="{{ form.transport_form.value|default:'' }}" {% if view_mode %}disabled{% endif %}>
+                </div>
+
+                <div>
+                    <label for="trans_to">Transport To</label>
+                    <input type="text" name="trans_to" id="trans_to" placeholder="Enter Transport To"
+                           value="{{ form.instance.trans_to }}" {% if view_mode %}disabled{% endif %}>
+                </div>
+
+                <div>
+                    <label for="transfer_to_vehicle_no">Vehicle No</label>
+                    <input type="text" name="transfer_to_vehicle_no" id="transfer_to_vehicle_no" placeholder="Enter Vehicle No"
+                           value="{{ form.transfer_to_vehicle_no.value|default:'' }}" {% if view_mode %}disabled{% endif %}>
+                </div>
+
+                <div>
+                    <label for="transport_name">Transport Name</label>
+                    <input type="text" name="transport_name" id="transport_name" placeholder="Enter Transport Name"
+                           value="{{ form.transport_name.value|default:'' }}" {% if view_mode %}disabled{% endif %}>
+                </div>
+            </div>
+
+
+            <div class="child-form-container">
+                <table class="child-table">
+                    <thead>
+                        <tr>
+                            <th>Sl No</th>
+                            <th>Item Code</th>
+                            <th>Item Name</th>
+                            <th>UOM</th>
+                            <th>Box/Bags</th>
+                            <th>Batch No</th>
+                            <th>Qty</th>
+                            <th>Bal Qty</th>
+                            <th>Stock Qty</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="childTableBody">
+                        {% if formset %}
+                        {% for form in formset %}
+                        <tr>
+                            <td>{{ forloop.counter }}</td>
+                            <td>
+                                <select name="item_code[]" class="item_code" {% if view_mode %}disabled{% endif %} onchange="updateItemDetails(this)">
+                                    <option value="">Item Code</option>
+                                    {% for item_detail in item_master %}
+                                    <option value="{{ item_detail.item_code }}"
+                                            data-name="{{ item_detail.item_name }}"
+                                            data-uom="{{ item_detail.uom }}"
+                                            {% if item.item_code == item_detail.item_code %} selected {% endif %}>
+                                        {{ item_detail.item_code }}
+                                    </option>
+                                    {% endfor %}
+                                </select>
+                            </td>
+                            <td>
+                                <select name="item_name[]" class="item_name" {% if view_mode %}disabled{% endif %} onchange="updateItemDetails(this)">
+                                    <option value="">Item Name</option>
+                                    {% for item_detail in item_master %}
+                                    <option value="{{ item_detail.item_name }}"
+                                            data-code="{{ item_detail.item_code }}"
+                                            data-uom="{{ item_detail.uom }}"
+                                            {% if item.item_name == item_detail.item_name %} selected {% endif %}>
+                                        {{ item_detail.item_name }}
+                                    </option>
+                                    {% endfor %}
+                                </select>
+                            </td>
+
+
+                            <td><input type="text" name="uom_{{ forloop.counter }}" value="{{ form.instance.uom }}" {% if view_mode %}disabled{% endif %}></td>
+                            <td>
+                                <input type="number"
+                                       name="{{ form.prefix }}-box_bags"
+                                       value="{{ form.box_bags.value|default:'' }}"
+                                       class="form-control"
+                                       {% if view_mode %}readonly{% endif %}>
+                            </td>
+                            <td><input type="text" name="batch_no_{{ forloop.counter }}" value="{{ form.instance.batch_no }}" {% if view_mode %}disabled{% endif %}></td>
+                            <td><input type="number" name="qty_{{ forloop.counter }}" value="{{ form.instance.qty }}" {% if view_mode %}disabled{% endif %}></td>
+                            <td><input type="number" name="bal_qty_{{ forloop.counter }}" value="{{ form.instance.bal_qty }}" {% if view_mode %}disabled{% endif %}></td>
+                            <td><input type="number" name="stock_qty_{{ forloop.counter }}" value="{{ form.instance.stock_qty }}" {% if view_mode %}disabled{% endif %}></td>
+                            <td>
+                                <button type="button" class="btn-danger delete-btn" onclick="removeRow(this)" {% if view_mode %} disabled {% endif %}>
+                                    <i class="fa fa-trash"></i>
+                                </button>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                        {% endif %}
+                    </tbody>
+                </table>
+                <button type="button" class="add-btn" onclick="addRow()" {% if view_mode %}disabled{% endif %}>+ Add Item</button>
+            </div>
+
+            <!-- Submit/Close Buttons -->
+            <div class="button-group">
+                {% if not view_mode %}
+                <button type="submit" class="btn-submit">
+                    {% if request.resolver_match.url_name == 'edit_packing_slip' %} Update {% else %} Save {% endif %}
+                </button>
+                {% endif %}
+                <a href="{% url 'packing_slip_list' %}" class="close-button">Close</a>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        function updateManagementForm() {
+            let table = document.getElementById("childTableBody");
+            let totalForms = table.rows.length;
+            let managementForm = document.querySelector('[name="form-TOTAL_FORMS"]');
+            managementForm.value = totalForms;
+        }
+
+        function addRow() {
+            let table = document.getElementById("childTableBody");
+            let newRow = document.createElement("tr");
+            let rowCount = table.rows.length + 1;
+
+            newRow.innerHTML = `
+        <td>${rowCount}</td>
+        <td>
+            <select name="item_code[]" class="item_code" {% if view_mode %}disabled{% endif %} onchange="updateItemDetails(this)">
+                <option value="">Item Code</option>
+                {% for item_detail in item_master %}
+                <option value="{{ item_detail.item_code }}"
+                        data-name="{{ item_detail.item_name }}"
+                        data-uom="{{ item_detail.uom }}"
+                        {% if item.item_code == item_detail.item_code %} selected {% endif %}>
+                    {{ item_detail.item_code }}
+                </option>
+                {% endfor %}
+            </select>
+        </td>
+        <td>
+            <select name="item_name[]" class="item_name" {% if view_mode %}disabled{% endif %} onchange="updateItemDetails(this)">
+                <option value="">Item Name</option>
+                {% for item_detail in item_master %}
+                <option value="{{ item_detail.item_name }}"
+                        data-code="{{ item_detail.item_code }}"
+                        data-uom="{{ item_detail.uom }}"
+                        {% if item.item_name == item_detail.item_name %} selected {% endif %}>
+                    {{ item_detail.item_name }}
+                </option>
+                {% endfor %}
+            </select>
+        </td>
+        <td><input type="text" name="uom_${rowCount}"></td>
+        <td><input type="number" name="box_bags_${rowCount}"></td>
+        <td><input type="text" name="batch_no_${rowCount}"></td>
+        <td><input type="number" name="qty_${rowCount}"></td>
+        <td><input type="number" name="bal_qty_${rowCount}"></td>
+        <td><input type="number" name="stock_qty_${rowCount}"></td>
+        <td>
+            <button type="button" class="btn-danger delete-btn" onclick="removeRow(this)">
+                <i class="fa fa-trash"></i>
+            </button>
+        </td>
+        `;
+            table.appendChild(newRow);
+            updateManagementForm();
+        }
+
+        function removeRow(button) {
+            let row = button.closest("tr");
+            if (row) {
+                row.remove();
+                updateManagementForm();
+                updateSerialNumbers();
+            }
+        }
+
+        function updateManagementForm() {
+            let table = document.getElementById("childTableBody");
+            let totalForms = table.rows.length;
+            let managementForm = document.querySelector('form').querySelector('[name="form-TOTAL_FORMS"]');
+            managementForm.value = totalForms;
+        }
+
+
+    function updateSerialNumbers() {
+        let table = document.getElementById("childTableBody");
+        let rows = table.getElementsByTagName("tr");
+        for (let i = 0; i < rows.length; i++) {
+            rows[i].cells[0].innerText = i + 1; // Update Sl No dynamically
+        }
+    }
+
+
+        function updateItemDetails(element) {
+            const row = element.closest('tr');
+
+            const codeSelect = row.querySelector('.item_code');
+            const nameSelect = row.querySelector('.item_name');
+
+            if (element.classList.contains('item_code')) {
+                const selectedOption = codeSelect.options[codeSelect.selectedIndex];
+                const itemName = selectedOption.getAttribute('data-name');
+
+                for (let i = 0; i < nameSelect.options.length; i++) {
+                    if (nameSelect.options[i].value === itemName) {
+                        nameSelect.selectedIndex = i;
+                        break;
+                    }
+                }
+
+            } else if (element.classList.contains('item_name')) {
+                const selectedOption = nameSelect.options[nameSelect.selectedIndex];
+                const itemCode = selectedOption.getAttribute('data-code');
+
+                for (let i = 0; i < codeSelect.options.length; i++) {
+                    if (codeSelect.options[i].value === itemCode) {
+                        codeSelect.selectedIndex = i;
+                        break;
+                    }
+                }
+            }
+        }
+
+
+
+    </script>
+</body>
+</html>
+{% endblock %}

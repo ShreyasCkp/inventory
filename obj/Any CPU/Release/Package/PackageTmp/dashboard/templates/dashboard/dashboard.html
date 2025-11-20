@@ -1,0 +1,78 @@
+﻿{% extends 'base.html' %}
+
+{% block title %}Stock Dashboard {% endblock %}
+
+{% block content %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Stock Dashboard</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: sans-serif;
+        }
+
+        .chart-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 70vh;
+            overflow: hidden;
+        }
+
+        canvas {
+            width: 300px !important;
+            height: 300px !important;
+        }
+    </style>
+</head>
+<body>
+    <h2 style="text-align: center; margin-top: 50px;">📊 Closing Stock Summary</h2>
+    <div class="chart-container">
+        <canvas id="stockChart"></canvas>
+    </div>
+
+    <script>
+        const data = {{ stock_chart_data|safe }};
+
+        const labels = data.map(item => item.item_name);
+        const closing = data.map(item => item.closing);
+
+        const ctx = document.getElementById('stockChart').getContext('2d');
+        const stockChart = new Chart(ctx, {
+            type: 'pie',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Closing Stock',
+                    data: closing,
+                    backgroundColor: [
+                        '#FF6384', '#36A2EB', '#FFCE56', '#66BB6A',
+                        '#BA68C8', '#FFA726', '#8D6E63', '#42A5F5',
+                        '#7E57C2', '#FF7043', '#26C6DA', '#9CCC65'
+                    ],
+                    borderColor: '#ffffff',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: false,  // Force static size
+                maintainAspectRatio: false,
+                plugins: {
+                    title: {
+                        display: true,
+                        text: 'Closing Stock Distribution by Item'
+                    },
+                    legend: {
+                        position: 'bottom'
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>
+{% endblock %}

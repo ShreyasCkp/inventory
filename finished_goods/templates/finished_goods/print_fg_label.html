@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Print FG Label</title>
+    <style>
+        @page {
+            size: A4 landscape;
+            margin: 1cm;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .page {
+            page-break-after: always;
+        }
+
+        .container {
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: nowrap;
+        }
+
+        .label {
+            width: 32%;
+            border: 1px solid #000;
+            padding: 10px;
+            box-sizing: border-box;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+
+        .qr-code img {
+            width: 100px;
+            height: 100px;
+        }
+
+        .company-name {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .label-data {
+            margin-top: 10px;
+        }
+
+            .label-data table {
+                width: 100%;
+                border-collapse: collapse;
+                margin-top: 10px;
+            }
+
+            .label-data table, .label-data th, .label-data td {
+                border: 1px solid black;
+            }
+
+            .label-data th, .label-data td {
+                padding: 5px;
+                text-align: left;
+            }
+
+        .button-group {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+            .button-group button {
+                padding: 10px 20px;
+                font-size: 16px;
+                cursor: pointer;
+            }
+    </style>
+</head>
+<body>
+
+    <div id="printable-area">
+        <!-- First Page -->
+        <div class="page">
+            <div class="container">
+                <!-- First Label -->
+                <div class="label">
+                    <div class="company-name">                        CKP Software technologies                    </div>
+                    <div class="qr-code">
+                        <img src="data:image/png;base64,{{ qr_code_base64_1 }}" alt="QR Code">
+                    </div>
+                    <div class="label-data">
+                        <table>
+                            <tr>
+                                <th>Item Code</th>
+                                <td>{{ label.item_code.item_code }}</td>
+                            </tr>
+                            <tr>
+                                <th>Item Name</th>
+                                <td>{{ label.item_code.item_name }}</td>
+                            </tr>
+                            <tr>
+                                <th>Packing Qty</th>
+                                <td>{{ label.packing_qty }}</td>
+                            </tr>
+                            <tr>
+                                <th>Lot/Batch No</th>
+                                <td>{{ label.batch_no }}</td>
+                            </tr>
+                            <tr>
+                                <th>Date of Packing</th>
+                                <td>{{ label.date_of_packing }}</td>
+                            </tr>
+                            <tr>
+                                <th>Date of Expiry</th>
+                                <td>{{ label.date_of_expiry }}</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Second Label -->
+                <div class="label">
+                    <div class="company-name">
+                        CKP Software Technologies
+                    </div>
+                    <div class="qr-code">
+                        <img src="data:image/png;base64,{{ qr_code_base64_2 }}" alt="QR Code">
+                    </div>
+                    <div class="label-data">
+                        <table>
+                            <tr>
+                                <th>Item Code</th>
+                                <td>{{ label.item_code.item_code }}</td>
+                            </tr>
+                            <tr>
+                                <th>Item Name</th>
+                                <td>{{ label.item_code.item_name }}</td>
+                            </tr>
+                            <tr>
+                                <th>Packing Qty</th>
+                                <td>{{ label.packing_qty }}</td>
+                            </tr>
+                            <tr>
+                                <th>Lot/Batch No</th>
+                                <td>{{ label.batch_no }}</td>
+                            </tr>
+                            <tr>
+                                <th>Date of Packing</th>
+                                <td>{{ label.date_of_packing }}</td>
+                            </tr>
+                            <tr>
+                                <th>Date of Expiry</th>
+                                <td>{{ label.date_of_expiry }}</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Third Label -->
+                <div class="label">
+                    <div class="company-name">
+                        CKP Software Technologies
+                    </div>
+                    <div class="qr-code">
+                        <img src="data:image/png;base64,{{ qr_code_base64_3 }}" alt="QR Code">
+                    </div>
+                    <div class="label-data">
+                        <table>
+                            <tr>
+                                <th>Item Code</th>
+                                <td>{{ label.item_code.item_code }}</td>
+                            </tr>
+                            <tr>
+                                <th>Item Name</th>
+                                <td>{{ label.item_code.item_name }}</td>
+                            </tr>
+                            <tr>
+                                <th>Packing Qty</th>
+                                <td>{{ label.packing_qty }}</td>
+                            </tr>
+                            <tr>
+                                <th>Lot/Batch No</th>
+                                <td>{{ label.batch_no }}</td>
+                            </tr>
+                            <tr>
+                                <th>Date of Packing</th>
+                                <td>{{ label.date_of_packing }}</td>
+                            </tr>
+                            <tr>
+                                <th>Date of Expiry</th>
+                                <td>{{ label.date_of_expiry }}</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="button-group">
+        <button id="printButton">Print</button>
+    </div>
+
+    <script>
+        document.getElementById('printButton').addEventListener('click', function () {
+            // Prompt for the number of pages
+            let pages = prompt("Enter the number of pages to print (e.g., 'odd' or 'even'):", "odd");
+
+            // Validate the input
+            if (pages !== null && (pages.toLowerCase() === 'odd' || pages.toLowerCase() === 'even')) {
+                // Determine whether to print odd or even pages
+                const printOdd = (pages.toLowerCase() === 'odd');
+
+                // Clone the printable area for the specified number of pages
+                const printableArea = document.getElementById('printable-area');
+                const totalPages = 6; // Example total number of pages
+                let cloneIndex = 0;
+
+                for (let i = 1; i <= totalPages; i++) {
+                    if ((printOdd && i % 2 !== 0) || (!printOdd && i % 2 === 0)) {
+                        const clone = printableArea.cloneNode(true);
+                        document.body.insertBefore(clone, printableArea.nextSibling);
+                        cloneIndex++;
+                    }
+                }
+
+                // Open the print dialog
+                window.print();
+
+                // Remove the cloned pages after printing
+                for (let i = 0; i < cloneIndex; i++) {
+                    document.body.removeChild(printableArea.nextSibling);
+                }
+            } else {
+                alert("Invalid input. Please enter 'odd' or 'even'.");
+            }
+        });
+    </script>
+</body>
+</html>

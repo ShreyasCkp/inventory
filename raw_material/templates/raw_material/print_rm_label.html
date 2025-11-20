@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Print RM Label</title>
+    <style>
+        @page {
+            size: A4 landscape;
+            margin: 1cm;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+        }
+
+        .label {
+            border: 1px solid black;
+            padding: 20px;
+            width: 300px;
+            display: inline-block;
+            margin: 20px;
+        }
+
+        .qr-code img {
+            width: 100px;
+            height: 100px;
+        }
+    </style>
+</head>
+<body>
+    <div class="label">
+        <h2>CKP Software technologies</h2>
+        <div class="qr-code">
+            <img src="data:image/png;base64,{{ qr_code_base64 }}" alt="QR Code">
+        </div>
+        <p><strong>Vendor:</strong> {{ label.vendor_name }}</p>
+        <p><strong>Item:</strong> {{ label.item_name }}</p>
+        <p><strong>Batch No:</strong> {{ label.batch_no }}</p>
+        <p><strong>Invoice No:</strong> {{ label.invoice_no }}</p>
+        <p><strong>Invoice Date:</strong> {{ label.invoice_date }}</p>
+    </div>
+
+    <script>
+        window.print();
+    </script>
+</body>
+</html>

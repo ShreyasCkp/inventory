@@ -1,0 +1,270 @@
+{% extends 'base.html' %}
+
+{% block title %}AM Material Issue List{% endblock %}
+
+{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AM Material Issue List</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f6f9;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 900px;
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0px 3px 10px rgba(0, 0, 0, 0.1);
+            margin-top: 15px;
+        }
+
+        h2 {
+            font-size: 14px; /* Adjust font size */
+        }
+
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .add-button {
+            padding: 8px 12px;
+            background: linear-gradient(45deg, #005792, #008ea1);
+            color: white;
+            text-decoration: none;
+            border-radius: 4px;
+            font-weight: 100;
+            transition: 0.3s;
+            border: none;
+            font-size: 10px;
+        }
+
+            .add-button:hover {
+                background: linear-gradient(45deg, #00416a, #00737a);
+            }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 9px; /*table inside words we adding*/
+            background: #fff;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+
+        th, td {
+            padding: 0px;
+            text-align: center;
+            border: 1px solid #ddd;
+            white-space: nowrap;
+        }
+
+        th {
+            background-color: #005792;
+            color: white;
+            font-size: 10px; /*table heading */
+            font-weight: 100;
+        }
+
+        tr:nth-child(even) {
+            background-color: #e9f3f8;
+        }
+
+        tr:hover {
+            background-color: #d0e7f2;
+        }
+
+        th:last-child, td:last-child {
+            width: 150px;
+            text-align: center;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 3px;
+            justify-content: center;
+        }
+
+            .action-buttons a {
+                padding: 2px 5px;
+                text-decoration: none;
+                color: white;
+                border-radius: 4px;
+                font-size: 12px;
+                transition: 0.3s;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+
+        .btn-view, .btn-edit {
+            background: linear-gradient(45deg, #0077b6, #0096c7);
+        }
+
+            .btn-view:hover, .btn-edit:hover {
+                background: linear-gradient(45deg, #005f86, #0077b6);
+            }
+
+        .btn-danger {
+            background: linear-gradient(45deg, #0077b6, #0096c7);
+        }
+
+            .btn-danger:hover {
+                background: linear-gradient(45deg, #9d0208, #6a040f);
+            }
+
+        .popup {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            padding: 20px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+            border-radius: 8px;
+            text-align: center;
+            z-index: 1000;
+        }
+
+            .popup button {
+                padding: 3px 6px;
+                border: none;
+                border-radius: 5px;
+                font-size: 14px;
+                cursor: pointer;
+                transition: 0.3s;
+                margin: 5px;
+            }
+
+        .btn-yes {
+            background: linear-gradient(45deg, #87CEFA, #00008B);
+            color: white;
+        }
+
+            .btn-yes:hover {
+                background: linear-gradient(45deg, #5ca5d6, #000070);
+            }
+
+        .btn-no {
+            background: linear-gradient(45deg, #ff1493, #6a0dad);
+            color: white;
+        }
+
+            .btn-no:hover {
+                background: linear-gradient(45deg, #e60073, #5c0aa5);
+            }
+
+        .overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.4);
+            z-index: 999;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="header-container">
+            <h2>AM Material Issue List</h2>
+            <a href="{% url 'asset_material_issue_add' %}" class="add-button">+ Add AM Issue</a>
+        </div>
+
+        <table>
+            <tr>
+                <th>SL NO</th>
+                <th>Issue No</th>
+                <th>Date of Issue</th>
+                <th>Issued To</th>
+                <th>Actions</th>
+            </tr>
+            {% for issue in issues %}
+            <tr>
+                <td>{{ forloop.counter }}</td>
+                <td>{{ issue.iss_no }}</td>
+                <td>{{ issue.date_of_issue }}</td>
+                <td>{{ issue.issued_to_whom }}</td>
+                <td class="action-buttons">
+                    <a href="{% url 'asset_material_issue_view' issue.id %}" class="btn-view" title="View">
+                        <i class="fa-solid fa-eye"></i>
+                    </a>
+                    <a href="{% url 'asset_material_issue_edit' issue.id %}" class="btn-edit" title="Edit">
+                        <i class="fa-solid fa-pen"></i>
+                    </a>
+                    <a href="#" onclick="confirmDelete({{ issue.id }}, '{{ issue.iss_no|escapejs }}')" class="btn-danger" title="Delete">
+                        <i class="fa-solid fa-trash"></i>
+                    </a>
+                    <form id="delete-form-{{ issue.id }}" method="POST" action="{% url 'asset_material_issue_delete' issue.id %}" style="display: none;">
+                        {% csrf_token %}
+                    </form>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="5" style="text-align: center; font-weight: bold; color: gray;">No records found.</td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+
+    <!-- Confirm Popup -->
+    <div id="confirm-popup" class="popup">
+        <p id="confirm-popup-message">Are you sure you want to delete this RM Material Issue?</p>
+        <button id="confirm-yes" class="btn-yes">Yes</button>
+        <button id="confirm-no" class="btn-no">No</button>
+    </div>
+    <div id="overlay" class="overlay"></div>
+
+    <!-- JavaScript for Popup -->
+    <script>
+        let deleteIssueId = null;
+
+        function confirmDelete(issueId, issueNo) {
+            deleteIssueId = issueId;
+            const popup = document.getElementById("confirm-popup");
+            popup.querySelector("p").textContent = `Are you sure you want to delete RM Material Issue (Issue No: ${issueNo})?`;
+            popup.style.display = "block";
+            document.getElementById("overlay").style.display = "block";
+        }
+
+        document.getElementById("confirm-yes").addEventListener("click", function () {
+            if (deleteIssueId) {
+                document.getElementById(`delete-form-${deleteIssueId}`).submit();
+            }
+        });
+
+        document.getElementById("confirm-no").addEventListener("click", function () {
+            document.getElementById("confirm-popup").style.display = "none";
+            document.getElementById("overlay").style.display = "none";
+        });
+    </script>
+</body>
+
+</html>
+
+{% endblock %}

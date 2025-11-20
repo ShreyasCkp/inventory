@@ -1,0 +1,171 @@
+
+<!--THIS
+
+{% extends 'base.html' %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block content %}
+{% endblock %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create FG Label</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f6f9;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .form-container {
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            width: 100%;
+            max-width: 900px;
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 30px;
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+            .form-grid input,
+            .form-grid select {
+                width: 100%;
+                padding: 12px;
+                border: 1px solid #ccc;
+                border-radius: 4px;
+                box-sizing: border-box;
+                transition: border-color 0.3s;
+            }
+
+                .form-grid input:focus,
+                .form-grid select:focus {
+                    border-color: #007bff;
+                    outline: none;
+                    box-shadow: 0 0 5px rgba(0, 123, 255, 0.3);
+                }
+
+        .button-group {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+
+            .button-group button {
+                padding: 12px 25px;
+                border: none;
+                border-radius: 4px;
+                cursor: pointer;
+                font-size: 16px;
+                color: white;
+                background: linear-gradient(to left, #6a11cb, #2575fc);
+                transition: background 0.3s;
+            }
+
+                .button-group button:hover {
+                    background: linear-gradient(to left, #2575fc, #6a11cb);
+                }
+
+        .form-grid input[type="date"] {
+            cursor: pointer;
+        }
+
+        .form-grid .date-field {
+            display: flex;
+            align-items: center;
+        }
+
+            .form-grid .date-field label {
+                margin-right: 10px;
+            }
+    </style>
+</head>
+<body>
+
+    <div class="form-container">
+        <h1>Create FG Label</h1>
+        <form id="fg-label-form" method="post">
+            {% csrf_token %}
+            <div class="form-grid">-->
+                <!-- Item Code Dropdown -->
+                <!--<select name="item_code" required>
+                    <option value="">Select Item Code</option>
+                    {% for item in items %}
+                    <option value="{{ item.id }}">{{ item.item_code }}</option>
+                    {% endfor %}
+                </select>-->
+
+                <!-- Item Name Dropdown -->
+                <!--<select name="item_name" required>
+                    <option value="">Select Item Name</option>
+                    {% for item in items %}
+                    <option value="{{ item.id }}">{{ item.item_name }}</option>
+                    {% endfor %}
+                </select>-->
+
+                <!-- Lot/Batch No -->
+                <!--<input type="text" name="batch_no" placeholder="Batch No" required>-->
+
+                <!-- Packing Qty -->
+                <!--<input type="number" name="packing_qty" placeholder="Packing Qty" required>-->
+
+                <!-- No of Bags -->
+                <!--<input type="number" name="no_of_bags" placeholder="No of Bags" required>-->
+
+                <!-- Next Bag No -->
+                <!--<input type="number" name="next_bag_no" placeholder="Next Bag No" required>-->
+
+                <!-- Date of Manufacture -->
+                <!--<div class="date-field">
+                    <label for="date_of_manufacture">Date of Manufacture</label>
+                    <input type="date" name="date_of_manufacture" class="datepicker" required>
+                </div>-->
+
+                <!-- Date of Expiry -->
+                <!--<div class="date-field">
+                    <label for="date_of_expiry">Date of Expiry</label>
+                    <input type="date" name="date_of_expiry" required>
+                </div>
+            </div>
+
+            <div class="button-group">
+                <button type="submit">Save</button>
+                <a href="{% url 'fg_label_list' %}">Back to FG Label List</a>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        // Date Picker (DTP)
+        document.addEventListener("DOMContentLoaded", function () {
+            const datePickers = document.querySelectorAll(".datepicker");
+            datePickers.forEach(picker => {
+                picker.addEventListener("focus", function () {
+                    this.showPicker();
+                });
+            });
+        });
+    </script>
+
+</body>
+</html>
+
+{% endblock %}-->

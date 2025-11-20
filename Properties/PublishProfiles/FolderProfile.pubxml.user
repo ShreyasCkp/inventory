@@ -1,0 +1,818 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!-- https://go.microsoft.com/fwlink/?LinkID=208121. -->
+<Project>
+  <PropertyGroup>
+    <_PublishTargetUrl>C:\Users\Admin\Downloads\Publish</_PublishTargetUrl>
+    <History>True|2025-07-21T07:07:43.8768375Z||;</History>
+    <LastFailureDetails />
+  </PropertyGroup>
+  <ItemGroup>
+    <File Include="Administrator_settings/apps.py">
+      <publishTime>06/25/2025 20:42:18</publishTime>
+    </File>
+    <File Include="Administrator_settings/forms.py">
+      <publishTime>06/25/2025 20:42:18</publishTime>
+    </File>
+    <File Include="Administrator_settings/migrations/templates/Administrator_settings/user_form.html">
+      <publishTime>06/25/2025 20:42:19</publishTime>
+    </File>
+    <File Include="Administrator_settings/migrations/templates/Administrator_settings/user_list.html">
+      <publishTime>06/25/2025 20:42:19</publishTime>
+    </File>
+    <File Include="Administrator_settings/models.py">
+      <publishTime>06/25/2025 20:42:18</publishTime>
+    </File>
+    <File Include="Administrator_settings/urls.py">
+      <publishTime>06/25/2025 20:42:18</publishTime>
+    </File>
+    <File Include="Administrator_settings/views.py">
+      <publishTime>06/25/2025 20:42:18</publishTime>
+    </File>
+    <File Include="Administrator_settings/__init__.py">
+      <publishTime>06/25/2025 20:42:18</publishTime>
+    </File>
+    <File Include="asset_management/apps.py">
+      <publishTime>06/25/2025 20:42:19</publishTime>
+    </File>
+    <File Include="asset_management/forms.py">
+      <publishTime>06/25/2025 20:42:19</publishTime>
+    </File>
+    <File Include="asset_management/migrations/__init__.py">
+      <publishTime>06/25/2025 20:42:19</publishTime>
+    </File>
+    <File Include="asset_management/models.py">
+      <publishTime>06/25/2025 20:42:19</publishTime>
+    </File>
+    <File Include="asset_management/templates/asset_management/am_inward_material_form.html">
+      <publishTime>06/25/2025 20:42:19</publishTime>
+    </File>
+    <File Include="asset_management/templates/asset_management/am_inward_material_list.html">
+      <publishTime>06/25/2025 20:42:19</publishTime>
+    </File>
+    <File Include="asset_management/templates/asset_management/asset_material_issue_form.html">
+      <publishTime>06/25/2025 20:42:19</publishTime>
+    </File>
+    <File Include="asset_management/templates/asset_management/asset_material_issue_list.html">
+      <publishTime>06/25/2025 20:42:19</publishTime>
+    </File>
+    <File Include="asset_management/urls.py">
+      <publishTime>06/25/2025 20:42:19</publishTime>
+    </File>
+    <File Include="asset_management/views.py">
+      <publishTime>06/25/2025 20:42:19</publishTime>
+    </File>
+    <File Include="asset_management/__init__.py">
+      <publishTime>06/25/2025 20:42:19</publishTime>
+    </File>
+    <File Include="dashboard/admin.py">
+      <publishTime>06/25/2025 20:42:19</publishTime>
+    </File>
+    <File Include="dashboard/apps.py">
+      <publishTime>06/25/2025 20:42:19</publishTime>
+    </File>
+    <File Include="dashboard/migrations/__init__.py">
+      <publishTime>06/25/2025 20:42:19</publishTime>
+    </File>
+    <File Include="dashboard/models.py">
+      <publishTime>06/25/2025 20:42:19</publishTime>
+    </File>
+    <File Include="dashboard/templates/dashboard/dashboard.html">
+      <publishTime>06/25/2025 20:42:19</publishTime>
+    </File>
+    <File Include="dashboard/tests.py">
+      <publishTime>06/25/2025 20:42:19</publishTime>
+    </File>
+    <File Include="dashboard/urls.py">
+      <publishTime>06/25/2025 20:42:19</publishTime>
+    </File>
+    <File Include="dashboard/views.py">
+      <publishTime>06/25/2025 20:42:19</publishTime>
+    </File>
+    <File Include="dashboard/__init__.py">
+      <publishTime>06/25/2025 20:42:19</publishTime>
+    </File>
+    <File Include="db.sqlite3">
+      <publishTime>06/25/2025 20:42:15</publishTime>
+    </File>
+    <File Include="finished_goods/apps.py">
+      <publishTime>06/25/2025 20:45:51</publishTime>
+    </File>
+    <File Include="finished_goods/forms.py">
+      <publishTime>06/25/2025 20:45:51</publishTime>
+    </File>
+    <File Include="finished_goods/migrations/__init__.py">
+      <publishTime>06/25/2025 20:45:51</publishTime>
+    </File>
+    <File Include="finished_goods/models.py">
+      <publishTime>06/25/2025 20:45:51</publishTime>
+    </File>
+    <File Include="finished_goods/templates/finished_goods/create_fg_label.html">
+      <publishTime>06/25/2025 20:45:51</publishTime>
+    </File>
+    <File Include="finished_goods/templates/finished_goods/create_packing_slip.html">
+      <publishTime>06/25/2025 20:45:51</publishTime>
+    </File>
+    <File Include="finished_goods/templates/finished_goods/delete_fg_label.html">
+      <publishTime>06/25/2025 20:45:51</publishTime>
+    </File>
+    <File Include="finished_goods/templates/finished_goods/delete_packing_slip.html">
+      <publishTime>06/25/2025 20:45:51</publishTime>
+    </File>
+    <File Include="finished_goods/templates/finished_goods/edit_fg_label.html">
+      <publishTime>06/25/2025 20:45:51</publishTime>
+    </File>
+    <File Include="finished_goods/templates/finished_goods/edit_packing_slip.html">
+      <publishTime>06/25/2025 20:45:51</publishTime>
+    </File>
+    <File Include="finished_goods/templates/finished_goods/fg_label_form.html">
+      <publishTime>06/25/2025 20:45:51</publishTime>
+    </File>
+    <File Include="finished_goods/templates/finished_goods/fg_label_list.html">
+      <publishTime>06/25/2025 20:45:51</publishTime>
+    </File>
+    <File Include="finished_goods/templates/finished_goods/fg_label_view.html">
+      <publishTime>06/25/2025 20:45:51</publishTime>
+    </File>
+    <File Include="finished_goods/templates/finished_goods/finished_inward_material_form.html">
+      <publishTime>06/25/2025 20:45:51</publishTime>
+    </File>
+    <File Include="finished_goods/templates/finished_goods/finished_inward_material_list.html">
+      <publishTime>06/25/2025 20:45:51</publishTime>
+    </File>
+    <File Include="finished_goods/templates/finished_goods/packing_slip_form.html">
+      <publishTime>06/25/2025 20:45:51</publishTime>
+    </File>
+    <File Include="finished_goods/templates/finished_goods/packing_slip_list.html">
+      <publishTime>06/25/2025 20:45:51</publishTime>
+    </File>
+    <File Include="finished_goods/templates/finished_goods/print_fg_label.html">
+      <publishTime>06/25/2025 20:45:51</publishTime>
+    </File>
+    <File Include="finished_goods/urls.py">
+      <publishTime>06/25/2025 20:45:51</publishTime>
+    </File>
+    <File Include="finished_goods/views.py">
+      <publishTime>06/25/2025 20:45:51</publishTime>
+    </File>
+    <File Include="finished_goods/__init__.py">
+      <publishTime>06/25/2025 20:45:51</publishTime>
+    </File>
+    <File Include="LG/settings.py">
+      <publishTime>07/15/2025 09:35:19</publishTime>
+    </File>
+    <File Include="LG/templates/Administrator_settings/user_form.html">
+      <publishTime>06/25/2025 20:48:30</publishTime>
+    </File>
+    <File Include="LG/templates/Administrator_settings/user_list.html">
+      <publishTime>06/25/2025 20:48:30</publishTime>
+    </File>
+    <File Include="LG/templates/base.html">
+      <publishTime>06/25/2025 20:48:30</publishTime>
+    </File>
+    <File Include="LG/urls.py">
+      <publishTime>06/25/2025 20:45:53</publishTime>
+    </File>
+    <File Include="LG/wsgi.py">
+      <publishTime>06/25/2025 20:45:53</publishTime>
+    </File>
+    <File Include="LG/__init__.py">
+      <publishTime>06/25/2025 20:45:53</publishTime>
+    </File>
+    <File Include="manage.py">
+      <publishTime>06/25/2025 20:42:15</publishTime>
+    </File>
+    <File Include="master/forms.py">
+      <publishTime>06/25/2025 20:48:30</publishTime>
+    </File>
+    <File Include="master/models.py">
+      <publishTime>06/25/2025 20:48:30</publishTime>
+    </File>
+    <File Include="master/templates/master/bag_boxes_detail_form.html">
+      <publishTime>06/25/2025 20:48:30</publishTime>
+    </File>
+    <File Include="master/templates/master/bag_boxes_list.html">
+      <publishTime>06/25/2025 20:48:30</publishTime>
+    </File>
+    <File Include="master/templates/master/category_form.html">
+      <publishTime>06/25/2025 20:48:30</publishTime>
+    </File>
+    <File Include="master/templates/master/category_list.html">
+      <publishTime>06/25/2025 20:48:30</publishTime>
+    </File>
+    <File Include="master/templates/master/company_form.html">
+      <publishTime>06/25/2025 20:48:30</publishTime>
+    </File>
+    <File Include="master/templates/master/customer_detail_form.html">
+      <publishTime>06/25/2025 20:48:30</publishTime>
+    </File>
+    <File Include="master/templates/master/customer_list.html">
+      <publishTime>06/25/2025 20:48:30</publishTime>
+    </File>
+    <File Include="master/templates/master/forgot_password.html">
+      <publishTime>06/25/2025 20:48:30</publishTime>
+    </File>
+    <File Include="master/templates/master/item_form.html">
+      <publishTime>06/25/2025 20:48:30</publishTime>
+    </File>
+    <File Include="master/templates/master/item_list.html">
+      <publishTime>06/25/2025 20:48:30</publishTime>
+    </File>
+    <File Include="master/templates/master/login.html">
+      <publishTime>06/25/2025 20:48:30</publishTime>
+    </File>
+    <File Include="master/templates/master/store_detail_form.html">
+      <publishTime>06/25/2025 20:48:30</publishTime>
+    </File>
+    <File Include="master/templates/master/store_list.html">
+      <publishTime>06/25/2025 20:48:30</publishTime>
+    </File>
+    <File Include="master/templates/master/vendor_form.html">
+      <publishTime>06/25/2025 20:48:30</publishTime>
+    </File>
+    <File Include="master/templates/master/vendor_list.html">
+      <publishTime>06/25/2025 20:48:30</publishTime>
+    </File>
+    <File Include="master/urls.py">
+      <publishTime>06/25/2025 20:48:30</publishTime>
+    </File>
+    <File Include="master/views.py">
+      <publishTime>06/25/2025 20:48:30</publishTime>
+    </File>
+    <File Include="master/__init__.py">
+      <publishTime>06/25/2025 20:48:30</publishTime>
+    </File>
+    <File Include="packing_materials/apps.py">
+      <publishTime>06/25/2025 20:48:31</publishTime>
+    </File>
+    <File Include="packing_materials/forms.py">
+      <publishTime>06/25/2025 20:48:31</publishTime>
+    </File>
+    <File Include="packing_materials/migrations/__init__.py">
+      <publishTime>06/25/2025 20:48:31</publishTime>
+    </File>
+    <File Include="packing_materials/models.py">
+      <publishTime>06/25/2025 20:48:31</publishTime>
+    </File>
+    <File Include="packing_materials/templates/packing_materials/create_pm_label.html">
+      <publishTime>06/25/2025 20:48:31</publishTime>
+    </File>
+    <File Include="packing_materials/templates/packing_materials/delete_pm_label.html">
+      <publishTime>06/25/2025 20:48:31</publishTime>
+    </File>
+    <File Include="packing_materials/templates/packing_materials/edit_pm_label.html">
+      <publishTime>06/25/2025 20:48:31</publishTime>
+    </File>
+    <File Include="packing_materials/templates/packing_materials/packing_material_form.html">
+      <publishTime>06/25/2025 20:48:31</publishTime>
+    </File>
+    <File Include="packing_materials/templates/packing_materials/packing_material_list.html">
+      <publishTime>06/25/2025 20:48:31</publishTime>
+    </File>
+    <File Include="packing_materials/templates/packing_materials/pm_label_list.html">
+      <publishTime>06/25/2025 20:48:31</publishTime>
+    </File>
+    <File Include="packing_materials/templates/packing_materials/pm_material_issue_form.html">
+      <publishTime>06/25/2025 20:48:31</publishTime>
+    </File>
+    <File Include="packing_materials/templates/packing_materials/pm_material_issue_list.html">
+      <publishTime>06/25/2025 20:48:31</publishTime>
+    </File>
+    <File Include="packing_materials/templates/packing_materials/pm_purchase_order_form.html">
+      <publishTime>06/25/2025 20:48:31</publishTime>
+    </File>
+    <File Include="packing_materials/templates/packing_materials/pm_purchase_order_list.html">
+      <publishTime>06/25/2025 20:48:31</publishTime>
+    </File>
+    <File Include="packing_materials/templates/packing_materials/print_pm_label.html">
+      <publishTime>06/25/2025 20:48:31</publishTime>
+    </File>
+    <File Include="packing_materials/templates/packing_materials/purchase_order_confirm_delete.html">
+      <publishTime>06/25/2025 20:48:31</publishTime>
+    </File>
+    <File Include="packing_materials/templates/packing_materials/purchase_order_detail.html">
+      <publishTime>06/25/2025 20:48:31</publishTime>
+    </File>
+    <File Include="packing_materials/templates/packing_materials/purchase_order_form.html">
+      <publishTime>06/25/2025 20:48:31</publishTime>
+    </File>
+    <File Include="packing_materials/templates/packing_materials/purchase_order_list.html">
+      <publishTime>06/25/2025 20:48:31</publishTime>
+    </File>
+    <File Include="packing_materials/urls.py">
+      <publishTime>06/25/2025 20:48:31</publishTime>
+    </File>
+    <File Include="packing_materials/views.py">
+      <publishTime>06/25/2025 20:48:31</publishTime>
+    </File>
+    <File Include="packing_materials/__init__.py">
+      <publishTime>06/25/2025 20:48:31</publishTime>
+    </File>
+    <File Include="raw_material/forms.py">
+      <publishTime>06/25/2025 20:48:31</publishTime>
+    </File>
+    <File Include="raw_material/models.py">
+      <publishTime>06/25/2025 20:48:31</publishTime>
+    </File>
+    <File Include="raw_material/templates/raw_material/create_rm_label.html">
+      <publishTime>06/25/2025 20:48:32</publishTime>
+    </File>
+    <File Include="raw_material/templates/raw_material/delete_rm_label.html">
+      <publishTime>06/25/2025 20:48:32</publishTime>
+    </File>
+    <File Include="raw_material/templates/raw_material/edit_rm_label.html">
+      <publishTime>06/25/2025 20:48:32</publishTime>
+    </File>
+    <File Include="raw_material/templates/raw_material/inward_material_form.html">
+      <publishTime>06/25/2025 20:48:32</publishTime>
+    </File>
+    <File Include="raw_material/templates/raw_material/inward_material_list.html">
+      <publishTime>06/25/2025 20:48:32</publishTime>
+    </File>
+    <File Include="raw_material/templates/raw_material/print_rm_label.html">
+      <publishTime>06/25/2025 20:48:32</publishTime>
+    </File>
+    <File Include="raw_material/templates/raw_material/rm_label_list.html">
+      <publishTime>06/25/2025 20:48:32</publishTime>
+    </File>
+    <File Include="raw_material/templates/raw_material/rm_material_issue_form.html">
+      <publishTime>06/25/2025 20:48:32</publishTime>
+    </File>
+    <File Include="raw_material/templates/raw_material/rm_material_issue_list.html">
+      <publishTime>06/25/2025 20:48:32</publishTime>
+    </File>
+    <File Include="raw_material/urls.py">
+      <publishTime>06/25/2025 20:48:31</publishTime>
+    </File>
+    <File Include="raw_material/utils.py">
+      <publishTime>06/25/2025 20:48:31</publishTime>
+    </File>
+    <File Include="raw_material/views.py">
+      <publishTime>06/25/2025 20:48:31</publishTime>
+    </File>
+    <File Include="raw_material/__init__.py">
+      <publishTime>06/25/2025 20:48:31</publishTime>
+    </File>
+    <File Include="reports/admin.py">
+      <publishTime>06/25/2025 20:48:32</publishTime>
+    </File>
+    <File Include="reports/apps.py">
+      <publishTime>06/25/2025 20:48:32</publishTime>
+    </File>
+    <File Include="reports/migrations/__init__.py">
+      <publishTime>06/25/2025 20:48:32</publishTime>
+    </File>
+    <File Include="reports/models.py">
+      <publishTime>06/25/2025 20:48:32</publishTime>
+    </File>
+    <File Include="reports/tasks.py">
+      <publishTime>06/25/2025 20:48:32</publishTime>
+    </File>
+    <File Include="reports/templates/reports/fg_inward_material_report.html">
+      <publishTime>06/25/2025 20:48:32</publishTime>
+    </File>
+    <File Include="reports/templates/reports/packing_slip_report.html">
+      <publishTime>06/25/2025 20:48:32</publishTime>
+    </File>
+    <File Include="reports/templates/reports/pm_material_issue_report.html">
+      <publishTime>06/25/2025 20:48:32</publishTime>
+    </File>
+    <File Include="reports/templates/reports/report.html">
+      <publishTime>06/25/2025 20:48:32</publishTime>
+    </File>
+    <File Include="reports/templates/reports/rm_issuance_report.html">
+      <publishTime>06/25/2025 20:48:32</publishTime>
+    </File>
+    <File Include="reports/templates/reports/stock_dashboard.html">
+      <publishTime>06/25/2025 20:48:32</publishTime>
+    </File>
+    <File Include="reports/urls.py">
+      <publishTime>06/25/2025 20:48:32</publishTime>
+    </File>
+    <File Include="reports/views.py">
+      <publishTime>06/25/2025 20:48:32</publishTime>
+    </File>
+    <File Include="reports/__init__.py">
+      <publishTime>06/25/2025 20:48:32</publishTime>
+    </File>
+    <File Include="requirements.txt">
+      <publishTime>06/25/2025 20:42:15</publishTime>
+    </File>
+    <File Include="staticfiles/admin/css/autocomplete.css">
+      <publishTime>06/25/2025 20:48:33</publishTime>
+    </File>
+    <File Include="staticfiles/admin/css/base.css">
+      <publishTime>06/25/2025 20:48:33</publishTime>
+    </File>
+    <File Include="staticfiles/admin/css/changelists.css">
+      <publishTime>06/25/2025 20:48:33</publishTime>
+    </File>
+    <File Include="staticfiles/admin/css/dark_mode.css">
+      <publishTime>06/25/2025 20:48:33</publishTime>
+    </File>
+    <File Include="staticfiles/admin/css/dashboard.css">
+      <publishTime>06/25/2025 20:48:33</publishTime>
+    </File>
+    <File Include="staticfiles/admin/css/forms.css">
+      <publishTime>06/25/2025 20:48:33</publishTime>
+    </File>
+    <File Include="staticfiles/admin/css/login.css">
+      <publishTime>06/25/2025 20:48:33</publishTime>
+    </File>
+    <File Include="staticfiles/admin/css/nav_sidebar.css">
+      <publishTime>06/25/2025 20:48:33</publishTime>
+    </File>
+    <File Include="staticfiles/admin/css/responsive.css">
+      <publishTime>06/25/2025 20:48:33</publishTime>
+    </File>
+    <File Include="staticfiles/admin/css/responsive_rtl.css">
+      <publishTime>06/25/2025 20:48:33</publishTime>
+    </File>
+    <File Include="staticfiles/admin/css/rtl.css">
+      <publishTime>06/25/2025 20:48:33</publishTime>
+    </File>
+    <File Include="staticfiles/admin/css/unusable_password_field.css">
+      <publishTime>06/25/2025 20:48:33</publishTime>
+    </File>
+    <File Include="staticfiles/admin/css/vendor/select2/LICENSE-SELECT2.md">
+      <publishTime>06/25/2025 20:48:33</publishTime>
+    </File>
+    <File Include="staticfiles/admin/css/vendor/select2/select2.css">
+      <publishTime>06/25/2025 20:48:33</publishTime>
+    </File>
+    <File Include="staticfiles/admin/css/vendor/select2/select2.min.css">
+      <publishTime>06/25/2025 20:48:33</publishTime>
+    </File>
+    <File Include="staticfiles/admin/css/widgets.css">
+      <publishTime>06/25/2025 20:48:33</publishTime>
+    </File>
+    <File Include="staticfiles/admin/img/calendar-icons.svg">
+      <publishTime>06/25/2025 20:48:33</publishTime>
+    </File>
+    <File Include="staticfiles/admin/img/gis/move_vertex_off.svg">
+      <publishTime>06/25/2025 20:48:33</publishTime>
+    </File>
+    <File Include="staticfiles/admin/img/gis/move_vertex_on.svg">
+      <publishTime>06/25/2025 20:48:33</publishTime>
+    </File>
+    <File Include="staticfiles/admin/img/icon-addlink.svg">
+      <publishTime>06/25/2025 20:48:33</publishTime>
+    </File>
+    <File Include="staticfiles/admin/img/icon-alert.svg">
+      <publishTime>06/25/2025 20:48:33</publishTime>
+    </File>
+    <File Include="staticfiles/admin/img/icon-calendar.svg">
+      <publishTime>06/25/2025 20:48:33</publishTime>
+    </File>
+    <File Include="staticfiles/admin/img/icon-changelink.svg">
+      <publishTime>06/25/2025 20:48:33</publishTime>
+    </File>
+    <File Include="staticfiles/admin/img/icon-clock.svg">
+      <publishTime>06/25/2025 20:48:33</publishTime>
+    </File>
+    <File Include="staticfiles/admin/img/icon-deletelink.svg">
+      <publishTime>06/25/2025 20:48:33</publishTime>
+    </File>
+    <File Include="staticfiles/admin/img/icon-hidelink.svg">
+      <publishTime>06/25/2025 20:48:33</publishTime>
+    </File>
+    <File Include="staticfiles/admin/img/icon-no.svg">
+      <publishTime>06/25/2025 20:48:33</publishTime>
+    </File>
+    <File Include="staticfiles/admin/img/icon-unknown-alt.svg">
+      <publishTime>06/25/2025 20:48:33</publishTime>
+    </File>
+    <File Include="staticfiles/admin/img/icon-unknown.svg">
+      <publishTime>06/25/2025 20:48:33</publishTime>
+    </File>
+    <File Include="staticfiles/admin/img/icon-viewlink.svg">
+      <publishTime>06/25/2025 20:48:33</publishTime>
+    </File>
+    <File Include="staticfiles/admin/img/icon-yes.svg">
+      <publishTime>06/25/2025 20:48:33</publishTime>
+    </File>
+    <File Include="staticfiles/admin/img/inline-delete.svg">
+      <publishTime>06/25/2025 20:48:33</publishTime>
+    </File>
+    <File Include="staticfiles/admin/img/LICENSE">
+      <publishTime>06/25/2025 20:48:33</publishTime>
+    </File>
+    <File Include="staticfiles/admin/img/README.txt">
+      <publishTime>06/25/2025 20:48:33</publishTime>
+    </File>
+    <File Include="staticfiles/admin/img/search.svg">
+      <publishTime>06/25/2025 20:48:33</publishTime>
+    </File>
+    <File Include="staticfiles/admin/img/selector-icons.svg">
+      <publishTime>06/25/2025 20:48:33</publishTime>
+    </File>
+    <File Include="staticfiles/admin/img/sorting-icons.svg">
+      <publishTime>06/25/2025 20:48:33</publishTime>
+    </File>
+    <File Include="staticfiles/admin/img/tooltag-add.svg">
+      <publishTime>06/25/2025 20:48:33</publishTime>
+    </File>
+    <File Include="staticfiles/admin/img/tooltag-arrowright.svg">
+      <publishTime>06/25/2025 20:48:33</publishTime>
+    </File>
+    <File Include="staticfiles/admin/js/actions.js">
+      <publishTime>06/25/2025 20:48:33</publishTime>
+    </File>
+    <File Include="staticfiles/admin/js/admin/DateTimeShortcuts.js">
+      <publishTime>06/25/2025 20:48:33</publishTime>
+    </File>
+    <File Include="staticfiles/admin/js/admin/RelatedObjectLookups.js">
+      <publishTime>06/25/2025 20:48:33</publishTime>
+    </File>
+    <File Include="staticfiles/admin/js/autocomplete.js">
+      <publishTime>06/25/2025 20:48:33</publishTime>
+    </File>
+    <File Include="staticfiles/admin/js/calendar.js">
+      <publishTime>06/25/2025 20:48:33</publishTime>
+    </File>
+    <File Include="staticfiles/admin/js/cancel.js">
+      <publishTime>06/25/2025 20:48:33</publishTime>
+    </File>
+    <File Include="staticfiles/admin/js/change_form.js">
+      <publishTime>06/25/2025 20:48:33</publishTime>
+    </File>
+    <File Include="staticfiles/admin/js/collapse.js">
+      <publishTime>07/21/2025 12:37:41</publishTime>
+    </File>
+    <File Include="staticfiles/admin/js/core.js">
+      <publishTime>06/25/2025 20:48:33</publishTime>
+    </File>
+    <File Include="staticfiles/admin/js/filters.js">
+      <publishTime>06/25/2025 20:48:33</publishTime>
+    </File>
+    <File Include="staticfiles/admin/js/inlines.js">
+      <publishTime>06/25/2025 20:48:33</publishTime>
+    </File>
+    <File Include="staticfiles/admin/js/jquery.init.js">
+      <publishTime>06/25/2025 20:48:33</publishTime>
+    </File>
+    <File Include="staticfiles/admin/js/nav_sidebar.js">
+      <publishTime>06/25/2025 20:48:33</publishTime>
+    </File>
+    <File Include="staticfiles/admin/js/popup_response.js">
+      <publishTime>06/25/2025 20:48:33</publishTime>
+    </File>
+    <File Include="staticfiles/admin/js/prepopulate.js">
+      <publishTime>06/25/2025 20:48:33</publishTime>
+    </File>
+    <File Include="staticfiles/admin/js/prepopulate_init.js">
+      <publishTime>06/25/2025 20:48:33</publishTime>
+    </File>
+    <File Include="staticfiles/admin/js/SelectBox.js">
+      <publishTime>06/25/2025 20:48:33</publishTime>
+    </File>
+    <File Include="staticfiles/admin/js/SelectFilter2.js">
+      <publishTime>06/25/2025 20:48:33</publishTime>
+    </File>
+    <File Include="staticfiles/admin/js/theme.js">
+      <publishTime>06/25/2025 20:48:33</publishTime>
+    </File>
+    <File Include="staticfiles/admin/js/unusable_password_field.js">
+      <publishTime>06/25/2025 20:48:33</publishTime>
+    </File>
+    <File Include="staticfiles/admin/js/urlify.js">
+      <publishTime>06/25/2025 20:48:33</publishTime>
+    </File>
+    <File Include="staticfiles/admin/js/vendor/jquery/jquery.js">
+      <publishTime>06/25/2025 20:48:33</publishTime>
+    </File>
+    <File Include="staticfiles/admin/js/vendor/jquery/jquery.min.js">
+      <publishTime>06/25/2025 20:48:33</publishTime>
+    </File>
+    <File Include="staticfiles/admin/js/vendor/jquery/LICENSE.txt">
+      <publishTime>06/25/2025 20:48:33</publishTime>
+    </File>
+    <File Include="staticfiles/admin/js/vendor/select2/i18n/af.js">
+      <publishTime>06/25/2025 20:48:33</publishTime>
+    </File>
+    <File Include="staticfiles/admin/js/vendor/select2/i18n/ar.js">
+      <publishTime>06/25/2025 20:48:33</publishTime>
+    </File>
+    <File Include="staticfiles/admin/js/vendor/select2/i18n/az.js">
+      <publishTime>06/25/2025 20:48:33</publishTime>
+    </File>
+    <File Include="staticfiles/admin/js/vendor/select2/i18n/bg.js">
+      <publishTime>06/25/2025 20:48:33</publishTime>
+    </File>
+    <File Include="staticfiles/admin/js/vendor/select2/i18n/bn.js">
+      <publishTime>06/25/2025 20:48:33</publishTime>
+    </File>
+    <File Include="staticfiles/admin/js/vendor/select2/i18n/bs.js">
+      <publishTime>06/25/2025 20:48:33</publishTime>
+    </File>
+    <File Include="staticfiles/admin/js/vendor/select2/i18n/ca.js">
+      <publishTime>06/25/2025 20:48:33</publishTime>
+    </File>
+    <File Include="staticfiles/admin/js/vendor/select2/i18n/cs.js">
+      <publishTime>06/25/2025 20:48:33</publishTime>
+    </File>
+    <File Include="staticfiles/admin/js/vendor/select2/i18n/da.js">
+      <publishTime>06/25/2025 20:48:33</publishTime>
+    </File>
+    <File Include="staticfiles/admin/js/vendor/select2/i18n/de.js">
+      <publishTime>06/25/2025 20:48:33</publishTime>
+    </File>
+    <File Include="staticfiles/admin/js/vendor/select2/i18n/dsb.js">
+      <publishTime>06/25/2025 20:48:33</publishTime>
+    </File>
+    <File Include="staticfiles/admin/js/vendor/select2/i18n/el.js">
+      <publishTime>06/25/2025 20:48:33</publishTime>
+    </File>
+    <File Include="staticfiles/admin/js/vendor/select2/i18n/en.js">
+      <publishTime>06/25/2025 20:48:33</publishTime>
+    </File>
+    <File Include="staticfiles/admin/js/vendor/select2/i18n/es.js">
+      <publishTime>06/25/2025 20:48:33</publishTime>
+    </File>
+    <File Include="staticfiles/admin/js/vendor/select2/i18n/et.js">
+      <publishTime>06/25/2025 20:48:33</publishTime>
+    </File>
+    <File Include="staticfiles/admin/js/vendor/select2/i18n/eu.js">
+      <publishTime>06/25/2025 20:48:33</publishTime>
+    </File>
+    <File Include="staticfiles/admin/js/vendor/select2/i18n/fa.js">
+      <publishTime>06/25/2025 20:48:33</publishTime>
+    </File>
+    <File Include="staticfiles/admin/js/vendor/select2/i18n/fi.js">
+      <publishTime>06/25/2025 20:48:33</publishTime>
+    </File>
+    <File Include="staticfiles/admin/js/vendor/select2/i18n/fr.js">
+      <publishTime>06/25/2025 20:48:33</publishTime>
+    </File>
+    <File Include="staticfiles/admin/js/vendor/select2/i18n/gl.js">
+      <publishTime>06/25/2025 20:48:33</publishTime>
+    </File>
+    <File Include="staticfiles/admin/js/vendor/select2/i18n/he.js">
+      <publishTime>06/25/2025 20:48:33</publishTime>
+    </File>
+    <File Include="staticfiles/admin/js/vendor/select2/i18n/hi.js">
+      <publishTime>06/25/2025 20:48:33</publishTime>
+    </File>
+    <File Include="staticfiles/admin/js/vendor/select2/i18n/hr.js">
+      <publishTime>06/25/2025 20:48:33</publishTime>
+    </File>
+    <File Include="staticfiles/admin/js/vendor/select2/i18n/hsb.js">
+      <publishTime>06/25/2025 20:48:33</publishTime>
+    </File>
+    <File Include="staticfiles/admin/js/vendor/select2/i18n/hu.js">
+      <publishTime>06/25/2025 20:48:33</publishTime>
+    </File>
+    <File Include="staticfiles/admin/js/vendor/select2/i18n/hy.js">
+      <publishTime>06/25/2025 20:48:33</publishTime>
+    </File>
+    <File Include="staticfiles/admin/js/vendor/select2/i18n/id.js">
+      <publishTime>06/25/2025 20:48:33</publishTime>
+    </File>
+    <File Include="staticfiles/admin/js/vendor/select2/i18n/is.js">
+      <publishTime>06/25/2025 20:48:33</publishTime>
+    </File>
+    <File Include="staticfiles/admin/js/vendor/select2/i18n/it.js">
+      <publishTime>06/25/2025 20:48:33</publishTime>
+    </File>
+    <File Include="staticfiles/admin/js/vendor/select2/i18n/ja.js">
+      <publishTime>06/25/2025 20:48:33</publishTime>
+    </File>
+    <File Include="staticfiles/admin/js/vendor/select2/i18n/ka.js">
+      <publishTime>06/25/2025 20:48:33</publishTime>
+    </File>
+    <File Include="staticfiles/admin/js/vendor/select2/i18n/km.js">
+      <publishTime>06/25/2025 20:48:33</publishTime>
+    </File>
+    <File Include="staticfiles/admin/js/vendor/select2/i18n/ko.js">
+      <publishTime>06/25/2025 20:48:33</publishTime>
+    </File>
+    <File Include="staticfiles/admin/js/vendor/select2/i18n/lt.js">
+      <publishTime>06/25/2025 20:48:33</publishTime>
+    </File>
+    <File Include="staticfiles/admin/js/vendor/select2/i18n/lv.js">
+      <publishTime>06/25/2025 20:48:33</publishTime>
+    </File>
+    <File Include="staticfiles/admin/js/vendor/select2/i18n/mk.js">
+      <publishTime>06/25/2025 20:48:33</publishTime>
+    </File>
+    <File Include="staticfiles/admin/js/vendor/select2/i18n/ms.js">
+      <publishTime>06/25/2025 20:48:33</publishTime>
+    </File>
+    <File Include="staticfiles/admin/js/vendor/select2/i18n/nb.js">
+      <publishTime>06/25/2025 20:48:33</publishTime>
+    </File>
+    <File Include="staticfiles/admin/js/vendor/select2/i18n/ne.js">
+      <publishTime>06/25/2025 20:48:33</publishTime>
+    </File>
+    <File Include="staticfiles/admin/js/vendor/select2/i18n/nl.js">
+      <publishTime>06/25/2025 20:48:33</publishTime>
+    </File>
+    <File Include="staticfiles/admin/js/vendor/select2/i18n/pl.js">
+      <publishTime>06/25/2025 20:48:33</publishTime>
+    </File>
+    <File Include="staticfiles/admin/js/vendor/select2/i18n/ps.js">
+      <publishTime>06/25/2025 20:48:33</publishTime>
+    </File>
+    <File Include="staticfiles/admin/js/vendor/select2/i18n/pt-BR.js">
+      <publishTime>06/25/2025 20:48:33</publishTime>
+    </File>
+    <File Include="staticfiles/admin/js/vendor/select2/i18n/pt.js">
+      <publishTime>06/25/2025 20:48:33</publishTime>
+    </File>
+    <File Include="staticfiles/admin/js/vendor/select2/i18n/ro.js">
+      <publishTime>06/25/2025 20:48:33</publishTime>
+    </File>
+    <File Include="staticfiles/admin/js/vendor/select2/i18n/ru.js">
+      <publishTime>06/25/2025 20:48:33</publishTime>
+    </File>
+    <File Include="staticfiles/admin/js/vendor/select2/i18n/sk.js">
+      <publishTime>06/25/2025 20:48:33</publishTime>
+    </File>
+    <File Include="staticfiles/admin/js/vendor/select2/i18n/sl.js">
+      <publishTime>06/25/2025 20:48:33</publishTime>
+    </File>
+    <File Include="staticfiles/admin/js/vendor/select2/i18n/sq.js">
+      <publishTime>06/25/2025 20:48:33</publishTime>
+    </File>
+    <File Include="staticfiles/admin/js/vendor/select2/i18n/sr-Cyrl.js">
+      <publishTime>06/25/2025 20:48:33</publishTime>
+    </File>
+    <File Include="staticfiles/admin/js/vendor/select2/i18n/sr.js">
+      <publishTime>06/25/2025 20:48:33</publishTime>
+    </File>
+    <File Include="staticfiles/admin/js/vendor/select2/i18n/sv.js">
+      <publishTime>06/25/2025 20:48:33</publishTime>
+    </File>
+    <File Include="staticfiles/admin/js/vendor/select2/i18n/th.js">
+      <publishTime>06/25/2025 20:48:33</publishTime>
+    </File>
+    <File Include="staticfiles/admin/js/vendor/select2/i18n/tk.js">
+      <publishTime>06/25/2025 20:48:33</publishTime>
+    </File>
+    <File Include="staticfiles/admin/js/vendor/select2/i18n/tr.js">
+      <publishTime>06/25/2025 20:48:33</publishTime>
+    </File>
+    <File Include="staticfiles/admin/js/vendor/select2/i18n/uk.js">
+      <publishTime>06/25/2025 20:48:33</publishTime>
+    </File>
+    <File Include="staticfiles/admin/js/vendor/select2/i18n/vi.js">
+      <publishTime>06/25/2025 20:48:33</publishTime>
+    </File>
+    <File Include="staticfiles/admin/js/vendor/select2/i18n/zh-CN.js">
+      <publishTime>06/25/2025 20:48:34</publishTime>
+    </File>
+    <File Include="staticfiles/admin/js/vendor/select2/i18n/zh-TW.js">
+      <publishTime>06/25/2025 20:48:34</publishTime>
+    </File>
+    <File Include="staticfiles/admin/js/vendor/select2/LICENSE.md">
+      <publishTime>06/25/2025 20:48:33</publishTime>
+    </File>
+    <File Include="staticfiles/admin/js/vendor/select2/select2.full.js">
+      <publishTime>06/25/2025 20:48:33</publishTime>
+    </File>
+    <File Include="staticfiles/admin/js/vendor/select2/select2.full.min.js">
+      <publishTime>06/25/2025 20:48:33</publishTime>
+    </File>
+    <File Include="staticfiles/admin/js/vendor/xregexp/LICENSE.txt">
+      <publishTime>06/25/2025 20:48:34</publishTime>
+    </File>
+    <File Include="staticfiles/admin/js/vendor/xregexp/xregexp.js">
+      <publishTime>06/25/2025 20:48:34</publishTime>
+    </File>
+    <File Include="staticfiles/admin/js/vendor/xregexp/xregexp.min.js">
+      <publishTime>06/25/2025 20:48:34</publishTime>
+    </File>
+    <File Include="staticfiles/beep-01a.wav">
+      <publishTime>06/25/2025 20:48:33</publishTime>
+    </File>
+    <File Include="staticfiles/images/logo.png.png">
+      <publishTime>07/21/2025 12:37:41</publishTime>
+    </File>
+    <File Include="stock_statement/admin.py">
+      <publishTime>06/25/2025 20:48:34</publishTime>
+    </File>
+    <File Include="stock_statement/apps.py">
+      <publishTime>06/25/2025 20:48:34</publishTime>
+    </File>
+    <File Include="stock_statement/migrations/__init__.py">
+      <publishTime>06/25/2025 20:48:34</publishTime>
+    </File>
+    <File Include="stock_statement/models.py">
+      <publishTime>06/25/2025 20:48:34</publishTime>
+    </File>
+    <File Include="stock_statement/templates/stock_statement/stock_statement.html">
+      <publishTime>06/25/2025 20:48:34</publishTime>
+    </File>
+    <File Include="stock_statement/urls.py">
+      <publishTime>06/25/2025 20:48:34</publishTime>
+    </File>
+    <File Include="stock_statement/utils.py">
+      <publishTime>06/25/2025 20:48:34</publishTime>
+    </File>
+    <File Include="stock_statement/views.py">
+      <publishTime>06/25/2025 20:48:34</publishTime>
+    </File>
+    <File Include="stock_statement/__init__.py">
+      <publishTime>06/25/2025 20:48:34</publishTime>
+    </File>
+  </ItemGroup>
+</Project>

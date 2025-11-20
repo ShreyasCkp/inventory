@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Delete Packing Slip</title>
+    <style>
+        /* Add your styles here */
+    </style>
+</head>
+<body>
+    <div class="form-container">
+        <h1>Delete Packing Slip</h1>
+        <p>Are you sure you want to delete this Packing Slip?</p>
+        <form method="post">
+            {% csrf_token %}
+            <button type="submit">Yes, delete</button>
+            <a href="{% url 'packing_slip_list' %}">No, go back</a>
+        </form>
+    </div>
+</body>
+</html>

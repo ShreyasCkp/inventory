@@ -1,0 +1,9 @@
+{% extends 'base.html' %}
+{% block content %}
+<h2>Are you sure you want to delete this RM Label?</h2>
+<form method="POST">
+    {% csrf_token %}
+    <button type="submit">Yes, Delete</button>
+    <a href="{% url 'rm_label_list' %}">Cancel</a>
+</form>
+{% endblock %}

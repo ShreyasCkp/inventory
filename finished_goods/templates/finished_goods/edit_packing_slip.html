@@ -1,0 +1,101 @@
+{% extends 'base.html' %}
+
+{% block title %}Edit Packing Slip{% endblock %}
+
+{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Packing Slip </title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f6f9;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .form-container {
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            width: 100%;
+            max-width: 900px;
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 30px;
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+            .form-grid input[type="text"],
+            .form-grid input[type="date"],
+            .form-grid input[type="number"],
+            .form-grid textarea,
+            .form-grid select {
+                width: 100%;
+                padding: 12px;
+                border: 1px solid #ccc;
+                border-radius: 4px;
+                box-sizing: border-box;
+                transition: border-color 0.3s;
+            }
+
+                .form-grid input:focus,
+                .form-grid textarea:focus,
+                .form-grid select:focus {
+                    border-color: #007bff;
+                    outline: none;
+                    box-shadow: 0 0 5px rgba(0, 123, 255, 0.3);
+                }
+
+            .form-grid textarea {
+                grid-column: span 2;
+                resize: vertical;
+                min-height: 100px;
+            }
+
+            .form-grid button[type="submit"] {
+                grid-column: span 2;
+                padding: 12px;
+                background-color: #007bff;
+                color: #fff;
+                border: none;
+                border-radius: 4px;
+                cursor: pointer;
+                font-size: 16px;
+            }
+
+                .form-grid button[type="submit"]:hover {
+                    background-color: #0056b3;
+                }
+    </style>
+</head>
+<body>
+    <div class="form-container">
+        <h1>Edit Packing Slip</h1>
+        <form method="POST">
+            {% csrf_token %}
+            <div class="form-grid">
+                {{ fg_label_form.as_p }}
+                <button type="submit">Update</button>
+            </div>
+        </form>
+    </div>
+</body>
+</html>
+{% endblock %}

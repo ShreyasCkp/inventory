@@ -1,0 +1,224 @@
+{% extends 'base.html' %}
+
+{% block title %}FG Inward Material Report{% endblock %}
+
+{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FG Inward Material Report</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f6f9;
+            margin: 0;
+            padding: 25px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 10px;
+        }
+
+        .child {
+            margin-top: 2px;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 25px;
+            display: flex;
+            flex-direction: column;
+            font-size: 10px;
+            font-weight: 100;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 900px;
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0px 3px 10px rgba(0, 0, 0, 0.1);
+            margin-top: 15px;
+        }
+
+        h2 {
+            font-size: 14px; /* Adjust font size */
+        }
+
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .add-button {
+            padding: 8px 12px;
+            background: linear-gradient(45deg, #005792, #008ea1);
+            color: white;
+            text-decoration: none;
+            border-radius: 4px;
+            font-weight: 100;
+            transition: 0.3s;
+            border: none;
+            font-size: 10px;
+        }
+
+            .add-button:hover {
+                background: linear-gradient(45deg, #00416a, #00737a);
+            }
+        /* Updated style for the button */
+        .btn-yes {
+            padding: 4px 6px;
+            background: linear-gradient(45deg, #005792, #008ea1);
+            color: white;
+            text-decoration: none;
+            border-radius: 4px;
+            font-weight: 100;
+            transition: 0.3s;
+            border: none;
+            font-size: 10px;
+        }
+
+            /* Hover effect for the button */
+            .btn-yes:hover {
+                background: linear-gradient(45deg, #007bb5, #007a8c);
+            }
+
+        /* Table styling */
+        table,
+        th,
+        td {
+            border: 1px solid #ddd;
+        }
+
+        th,
+        td {
+            padding: 0px;
+            text-align: center;
+            border: 1px solid #ddd;
+            white-space: nowrap;
+        }
+
+        th {
+            background-color: #005792;
+            color: white;
+            font-size: 10px; /*table heading */
+            font-weight: 100;
+        }
+
+        tr:nth-child(even) {
+            background-color: #e9f3f8;
+        }
+
+        tr:hover {
+            background-color: #d0e7f2;
+        }
+
+        th:last-child,
+        td:last-child {
+            width: 150px;
+            text-align: center;
+        }
+
+
+        .action-buttons {
+            display: flex;
+            gap: 3px;
+            justify-content: center;
+        }
+
+            .action-buttons a {
+                padding: 2px 5px;
+                text-decoration: none;
+                color: white;
+                border-radius: 4px;
+                font-size: 12px;
+                transition: 0.3s;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+
+
+        .overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.4);
+            z-index: 999;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header-container">
+            <h2>FG Inward Material Report</h2>
+        </div>
+        <form method="GET">
+            <label for="from_date">From:</label>
+            <input type="date" name="from_date" value="{{ request.GET.from_date }}" required>
+
+            <label for="to_date">To:</label>
+            <input type="date" name="to_date" value="{{ request.GET.to_date }}" required>
+
+            <label for="search">Search:</label>
+            <input type="text" name="search" placeholder="Item Code or Item Name" value="{{ request.GET.search }}">
+
+            <button type="submit" class="btn-yes">View Report</button>
+
+            {% if inward_materials %}
+            <a href="{% url 'export_fg_inward_material_excel' %}?from_date={{ request.GET.from_date }}&to_date={{ request.GET.to_date }}&search={{ request.GET.search }}" class="btn-yes">
+                Export to Excel
+            </a>
+            {% endif %}
+        </form>
+
+        <div class="child">
+            {% if no_data_message %}
+            <p style="color: red;">{{ no_data_message }}</p>
+            {% endif %}
+
+            {% if inward_materials %}
+            <table border="1">
+                <thead>
+                    <tr>
+                        <th>Inv No</th>
+                        <th>Inv Date</th>
+                        <th>Item Code</th>
+                        <th>Item Name</th>
+                        <th>No of Bags</th>
+                        <th>Qty</th>
+                        <th>UOM</th>
+                        <th>Batch No</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for material in inward_materials %}
+                    {% for item in material.fginwardmaterialsub_set.all %}
+                    <tr>
+                        <td>{{ material.inward_no }}</td>
+                        <td>{{ material.inward_date }}</td>
+                        <td>{{ item.item_code }}</td>
+                        <td>{{ item.item_name }}</td>
+                        <td>{{ item.box_no }}</td>
+                        <td>{{ item.quantity }}</td>
+                        <td>{{ item.uom }}</td>
+                        <td>{{ item.batch_no }}</td>
+                    </tr>
+                    {% endfor %}
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    {% endif %}
+</body>
+</html>
+{% endblock %}

@@ -1,0 +1,182 @@
+{% extends 'base.html' %}
+
+{% block title %}Create PM Label{% endblock %}
+
+{% block content %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create PM Label</title>
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #eef2f3;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .form-container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 600px;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        h6 {
+            text-align: center;
+            font-size: 16px;
+            color: #333;
+            margin-bottom: 15px;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+            .form-grid select, .form-grid input {
+                width: 100%;
+                padding: 10px;
+                border: 1px solid #ccc;
+                border-radius: 5px;
+                font-size: 14px;
+                transition: 0.3s;
+            }
+
+                .form-grid input:focus, .form-grid select:focus {
+                    border-color: #0077b6;
+                    outline: none;
+                    box-shadow: 0 0 5px rgba(0, 119, 182, 0.3);
+                }
+
+        .button-group {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 15px;
+        }
+
+            .button-group button, .button-group .close-button {
+                padding: 10px 15px;
+                border: none;
+                border-radius: 5px;
+                cursor: pointer;
+                font-size: 14px;
+                color: white;
+                background: linear-gradient(45deg, #0077b6, #0096c7);
+                transition: 0.3s;
+            }
+
+                .button-group button:hover, .button-group .close-button:hover {
+                    background: linear-gradient(45deg, #005f86, #0077b6);
+                    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+                }
+
+        @media (max-width: 600px) {
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .button-group {
+                flex-direction: column;
+                gap: 10px;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="form-container">
+        <h6>Edit PM Label</h6>
+        <form method="POST">
+            {% csrf_token %}
+
+            <div class="form-grid">
+                <select id="item_code" name="item_code" required {% if view_mode %}disabled{% endif %} onchange="updateItemName(this)">
+                    <option value="">Item Code*</option>
+                    {% for item_detail in item_master %}
+                    <option value="{{ item_detail.item_code }}" data-name="{{ item_detail.item_name }}"
+                            {% if form.item_code.value == item_detail.item_code %}selected{% endif %}>
+                        {{ item_detail.item_code }}
+                    </option>
+                    {% endfor %}
+                </select>
+
+                <select id="item_name" name="item_name" required {% if view_mode %}disabled{% endif %} onchange="updateItemCode(this)">
+                    <option value="">Item Name*</option>
+                    {% for item_detail in item_master %}
+                    <option value="{{ item_detail.item_name }}" data-code="{{ item_detail.item_code }}"
+                            {% if form.item_name.value == item_detail.item_name %}selected{% endif %}>
+                        {{ item_detail.item_name }}
+                    </option>
+                    {% endfor %}
+                </select>
+
+                <input type="number" name="noofpacks" placeholder="Number of Packs" value="{{ form.noofpacks.value }}" required>
+                <input type="number" name="next_pack_no" placeholder="Next Pack Number" value="{{ form.next_pack_no.value }}" required>
+                <input type="text" name="lot_batch_no" placeholder="Lot/Batch Number" value="{{ form.lot_batch_no.value }}" required>
+                <input type="number" name="packing_qty" placeholder="Packing Quantity" value="{{ form.packing_qty.value }}" required>
+                <input type="date" name="receipt_date" placeholder="Receipt Date" value="{{ form.receipt_date.value }}" required>
+            </div>
+
+            <div class="button-group">
+                <button type="submit">Update</button>
+                <a href="{% url 'pm_label_list' %}" class="close-button">Back</a>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        function updateItemName(selectElement) {
+            var selectedCode = selectElement.value;
+            var itemNameDropdown = document.getElementById("item_name");
+            for (var i = 0; i < itemNameDropdown.options.length; i++) {
+                var option = itemNameDropdown.options[i];
+                if (option.getAttribute("data-code") === selectedCode) {
+                    itemNameDropdown.value = option.value;
+                    break;
+                }
+            }
+        }
+
+        function updateItemCode(selectElement) {
+            var selectedName = selectElement.value;
+            var itemCodeDropdown = document.getElementById("item_code");
+            for (var i = 0; i < itemCodeDropdown.options.length; i++) {
+                var option = itemCodeDropdown.options[i];
+                if (option.getAttribute("data-name") === selectedName) {
+                    itemCodeDropdown.value = option.value;
+                    break;
+                }
+            }
+        }
+    </script>
+</body>
+</html>
+
+{% endblock %}

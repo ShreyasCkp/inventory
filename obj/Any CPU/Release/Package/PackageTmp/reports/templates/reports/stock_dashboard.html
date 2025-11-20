@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stock Statement</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            padding: 20px;
+        }
+
+        h2 {
+            text-align: center;
+        }
+
+        .filter-buttons {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+            .filter-buttons button {
+                padding: 10px 15px;
+                margin: 5px;
+                border: none;
+                background-color: #007bff;
+                color: white;
+                cursor: pointer;
+                border-radius: 5px;
+            }
+
+                .filter-buttons button:hover {
+                    background-color: #0056b3;
+                }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: center;
+        }
+
+        th {
+            background-color: #f4f4f4;
+        }
+    </style>
+</head>
+<body>
+
+    <h2>Stock Statement</h2>
+
+    <div class="filter-buttons">
+        <button onclick="filterCategory('ALL')">All</button>
+        <button onclick="filterCategory('RM')">Raw Materials</button>
+        <button onclick="filterCategory('PM')">Packing Materials</button>
+        <button onclick="filterCategory('FG')">Finished Goods</button>
+    </div>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Product Name</th>
+                <th>Category</th>
+                <th>Inward</th>
+                <th>Outward</th>
+                <th>Balance</th>
+                <th>Order Level</th>
+                <th>Open Balance</th>
+                <th>Closing Stock</th>
+                <th>Reorder Level</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for stock in stocks %}
+            <tr>
+                <td>{{ stock.product_name }}</td>
+                <td>{{ stock.get_category_display }}</td>
+                <td>{{ stock.inward }}</td>
+                <td>{{ stock.outward }}</td>
+                <td>{{ stock.balance }}</td>
+                <td>{{ stock.order_level }}</td>
+                <td>{{ stock.open_balance }}</td>
+                <td>{{ stock.closing_stock }}</td>
+                <td>{{ stock.reorder_level }}</td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="9">No data available for selected category</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <script>
+        function filterCategory(category) {
+            window.location.href = "?category=" + category;
+        }
+    </script>
+
+</body>
+</html>

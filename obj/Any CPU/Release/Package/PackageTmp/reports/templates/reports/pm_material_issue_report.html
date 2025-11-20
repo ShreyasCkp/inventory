@@ -1,0 +1,223 @@
+{% extends 'base.html' %}
+
+{% block title %}PM Issuance Report{% endblock %}
+
+{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PM Issuance Report</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f6f9;
+            margin: 0;
+            padding: 25px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 10px;
+        }
+
+        .child {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 25px;
+            display: flex;
+            flex-direction: column;
+            font-size: 10px;
+            font-weight: 100;
+            border: 1.5px solid #005f86; /* Updated border color */
+        }
+
+        .container {
+            width: 100%;
+            max-width: 900px;
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0px 3px 10px rgba(0, 0, 0, 0.1);
+            margin-top: 15px;
+        }
+
+        h2 {
+            font-size: 14px; /* Adjust font size */
+        }
+
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .add-button {
+            padding: 8px 12px;
+            background: linear-gradient(45deg, #005792, #008ea1);
+            color: white;
+            text-decoration: none;
+            border-radius: 4px;
+            font-weight: 100;
+            transition: 0.3s;
+            border: none;
+            font-size: 10px;
+        }
+
+            .add-button:hover {
+                background: linear-gradient(45deg, #00416a, #00737a);
+            }
+        /* Updated style for the button */
+        .btn-yes {
+            padding: 4px 6px;
+            background: linear-gradient(45deg, #005792, #008ea1);
+            color: white;
+            text-decoration: none;
+            border-radius: 4px;
+            font-weight: 100;
+            transition: 0.3s;
+            border: none;
+            font-size: 10px;
+        }
+
+            /* Hover effect for the button */
+            .btn-yes:hover {
+                background: linear-gradient(45deg, #007bb5, #007a8c);
+            }
+
+        /* Table styling */
+        table,
+        th,
+        td {
+            border: 1px solid #ddd;
+        }
+
+        th,
+        td {
+            padding: 0px;
+            text-align: center;
+            border: 1px solid #ddd;
+            white-space: nowrap;
+        }
+
+        th {
+            background-color: #005792;
+            color: white;
+            font-size: 10px; /*table heading */
+            font-weight: 100;
+        }
+
+        tr:nth-child(even) {
+            background-color: #e9f3f8;
+        }
+
+        tr:hover {
+            background-color: #d0e7f2;
+        }
+
+        th:last-child,
+        td:last-child {
+            width: 150px;
+            text-align: center;
+        }
+
+
+        .action-buttons {
+            display: flex;
+            gap: 3px;
+            justify-content: center;
+        }
+
+            .action-buttons a {
+                padding: 2px 5px;
+                text-decoration: none;
+                color: white;
+                border-radius: 4px;
+                font-size: 12px;
+                transition: 0.3s;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+
+
+        .overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.4);
+            z-index: 999;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="header-container">
+            <h2>PM Issuance Report</h2>
+        </div>
+        <!-- Filters Section -->
+        <form method="GET">
+            <label for="from_date">From:</label>
+            <input type="date" name="from_date" value="{{ request.GET.from_date }}" required>
+
+            <label for="to_date">To:</label>
+            <input type="date" name="to_date" value="{{ request.GET.to_date }}" required>
+
+            <label for="search">Search:</label>
+            <input type="text" name="search" placeholder="Item Code or Issued To" value="{{ request.GET.search }}">
+            <button type="submit" name="apply_filter" class="btn-yes">Apply Filter</button>
+
+            <button type="submit" class="btn-yes">View Report</button>
+
+            {% if rm_issuances %}
+            <a href="{% url 'export_rm_issuance_excel' %}?from_date={{ request.GET.from_date }}&to_date={{ request.GET.to_date }}&search={{ request.GET.search }}"
+               class="btn-yes">
+                Export to Excel
+            </a>
+            {% endif %}
+        </form>
+
+        <!-- No Data Message -->
+        {% if no_data_message %}
+        <p style="color: red;">{{ no_data_message }}</p>
+        {% endif %}
+
+        <!-- Table for Displaying Data -->
+        {% if rm_issuances %}
+        <table style="width: 100%; margin-top: 20px; font-size: 12px ">
+            <thead>
+                <tr>
+                    <!--<th> Vendor</th> -->
+                    <th style="padding: 10px; border: 1px solid black;">Issue No</th>
+                    <th style="padding: 10px; border: 1px solid black;">Issue Date</th>
+                    <th style="padding: 10px; border: 1px solid black;">Item Code</th>
+                    <th >Item Name</th>
+                    <th >Quantity</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for issuance in rm_issuances %}
+                <tr style="text-align: center; font-size: 9px ; {% if forloop.counter|divisibleby:2 %}  {% endif %}">
+                    <!--<td style="padding: 10px; border: 1px solid black;">{{ issuance.vendor }}</td>-->
+                    <td >{{ issuance.matIssueId.issue_no }}</td>
+                    <td >{{ issuance.matIssueId.issue_date }}</td>
+                    <td >{{ issuance.item_code }}</td>
+                    <td >{{ issuance.item_name }}</td>
+                    <td >{{ issuance.quantity }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% endif %}
+</body>
+</html>
+{% endblock %}
+

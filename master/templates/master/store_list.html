@@ -1,0 +1,335 @@
+{% extends 'base.html' %}
+
+{% block title %}Store List{% endblock %}
+
+{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Store List</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(2deg, #ff00cc, #3333ff);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 900px;
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0px 3px 10px rgba(0, 0, 0, 0.1);
+            margin-top: 15px;
+        }
+
+        h2 {
+            font-size: 14px; /* Adjust font size */
+        }
+
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .add-button {
+            padding: 8px 12px;
+            background: linear-gradient(135deg, #ff33cc, #6633ff);
+            color: white;
+            text-decoration: none;
+            border-radius: 4px;
+            font-weight: 100;
+            transition: 0.3s;
+            border: none;
+            font-size: 10px;
+        }
+
+            .add-button:hover {
+                background: linear-gradient(135deg, #ff00cc, #3333ff);
+            }
+
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 9px; /*table inside words we adding*/
+            background: #fff;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+
+        table,
+        th,
+        td {
+            border: 1px solid #ddd;
+        }
+
+        th,
+        td {
+            padding: 0px;
+            text-align: center;
+            border: 1px solid #ddd;
+            white-space: nowrap;
+        }
+
+        th {
+            background: linear-gradient(1deg, #ff00cc, #3333ff);
+            color: white;
+            font-size: 10px; /*table heading */
+            font-weight: 100;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f3e6ff; /* soft lavender */
+        }
+
+        tr:hover {
+            background-color: #e6ccff; /* soft violet - great match */
+        }
+
+
+        th:last-child,
+        td:last-child {
+            width: 150px;
+            text-align: center;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 3px;
+            justify-content: center;
+        }
+
+            .action-buttons a {
+                padding: 2px 5px;
+                text-decoration: none;
+                color: white;
+                border-radius: 4px;
+                font-size: 12px;
+                transition: 0.3s;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+
+        .btn-view,
+        .btn-edit {
+            background: linear-gradient(135deg, #ff00cc, #3333ff);
+        }
+
+            .btn-view:hover,
+            .btn-edit:hover {
+                background: linear-gradient(135deg, #ff00cc, #3333ff);
+            }
+
+        .btn-danger {
+            background: linear-gradient(135deg, #ff00cc, #3333ff);
+        }
+
+            .btn-danger:hover {
+                background: linear-gradient(45deg, #9d0208, #6a040f);
+            }
+
+        .popup {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            padding: 20px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+            border-radius: 8px;
+            text-align: center;
+            z-index: 1000;
+        }
+
+            .popup button {
+                padding: 3px 6px;
+                border: none;
+                border-radius: 5px;
+                font-size: 14px;
+                cursor: pointer;
+                transition: 0.3s;
+                margin: 5px;
+            }
+
+        .btn-yes {
+            background: linear-gradient(135deg, #ff00cc, #3333ff);
+            color: white;
+        }
+
+            .btn-yes:hover {
+                background: linear-gradient(45deg, #5ca5d6, #000070);
+            }
+
+        .btn-no {
+            background: linear-gradient(135deg, #ff00cc, #3333ff);
+            color: white;
+        }
+
+            .btn-no:hover {
+                background: linear-gradient(45deg, #e60073, #5c0aa5);
+            }
+
+        .overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.4);
+            z-index: 999;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="header-container">
+            <h2>Store List</h2>
+            <a href="{% url 'store_add' %}" class="add-button">+ Add Store</a>
+        </div>
+
+        <table>
+            <tr>
+                <th>SL NO</th>
+                <th>Name</th>
+                <th>Actions</th>
+            </tr>
+            {% for store in store %}
+            <tr>
+                <td>{{ forloop.counter }}</td>
+                <td>{{ store.store_name }}</td>
+                <td class="action-buttons">
+                    <a href="{% url 'store_view' store.id %}" class="btn-view">
+                        <i class="fa-solid fa-eye"></i>
+                    </a>
+                    <a href="{% url 'store_edit' store.id %}" class="btn-edit">
+                        <i class="fa-solid fa-pen"></i>
+                    </a>
+                    <a href="#" onclick="confirmDelete({{ store.id }}, '{{ store.store_name|escapejs }}')" class="btn-danger">
+                        <i class="fa-solid fa-trash"></i>
+                    </a>
+
+                    <form id="delete-form-{{ store.id }}" method="POST" action="{% url 'store_delete' store.id %}" style="display: none;">
+                        {% csrf_token %}
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+
+    <div id="confirm-popup" class="popup">
+        <p id="confirm-popup-message">Are you sure you want to delete this store?</p>
+        <button id="confirm-yes" class="btn-yes">Yes</button>
+        <button id="confirm-no" class="btn-no">No</button>
+    </div>
+    <div id="overlay" class="overlay"></div>
+
+    <script>
+        let deleteStoreId = null;
+
+        function confirmDelete(storeId, storeName) {
+            deleteStoreId = storeId;
+            const popup = document.getElementById("confirm-popup");
+
+            popup.querySelector("p").textContent = `Are you sure you want to delete store "${storeName}"?`;
+            popup.style.display = "block";
+            document.getElementById("overlay").style.display = "block";
+        }
+
+        document.getElementById("confirm-yes").addEventListener("click", function () {
+            if (deleteStoreId) {
+                // Fix: Correct the form ID selection
+                document.getElementById("delete-form-" + deleteStoreId).submit();
+            }
+        });
+
+        document.getElementById("confirm-no").addEventListener("click", function () {
+            document.getElementById("confirm-popup").style.display = "none";
+            document.getElementById("overlay").style.display = "none";
+        });
+    </script>
+
+    {% if messages %}
+    <div id="snackbar">{{ messages.0 }}</div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var snackbar = document.getElementById("snackbar");
+            if (snackbar) {
+                snackbar.classList.add("show");
+                setTimeout(function () {
+                    snackbar.classList.remove("show");
+                }, 3000);
+            }
+        });
+    </script>
+    <style>
+        #snackbar {
+            visibility: hidden;
+            min-width: 250px;
+            background-color: #28a745;
+            color: white;
+            text-align: center;
+            border-radius: 4px;
+            padding: 12px;
+            position: fixed;
+            z-index: 9999;
+            left: 50%;
+            bottom: 30px;
+            transform: translateX(-50%);
+            font-size: 14px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+        }
+
+            #snackbar.show {
+                visibility: visible;
+                animation: fadein 0.5s, fadeout 0.5s 2.5s;
+            }
+
+        @keyframes fadein {
+            from {
+                bottom: 0;
+                opacity: 0;
+            }
+
+            to {
+                bottom: 30px;
+                opacity: 1;
+            }
+        }
+
+        @keyframes fadeout {
+            from {
+                bottom: 30px;
+                opacity: 1;
+            }
+
+            to {
+                bottom: 0;
+                opacity: 0;
+            }
+        }
+    </style>
+    {% endif %}
+
+
+</body>
+
+</html>
+
+{% endblock %}

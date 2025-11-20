@@ -1,0 +1,408 @@
+{% extends 'base.html' %}
+
+{% block title %}PM Material Label{% endblock %}
+
+{% block content %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create PM Label</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f2f5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 100px;
+            box-sizing: border-box;
+        }
+
+        .form-container {
+            background-color: #f4f4f4;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2);
+            width: 90%;
+            max-width: 600px;
+            animation: fadeIn 0.5s ease;
+            border: 2px solid transparent;
+            background-clip: padding-box, border-box;
+            background-origin: border-box;
+            background-image: linear-gradient(#f4f4f4, #f4f4f4), linear-gradient(45deg, #0077b6, #0096c7);
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        h4 {
+            text-align: left;
+            margin-bottom: 8px;
+            font-size: 20px;
+            color: #333;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+        }
+
+            /* Smaller input and textarea styles */
+            .form-grid input[type="text"],
+            .form-grid input[type="email"],
+            .form-grid input[type="number"],
+            .form-grid textarea {
+                width: 100%;
+                padding: 1px 2px;
+                font-size: 9px;
+                border: 1px solid #ccc;
+                border-radius: 4px;
+                padding: 4px 6px;
+                border-radius: 4px;
+                box-sizing: border-box;
+                transition: border-color 0.3s;
+            }
+
+            .form-grid input[type="email"],
+            .form-grid input[type="text"] {
+                height: 28px;
+            }
+
+            .form-grid .address {
+                height: 28px;
+                font-size: 11px;
+                resize: none;
+            }
+
+        .button-group {
+            grid-column: span 3;
+            display: flex;
+            justify-content: flex-end;
+            gap: 6px;
+            margin-top: 12px;
+            font-size: 10px;
+            font-weight: 100;
+        }
+
+            /* Smaller button styles */
+            .button-group button {
+                padding: 6px 10px;
+                border: none;
+                border-radius: 4px;
+                cursor: pointer;
+                font-size: 10px;
+                font-weight: 100;
+                color: white;
+                background: linear-gradient(45deg, #0077b6, #0096c7);
+                transition: background 0.3s, box-shadow 0.3s;
+            }
+
+                .button-group button:hover {
+                    background: linear-gradient(45deg, #005f86, #0077b6);
+                    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+                }
+
+        /* Corrected close button styles */
+        .close-button {
+            padding: 6px 10px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 10px;
+            font-weight: 100;
+            color: white;
+            text-decoration: none;
+            text-align: center;
+            background: linear-gradient(45deg, #0077b6, #0096c7);
+            transition: background 0.3s, box-shadow 0.3s;
+        }
+
+            .close-button:hover {
+                background: linear-gradient(45deg, #9d0208, #6a040f);
+                box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+            }
+
+        @media (max-width: 600px) {
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .button-group {
+                flex-direction: column;
+                gap: 6px;
+                justify-content: center;
+            }
+        }
+        /* Style for invalid fields after submit */
+        .invalid {
+            border-color: red !important;
+        }
+
+            .invalid::placeholder {
+                color: red !important;
+            }
+        .form-grid label {
+            font-size: 8px;
+            font-weight: bold;
+            display: block;
+            margin-bottom: 2px;
+            color: #333;
+        }
+        .selects {
+            padding: 6px;
+            text-align-last: left;
+            padding-inline-start: 1px;
+            padding-right: 100px;
+            font-size: 9px;
+        }
+        .receipts {
+            padding: 5px;
+            text-align-last: left;
+            padding-inline-start: 1px;
+            padding-left: 80px;
+            padding-right: 20px;
+            font-size: 9px;
+        }
+    </style>
+</head>
+<body>
+    <div class="form-container">
+        <h6 style="color: black; font-size: 12px; font-weight: 100;">Create PM Label</h6>
+        <form id="pmlabelForm" method="POST" novalidate>
+            {% csrf_token %}
+           <div class="form-grid">
+
+                <!-- Item Code -->
+                <div>
+                    <label for="item_code">Item Code*</label>
+                    <select id="item_code" name="item_code" class="selects" required {% if view_mode %}disabled{% endif %} onchange="updateItemName(this)">
+                        <option value="">Item Code*</option>
+                        {% for item_detail in item_master %}
+                        <option value="{{ item_detail.item_code }}" data-name="{{ item_detail.item_name }}"
+                            {% if form.item_code.value == item_detail.item_code %}selected{% endif %}>
+                            {{ item_detail.item_code }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <!-- Item Name -->
+                <div>
+                    <label for="item_name">Item Name*</label>
+                    <select id="item_name" name="item_name" class="selects" required {% if view_mode %}disabled{% endif %} onchange="updateItemCode(this)">
+                        <option>Item Name*</option>
+                        {% for item_detail in item_master %}
+                        <option value="{{ item_detail.item_name }}" data-code="{{ item_detail.item_code }}"
+                            {% if form.item_name.value == item_detail.item_name %}selected{% endif %}>
+                            {{ item_detail.item_name }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <!-- Number of Packs -->
+                <div>
+                    <label for="noofpacks">Number of Packs</label>
+                    <input id="noofpacks" type="text" name="noofpacks" placeholder="Number of Packs"
+                           value="{{ form.noofpacks.value|default:'' }}" {% if view_mode %}disabled{% endif %}>
+                </div>
+
+                <!-- Next Pack Number -->
+                <div>
+                    <label for="next_pack_no">Next Pack Number*</label>
+                    <input id="next_pack_no" type="text" name="next_pack_no" placeholder="Next Pack Number" required
+                           value="{{ form.next_pack_no.value|default:'' }}" {% if view_mode %}disabled{% endif %}>
+                </div>
+
+                <!-- Lot/Batch Number -->
+                <div>
+                    <label for="lot_batch_no">Lot/Batch Number</label>
+                    <input id="lot_batch_no" type="text" name="lot_batch_no" placeholder="Lot/Batch Number"
+                           value="{{ form.lot_batch_no.value|default:'' }}" {% if view_mode %}disabled{% endif %}>
+                </div>
+
+                <!-- Packing Quantity -->
+                <div>
+                    <label for="packing_qty">Packing Quantity*</label>
+                    <input id="packing_qty" type="text" name="packing_qty" placeholder="Packing Quantity" required
+                           value="{{ form.packing_qty.value|default:'' }}" {% if view_mode %}disabled{% endif %}>
+                </div>
+
+                <!-- Receipt Date -->
+                <div>
+                    <label for="id_receipt_date">Receipt Date*</label>
+                    <input id="id_receipt_date" type="date" class="receipts" name="receipt_date" placeholder="Receipt Date" required
+                           value="{{ form.receipt_date.value|date:'Y-m-d' }}" {% if view_mode %}disabled{% endif %}>
+                </div>
+
+            </div>
+
+            <br>
+            <div class="button-group">
+                {% if not view_mode %}
+                <button type="submit" class="btn-submit">{% if request.resolver_match.url_name == '_edit' %} Update {% else %} Save {% endif %}</button>
+                {% endif %}
+                <a href="{% url 'pm_label_list' %}" class="close-button">Close</a>
+            </div>
+
+        </form>
+    </div>
+    <script>
+        function updateItemDetails(selectElement, type) {
+            // Find the parent container (form-grid)
+            let container = selectElement.closest(".form-grid");
+            let itemCodeDropdown = container.querySelector(".item_code");
+            let itemNameDropdown = container.querySelector(".item_name");
+
+            if (type === "code") {
+                let selectedOption = itemCodeDropdown.options[itemCodeDropdown.selectedIndex];
+                let itemName = selectedOption.getAttribute("data-name");
+
+                // Automatically update the 'item_name' dropdown when 'item_code' is selected
+                for (let option of itemNameDropdown.options) {
+                    if (option.textContent.trim() === itemName) {
+                        itemNameDropdown.value = option.value;
+                        break;
+                    }
+                }
+            } else if (type === "name") {
+                let selectedOption = itemNameDropdown.options[itemNameDropdown.selectedIndex];
+                let itemCode = selectedOption.getAttribute("data-code");
+
+                // Automatically update the 'item_code' dropdown when 'item_name' is selected
+                for (let option of itemCodeDropdown.options) {
+                    if (option.textContent.trim() === itemCode) {
+                        itemCodeDropdown.value = option.value;
+                        break;
+                    }
+                }
+            }
+        }
+
+        // Pre-fill the dropdowns on page load
+        document.addEventListener("DOMContentLoaded", function () {
+            let itemCodeDropdown = document.querySelector(".item_code");
+            let itemNameDropdown = document.querySelector(".item_name");
+
+            if (itemCodeDropdown && itemNameDropdown) {
+                let selectedCode = itemCodeDropdown.value;
+                let selectedName = itemNameDropdown.value;
+
+                // Sync item name with the selected code
+                if (selectedCode) {
+                    let selectedOption = itemCodeDropdown.options[itemCodeDropdown.selectedIndex];
+                    let itemName = selectedOption.getAttribute("data-name");
+
+                    for (let option of itemNameDropdown.options) {
+                        if (option.textContent.trim() === itemName) {
+                            itemNameDropdown.value = option.value;
+                            break;
+                        }
+                    }
+                }
+
+                // Sync item code with the selected name
+                if (selectedName) {
+                    let selectedOption = itemNameDropdown.options[itemNameDropdown.selectedIndex];
+                    let itemCode = selectedOption.getAttribute("data-code");
+
+                    for (let option of itemCodeDropdown.options) {
+                        if (option.textContent.trim() === itemCode) {
+                            itemCodeDropdown.value = option.value;
+                            break;
+                        }
+                    }
+                }
+            }
+        });
+
+
+        document.addEventListener("DOMContentLoaded", function () {
+            const dateInput = document.querySelector('input[name="id_receipt_date"]');
+
+            if (dateInput) {
+                let dateValue = dateInput.value;
+
+                if (dateValue) {
+                    // If the value is in mm/dd/yyyy or another incorrect format, reformat it
+                    const dateParts = dateValue.split('/');
+
+                    // Check if the date value is in mm/dd/yyyy format
+                    if (dateParts.length === 3) {
+                        const formattedDate = `${dateParts[2]}-${dateParts[0]}-${dateParts[1]}`;
+                        dateInput.value = formattedDate;
+                    }
+                }
+            }
+        });
+
+        document.getElementById('pmlabelForm').addEventListener('submit', function (event) {
+            // Remove previous invalid classes first
+            document.querySelectorAll('.invalid').forEach(function (field) {
+                field.classList.remove('invalid');
+            });
+
+            // Check if required fields are filled
+            var isValid = true;
+            var requiredFields = ['customer_code', 'customer_name', 'tel_no', 'gst_no', 'customer_type'];
+
+            requiredFields.forEach(function (fieldId) {
+                var field = document.getElementById(fieldId);
+                if (!field.value.trim()) {
+                    field.classList.add('invalid'); // Add the invalid class to the field
+                    isValid = false;
+                }
+            });
+
+            if (!isValid) {
+                event.preventDefault(); // Prevent form submission if invalid fields are found
+            }
+        });
+
+        // Update Item Name based on Item Code selection
+        function updateItemName(selectElement) {
+            var selectedCode = selectElement.value;
+            var itemNameDropdown = document.getElementById("item_name");
+
+            for (var i = 0; i < itemNameDropdown.options.length; i++) {
+                var option = itemNameDropdown.options[i];
+                if (option.getAttribute("data-code") === selectedCode) {
+                    itemNameDropdown.value = option.value;
+                    break;
+                }
+            }
+        }
+
+        // Update Item Code based on Item Name selection
+        function updateItemCode(selectElement) {
+            var selectedName = selectElement.value;
+            var itemCodeDropdown = document.getElementById("item_code");
+
+            for (var i = 0; i < itemCodeDropdown.options.length; i++) {
+                var option = itemCodeDropdown.options[i];
+                if (option.getAttribute("data-name") === selectedName) {
+                    itemCodeDropdown.value = option.value;
+                    break;
+                }
+            }
+        }
+    </script>
+</body>
+</html>
+
+{% endblock %}

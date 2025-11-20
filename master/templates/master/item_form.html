@@ -1,0 +1,463 @@
+{% extends 'base.html' %}
+
+{% block title %}Item form{% endblock %}
+
+{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Item</title>
+    
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f2f5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 100px;
+            box-sizing: border-box;
+        }
+
+        .form-container {
+            background-color: #f4f4f4;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2);
+            width: 110%;
+            max-width: 800px;
+            animation: fadeIn 0.5s ease;
+            border: 2px solid transparent;
+            background-clip: padding-box, border-box;
+            background-origin: border-box;
+            background-image: linear-gradient(#f4f4f4, #f4f4f4), linear-gradient(45deg, #422ddb, #ec6ddb);
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        h4 {
+            text-align: left;
+            margin-bottom: 8px;
+            font-size: 20px;
+            color: #333;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+        }
+
+            /* Smaller input and textarea styles */
+            .form-grid input[type="text"],
+            .form-grid input[type="email"],
+            .form-grid input[type="number"],
+            .form-grid textarea {
+                width: 100%;
+                padding: 1px 2px;
+                border: 1px solid #ccc;
+                border-radius: 4px;
+                box-sizing: border-box;
+                transition: border-color 0.3s;
+                font-size: 9px;
+            }
+
+            .form-grid input[type="email"],
+            .form-grid input[type="text"] {
+                height: 28px;
+            }
+
+            .form-grid .address {
+                height: 28px;
+                font-size: 11px;
+                resize: none;
+            }
+
+        .button-group {
+            grid-column: span 3;
+            display: flex;
+            justify-content: flex-end;
+            gap: 6px;
+            margin-top: 12px;
+            font-size: 10px;
+            font-weight: 100;
+        }
+
+            /* Smaller button styles */
+            .button-group button {
+                padding: 6px 10px;
+                border: none;
+                border-radius: 4px;
+                cursor: pointer;
+                font-size: 10px;
+                font-weight: 100;
+                color: white;
+                background: linear-gradient(135deg, #ff33cc, #6633ff);
+                transition: background 0.3s, box-shadow 0.3s;
+            }
+
+                .button-group button:hover {
+                    background: linear-gradient(135deg, #ff00cc, #3333ff);
+                    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+                }
+
+        /* Corrected close button styles */
+        .close-button {
+            padding: 6px 10px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 10px;
+            font-weight: 100;
+            color: white;
+            text-decoration: none;
+            text-align: center;
+            background: linear-gradient(2deg, #ff00cc, #3333ff);
+            transition: background 0.3s, box-shadow 0.3s;
+        }
+
+            .close-button:hover {
+                background: linear-gradient(45deg, #9d0208, #6a040f);
+                box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+            }
+
+        @media (max-width: 600px) {
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .button-group {
+                flex-direction: column;
+                gap: 6px;
+                justify-content: center;
+            }
+        }
+        /* Style for invalid fields after submit */
+        .invalid {
+            border-color: red !important;
+        }
+
+            .invalid::placeholder {
+                color: red !important;
+            }
+        .form-grid label {
+            font-size: 8px;
+            font-weight: bold;
+            color: #333;
+            display: block;
+            margin-bottom: 2px;
+        }
+        select {
+            padding: 8px;
+            text-align-last: left;
+            padding-inline-start: 1px;
+            padding-right: 141px;
+        }/* Ensures selected value is left-aligned */
+        
+
+        select option {
+            text-align: left;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="form-container">
+        <h6 style="color: black; font-size: 12px; font-weight: 100;">{{ title }}</h6>
+        <form method="POST">
+
+            {% csrf_token %}
+            <div class="form-grid">
+                <div>
+                    <label for="item_code">Item Code*</label>
+                    <input type="text" id="item_code" name="item_code" placeholder="Item Code*" required
+                           value="{{ form.item_code.value|default:'' }}">
+                </div>
+
+                <div>
+                    <label for="item_name">Item Name*</label>
+                    <input type="text" id="item_name" name="item_name" placeholder="Item Name*" required 
+                           value="{{ form.item_name.value|default:'' }}">
+                </div>
+
+                <div>
+                    <label for="rack_no">Rack No</label>
+                    <input type="text" id="rack_no" name="rack_no" placeholder="Rack No" 
+                           value="{{ form.rack_no.value|default:'' }}">
+                </div>
+
+                <div>
+                    <label for="rol">ROL</label>
+                    <input type="text" id="rol" name="rol" placeholder="ROL" 
+                           value="{{ form.rol.value|default:'' }}">
+                </div>
+
+                <div>
+                    <label for="uom">UOM*</label>
+                    <select name="uom" id="uom" {% if view_mode %}disabled{% endif %} required>
+                        <option value="">Select UOM</option>
+                        {% for uom in uoms %}
+                        <option value="{{ uom.id }}"
+                                {% if form.uom.value == uom.id|stringformat:"s" %}selected{% endif %}>
+                            {{ uom.name }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div>
+                    <label for="alt_uom">Alt UOM</label>
+                    <select name="alt_uom" id="alt_uom" {% if view_mode %}disabled{% endif %}>
+                        <option value="">Select Alt UOM</option>
+                        {% for alt_uom in uoms %}
+                        <option value="{{ alt_uom.id }}"
+                                {% if form.alt_uom.value == alt_uom.id|stringformat:"s" %}selected{% endif %}>
+                            {{ alt_uom.name }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div>
+                    <label for="rate">Rate</label>
+                    <input type="text" name="rate" id="rate" placeholder="Rate" class="hidden"
+                           value="{{ form.rate.value|default:'' }}">
+                </div>
+
+                <div>
+                    <label for="grade">Grade</label>
+                    <input type="text" name="grade" placeholder="Grade" id="grade"
+                           value="{{ form.grade.value|default:'' }}">
+                </div>
+
+                <div>
+                    <label for="molqty">MOL Qty</label>
+                    <input type="text" name="molqty" id="molqty" placeholder="MOL Qty"
+                           value="{{ form.molqty.value|default:'' }}">
+                </div>
+
+                <div>
+                    <label for="hsncode">HSN Code</label>
+                    <input type="text" name="hsncode" id="hsncode" placeholder="HSN Code"
+                           value="{{ form.hsncode.value|default:'' }}">
+                </div>
+
+                <div>
+                    <label for="packingqty">Packing Qty</label>
+                    <input type="text" name="packingqty" id="packingqty" placeholder="Packing Qty" 
+                           value="{{ form.packingqty.value|default:'' }}">
+                </div>
+
+                <div>
+                    <label for="remarks">Remarks</label>
+                    <textarea name="remarks" id="remarks" placeholder="Remarks">{{ form.remarks.value|default:'' }}</textarea>
+                </div>
+
+                <div>
+                    <label for="category">Category*</label>
+                    <select name="category" id="category" required onchange="toggleBOM()">
+                        <option value="">Select Category</option>
+                        {% for category in form.category.field.queryset %}
+                        <option value="{{ category.id }}" {% if form.category.value == category.id %}selected{% endif %}>
+                            {{ category.name }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+
+
+            <!-- BOM Section -->
+            {{ bom_formset.management_form }}
+
+        <div id="bom-section">
+            <h6 style="color: black; font-size: 12px; font-weight: 100;">Bill of Materials (BOM)</h6>
+            <button type="button" class="add-btn">Add Item</button>
+
+            <table id="bom-table">
+                <thead>
+                    <tr>
+                        <th>Sl No</th>
+                        <th>Item Code</th>
+                        <th>Item Name</th>
+                        <th>Required Quantity</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody id="bomTableBody">
+
+                    {% for form in bom_formset %}
+                    <tr>
+                        <td><input type="text" name="serial_no[]" value="{{ forloop.counter }}" {% if view_mode %}disabled{% endif %}></td>
+                        <td><input type="text" name="item_code[]" value="{{ form.item_code.value|default:'' }}" {% if view_mode %}disabled{% endif %}></td>
+                        <td><input type="text" name="item_name[]" value="{{ form.item_name.value|default:'' }}" {% if view_mode %}disabled{% endif %}></td>
+                        <td><input type="number" name="required_qty[]" value="{{ form.required_qty.value|default:'' }}" {% if view_mode %}disabled{% endif %}></td>
+                        <td>
+                            <button type="button" class="remove-btn" onclick="removeBOMRow(this)" {% if view_mode %}disabled{% endif %}>Remove</button>
+                        </td>
+                    </tr>
+
+                    {% endfor %}
+                </tbody>
+            </table>
+
+        </div>
+
+            <div class="button-group">
+                <button type="submit">Save</button>
+                <a href="{% url 'item_list' %}" class="close-button">Close</a>
+            </div>
+
+        </form>
+    </div>
+
+    <script>
+
+        document.addEventListener("DOMContentLoaded", function () {
+
+            // Run BOM toggle on page load (to hide/show based on initial category value)
+
+            toggleBOM();
+
+            // Attach event listener for category change to show/hide BOM section
+
+            document.getElementById("category").addEventListener("change", toggleBOM);
+
+            // Attach event listener for Add Item button (your BOM row logic)
+
+            document.querySelector(".add-btn").addEventListener("click", addBOMRow);
+
+            // Function to handle the visibility and enabling/disabling of the rate input field
+
+            var uomSelect = document.getElementById('uom');
+
+            var altUomSelect = document.getElementById('alt_uom');
+
+            var rateInput = document.getElementById('rate');
+
+            // Function to handle Rate Field visibility and enabling
+
+            function handleRateField() {
+
+                var uomValue = uomSelect.value;
+
+                var altUomValue = altUomSelect.value;
+
+                if (uomValue && altUomValue && uomValue !== altUomValue) {
+
+                    // If UOM and Alt UOM are different, show the rate input and allow editing
+
+                    rateInput.classList.remove('hidden');
+
+                    rateInput.disabled = false; // Enable the input field
+
+                } else {
+
+                    // If UOM and Alt UOM are the same, hide the rate input or disable it
+
+                    rateInput.classList.add('hidden');
+
+                    rateInput.disabled = true; // Disable the input field
+
+                }
+
+            }
+
+            // Set the initial visibility and state of the rate input when the page loads
+
+            handleRateField();
+
+            // Add event listeners to UOM and Alt UOM selections
+
+            uomSelect.addEventListener('change', handleRateField);
+
+            altUomSelect.addEventListener('change', handleRateField);
+
+        });
+
+        // Show or hide the BOM section based on category value
+
+        function toggleBOM() {
+
+            var category = document.getElementById("category").value;
+
+            var bomSection = document.getElementById("bom-section");
+
+            // Show BOM section only if category is "Finished Goods" (value 1)
+
+            if (category === "1") {
+
+                bomSection.style.display = "block";  // Show the BOM section
+
+            } else {
+
+                bomSection.style.display = "none";  // Hide the BOM section
+
+            }
+
+}
+
+        // Add a new row to the BOM table
+
+        function addBOMRow() {
+
+            var tableBody = document.getElementById("bomTableBody");
+
+
+            var newRow = document.createElement("tr");
+            var serialNo = tableBody.rows.length + 1;
+            // Create new BOM row with form fields for item_code, item_name, and required_qty
+
+            newRow.innerHTML = `
+             <td><input type="text" name="serial_no[]" value="${serialNo}" {% if view_mode %}disabled{% endif %}></td>
+<td><input type="text" name="item_code[]" value="{{ form.item_code.value|default:'' }}" {% if view_mode %}disabled{% endif %}></td>
+<td><input type="text" name="item_name[]" value="{{ form.item_name.value|default:'' }}" {% if view_mode %}disabled{% endif %}></td>
+<td><input type="number" name="required_qty[]" value="{{ form.required_qty.value|default:'' }}" {% if view_mode %}disabled{% endif %}></td>
+<td>
+<button type="button" class="remove-btn" onclick="removeBOMRow(this)" {% if view_mode %}disabled{% endif %}>Remove</button>
+
+                `;
+
+            tableBody.appendChild(newRow);
+
+            // Increment the total number of forms in the management form
+
+        }
+
+        // Remove a BOM row
+
+        function removeBOMRow(button) {
+
+            var row = button.closest("tr");
+
+            row.remove();
+
+            // Recalculate and update the TOTAL_FORMS field after removal
+
+            var totalForms = document.getElementById("id_bom-TOTAL_FORMS");
+
+            totalForms.value = parseInt(totalForms.value) - 1;
+
+        }
+    </script>
+
+</body>
+</html>
+
+{% endblock %}
+

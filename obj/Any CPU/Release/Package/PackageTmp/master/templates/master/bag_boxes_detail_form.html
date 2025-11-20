@@ -1,0 +1,236 @@
+{% extends 'base.html' %}
+
+{% block title %}Bag_Boxes form{% endblock %}
+
+{% block content %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Bag_Boxes</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f2f5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 100px;
+            box-sizing: border-box;
+        }
+
+        .form-container {
+            background-color: #f4f4f4;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2);
+            width: 90%;
+            max-width: 600px;
+            animation: fadeIn 0.5s ease;
+            border: 2px solid transparent;
+            background-clip: padding-box, border-box;
+            background-origin: border-box;
+            background-image: linear-gradient(#f4f4f4, #f4f4f4), linear-gradient(45deg, #422ddb, #ec6ddb);
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        h4 {
+            text-align: left;
+            margin-bottom: 8px;
+            font-size: 20px;
+            color: #333;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+        }
+
+            /* Smaller input and textarea styles */
+            .form-grid input[type="text"],
+            .form-grid input[type="email"],
+            .form-grid input[type="number"],
+            .form-grid textarea {
+                width: 100%;
+                padding: 1px 2px;
+                border: 1px solid #ccc;
+                border-radius: 4px;
+                box-sizing: border-box;
+                transition: border-color 0.3s;
+                font-size: 9px;
+            }
+
+            .form-grid input[type="email"],
+            .form-grid input[type="text"] {
+                height: 28px;
+            }
+
+            .form-grid .address {
+                height: 28px;
+                font-size: 11px;
+                resize: none;
+            }
+
+        .button-group {
+            grid-column: span 3;
+            display: flex;
+            justify-content: flex-end;
+            gap: 6px;
+            margin-top: 12px;
+            font-size: 10px;
+            font-weight: 100;
+        }
+
+            /* Smaller button styles */
+            .button-group button {
+                padding: 6px 10px;
+                border: none;
+                border-radius: 4px;
+                cursor: pointer;
+                font-size: 10px;
+                font-weight: 100;
+                color: white;
+                background: linear-gradient(135deg, #ff33cc, #6633ff);
+                transition: background 0.3s, box-shadow 0.3s;
+            }
+
+                .button-group button:hover {
+                    background: linear-gradient(135deg, #ff00cc, #3333ff);
+                    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+                }
+
+        /* Corrected close button styles */
+        .close-button {
+            padding: 6px 10px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 10px;
+            font-weight: 100;
+            color: white;
+            text-decoration: none;
+            text-align: center;
+            background: linear-gradient(2deg, #ff00cc, #3333ff);
+            transition: background 0.3s, box-shadow 0.3s;
+        }
+
+            .close-button:hover {
+                background: linear-gradient(45deg, #9d0208, #6a040f);
+                box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+            }
+
+        @media (max-width: 600px) {
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .button-group {
+                flex-direction: column;
+                gap: 6px;
+                justify-content: center;
+            }
+        }
+        /* Style for invalid fields after submit */
+        .invalid {
+            border-color: red !important;
+        }
+
+            .invalid::placeholder {
+                color: red !important;
+            }
+        .form-grid label {
+            font-size: 8px;
+            font-weight: bold;
+            color: #333;
+            display: block;
+            margin-bottom: 2px;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="form-container">
+        <h6 style="color: black; font-size: 12px; font-weight: 100;">Add Bag_Boxes</h6>
+        <form id="bag_boxesForm" method="POST" novalidate>
+            {% csrf_token %}
+            <div class="form-grid">
+                <div>
+                    <label for="code">Code*</label>
+                    <input id="code" type="text" name="code" placeholder="Code*" required
+                           value="{{ form.code.value|default:'' }}" {% if view_mode %}readonly{% endif %}>
+                </div>
+
+                <div>
+                    <label for="qty">Qty*</label>
+                    <input id="qty" type="text" name="qty" placeholder="Qty" required
+                           value="{{ form.qty.value|default:'' }}" {% if view_mode %}readonly{% endif %}>
+                </div>
+
+                <div>
+                    <label for="description">Description*</label>
+                    <input id="description" type="text" name="description" placeholder="Description" required
+                           value="{{ form.description.value|default:'' }}" {% if view_mode %}readonly{% endif %}>
+                </div>
+
+                <div>
+                    <label for="remarks">Remarks*</label>
+                    <input id="remarks" type="text" name="remarks" placeholder="Remarks" required
+                           value="{{ form.remarks.value|default:'' }}" {% if view_mode %}readonly{% endif %}>
+                </div>
+            </div>
+
+            <div class="button-group">
+                {% if not view_mode %}
+                <button type="submit">
+                    {% if request.resolver_match.url_name == 'bag_boxes_edit' %} Update {% else %} Save {% endif %}
+                </button>
+                {% endif %}
+                <a href="{% url 'bag_boxes_list' %}" class="close-button">Close</a>
+            </div>
+        </form>
+    </div>
+    <script>
+        document.getElementById('bag_boxesForm').addEventListener('submit', function (event) {
+        // Remove previous invalid classes first
+        document.querySelectorAll('.invalid').forEach(function (field) {
+            field.classList.remove('invalid');
+        });
+
+        // Check if required fields are filled
+        var isValid = true;
+            var requiredFields = ['code', 'qty', 'description','remarks'];
+
+        requiredFields.forEach(function (fieldId) {
+            var field = document.getElementById(fieldId);
+            if (!field.value.trim()) {
+                field.classList.add('invalid'); // Add the invalid class to the field
+                isValid = false;
+            }
+        });
+
+        if (!isValid) {
+            event.preventDefault(); // Prevent form submission if invalid fields are found
+        }
+    });
+    </script>
+</body>
+</html>
+
+{% endblock %}
