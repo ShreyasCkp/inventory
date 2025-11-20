@@ -1,4 +1,5 @@
-﻿from django.shortcuts import render
+﻿import logging
+from django.shortcuts import render
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from master.models import ItemDetail, StoreDetail
@@ -11,8 +12,6 @@ import base64
 from io import BytesIO
 import qrcode
 from django.template.loader import render_to_string
-# from weasyprint import HTML
-import logging
 # from django.http import HttpResponse
 
 # List of Inward Materials
@@ -550,6 +549,7 @@ def print_fg_label(request, pk):
     qr_code_base64_2 = generate_qr_code(qr_data)
     qr_code_base64_3 = generate_qr_code(qr_data)
     
+    from weasyprint import HTML
     # Render the HTML template with the label data and QR codes
     html_string = render_to_string('finished_goods/print_fg_label.html', {
         'label': label,
@@ -557,7 +557,7 @@ def print_fg_label(request, pk):
         'qr_code_base64_2': qr_code_base64_2,
         'qr_code_base64_3': qr_code_base64_3,
     })
-    
+    from weasyprint import HTML
     # Convert the HTML to PDF
     html = HTML(string=html_string)
     pdf = html.write_pdf()
@@ -575,7 +575,7 @@ def fg_label_view(request, pk):
     item_master = ItemDetail.objects.all()
 
     form = FGLabelGenerationForm(instance=label)  # Bind the form to the model instance
-    
+    from weasyprint import HTML
     # Pass view_mode as True to disable form fields in view mode
     return render(request, 'finished_goods/create_fg_label.html', {
         'form': form,
