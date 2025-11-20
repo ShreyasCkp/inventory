@@ -104,8 +104,34 @@ jobs:
           echo "DB_PASSWORD=${{ secrets.DB_PASSWORD }}" >> $GITHUB_ENV
           echo "DB_HOST=${{ secrets.DB_HOST }}" >> $GITHUB_ENV
           echo "DB_PORT=${{ secrets.DB_PORT }}" >> $GITHUB_ENV
+          # initially write raw secret; we'll sanitize it in the next step
           echo "DB_SSLMODE=${{ secrets.DB_SSLMODE }}" >> $GITHUB_ENV
           echo "ALLOWED_HOSTS=${{ secrets.ALLOWED_HOSTS }}" >> $GITHUB_ENV
+
+      - name: Sanitize DB_SSLMODE and set PGSSLMODE (protect psycopg2)
+        # MUST be after the step that writes DB_SSLMODE to $GITHUB_ENV
+        run: |
+          echo "Sanitizing DB_SSLMODE / PGSSLMODE..."
+          # read value we just placed into the environment
+          val="${DB_SSLMODE:-}"
+          echo "Raw DB_SSLMODE: '${val}'" >&2
+          case "$val" in
+            disable|allow|prefer|require|verify-ca|verify-full)
+              echo "DB_SSLMODE is valid: $val" >&2
+              echo "DB_SSLMODE=$val" >> $GITHUB_ENV
+              echo "PGSSLMODE=$val" >> $GITHUB_ENV
+              ;;
+            ""|\*\*\*)
+              echo "DB_SSLMODE is empty or masked (***). Defaulting to 'require'." >&2
+              echo "DB_SSLMODE=require" >> $GITHUB_ENV
+              echo "PGSSLMODE=require" >> $GITHUB_ENV
+              ;;
+            *)
+              echo "DB_SSLMODE has invalid value: '$val'. Overriding to 'require'." >&2
+              echo "DB_SSLMODE=require" >> $GITHUB_ENV
+              echo "PGSSLMODE=require" >> $GITHUB_ENV
+              ;;
+          esac
 
       - name: Make migrations (safe)
         env:
@@ -116,15 +142,11 @@ jobs:
           python manage.py makemigrations --noinput || echo "no migrations to create"
 
       - name: Run migrations (retry until DB ready)
+        # IMPORTANT: do NOT override DB_SSLMODE here with the raw secret,
+        # rely on $GITHUB_ENV (sanitized DB_SSLMODE & PGSSLMODE) instead
         env:
           DJANGO_SETTINGS_MODULE: ${{ env.DJANGO_SETTINGS_MODULE }}
           SECRET_KEY: ${{ secrets.SECRET_KEY }}
-          DB_NAME: ${{ secrets.DB_NAME }}
-          DB_USER: ${{ secrets.DB_USER }}
-          DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
-          DB_HOST: ${{ secrets.DB_HOST }}
-          DB_PORT: ${{ secrets.DB_PORT }}
-          DB_SSLMODE: ${{ secrets.DB_SSLMODE }}
         run: |
           set -e
           n=0
