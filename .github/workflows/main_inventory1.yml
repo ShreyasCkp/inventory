@@ -1,6 +1,3 @@
-# Updated workflow with OIDC debug step
-# Portal screenshot (for reference): [Uploaded portal screenshot](/mnt/data/53467d01-93d1-4bef-8c18-650977892d41.png)
-
 name: Build and deploy Python app to Azure Web App - inventory1
 
 on:
@@ -10,7 +7,6 @@ on:
   workflow_dispatch:
 
 env:
-  # Make sure your Django settings module is correct
   DJANGO_SETTINGS_MODULE: LG.deployment
   PYTHONUNBUFFERED: 1
 
@@ -19,7 +15,6 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: read
-
     steps:
       - name: Checkout repo
         uses: actions/checkout@v4
@@ -33,11 +28,11 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
+
       - name: Run linters / tests (optional)
         run: |
-          # uncomment/replace with actual test command if you have tests
-          # pytest -q
           echo "Skipping tests (none configured)"
+
       - name: Collect static (local check)
         env:
           SECRET_KEY: ${{ secrets.SECRET_KEY }}
@@ -49,8 +44,8 @@ jobs:
           DB_SSLMODE: ${{ secrets.DB_SSLMODE }}
           ALLOWED_HOSTS: ${{ secrets.ALLOWED_HOSTS }}
         run: |
-          # try collecting static to confirm there are no issues (ignore failures)
           python manage.py collectstatic --noinput || echo "collectstatic failed or skipped"
+
       - name: Create file list for inspection
         run: |
           echo "==== FILE LIST ====" > file-list.txt
@@ -60,6 +55,7 @@ jobs:
           echo "" >> file-list.txt
           echo "All files (recursive):" >> file-list.txt
           find . -maxdepth 4 -type f -not -path "./antenv/*" -print >> file-list.txt
+
       - name: Upload repo file-list artifact
         uses: actions/upload-artifact@v4
         with:
@@ -72,7 +68,6 @@ jobs:
     permissions:
       id-token: write
       contents: read
-
     steps:
       - name: Download artifact from build job
         uses: actions/download-artifact@v4
@@ -92,53 +87,45 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
+
       - name: Prepare environment variables for Django
         run: |
           echo "DJANGO_SETTINGS_MODULE=${{ env.DJANGO_SETTINGS_MODULE }}" >> $GITHUB_ENV
-          # pass secrets into the environment for manage.py commands
           echo "SECRET_KEY=${{ secrets.SECRET_KEY }}" >> $GITHUB_ENV
           echo "DB_NAME=${{ secrets.DB_NAME }}" >> $GITHUB_ENV
           echo "DB_USER=${{ secrets.DB_USER }}" >> $GITHUB_ENV
           echo "DB_PASSWORD=${{ secrets.DB_PASSWORD }}" >> $GITHUB_ENV
           echo "DB_HOST=${{ secrets.DB_HOST }}" >> $GITHUB_ENV
           echo "DB_PORT=${{ secrets.DB_PORT }}" >> $GITHUB_ENV
-          # initially write raw secret; we'll sanitize it in the next step
           echo "DB_SSLMODE=${{ secrets.DB_SSLMODE }}" >> $GITHUB_ENV
           echo "ALLOWED_HOSTS=${{ secrets.ALLOWED_HOSTS }}" >> $GITHUB_ENV
-      - name: Sanitize DB_SSLMODE and set PGSSLMODE (protect psycopg2)
-        # MUST be after the step that writes DB_SSLMODE to $GITHUB_ENV
+
+      - name: Sanitize DB_SSLMODE and set PGSSLMODE
         run: |
-          echo "Sanitizing DB_SSLMODE / PGSSLMODE..."
-          # read value we just placed into the environment
           val="${DB_SSLMODE:-}"
-          echo "Raw DB_SSLMODE: '${val}'" >&2
           case "$val" in
             disable|allow|prefer|require|verify-ca|verify-full)
-              echo "DB_SSLMODE is valid: $val" >&2
               echo "DB_SSLMODE=$val" >> $GITHUB_ENV
               echo "PGSSLMODE=$val" >> $GITHUB_ENV
               ;;
             ""|\*\*\*)
-              echo "DB_SSLMODE is empty or masked (***). Defaulting to 'require'." >&2
               echo "DB_SSLMODE=require" >> $GITHUB_ENV
               echo "PGSSLMODE=require" >> $GITHUB_ENV
               ;;
             *)
-              echo "DB_SSLMODE has invalid value: '$val'. Overriding to 'require'." >&2
               echo "DB_SSLMODE=require" >> $GITHUB_ENV
               echo "PGSSLMODE=require" >> $GITHUB_ENV
               ;;
           esac
+
       - name: Make migrations (safe)
         env:
           DJANGO_SETTINGS_MODULE: ${{ env.DJANGO_SETTINGS_MODULE }}
           SECRET_KEY: ${{ secrets.SECRET_KEY }}
         run: |
-          # create migrations locally if there are model changes; harmless if none
           python manage.py makemigrations --noinput || echo "no migrations to create"
+
       - name: Run migrations (retry until DB ready)
-        # IMPORTANT: do NOT override DB_SSLMODE here with the raw secret,
-        # rely on $GITHUB_ENV (sanitized DB_SSLMODE & PGSSLMODE) instead
         env:
           DJANGO_SETTINGS_MODULE: ${{ env.DJANGO_SETTINGS_MODULE }}
           SECRET_KEY: ${{ secrets.SECRET_KEY }}
@@ -156,19 +143,19 @@ jobs:
             echo "migrate did not succeed after retries" >&2
             exit 1
           fi
+
       - name: Collect static (deploy)
         env:
           DJANGO_SETTINGS_MODULE: ${{ env.DJANGO_SETTINGS_MODULE }}
           SECRET_KEY: ${{ secrets.SECRET_KEY }}
         run: |
           python manage.py collectstatic --noinput
+
       - name: List deployed files (sanity)
         run: |
           echo "==== Deployed file list (artifact already created in build job) ===="
           ls -la
           find . -maxdepth 4 -type f | sed -n '1,200p'
-
-      
 
       - name: Login to Azure
         uses: azure/login@v2
@@ -181,9 +168,9 @@ jobs:
         uses: azure/webapps-deploy@v3
         id: deploy-to-webapp
         with:
-          app-name: 'inventory1'          # <-- keep or change to your Azure App name
-          slot-name: 'production'        # production slot
-          package: '.'                   # deploy current repo contents
+          app-name: 'inventory1'
+          slot-name: 'production'
+          package: '.'
 
       - name: Show Azure deployment result
         run: |
