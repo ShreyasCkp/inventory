@@ -32,9 +32,18 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 SECRET_KEY = '8fae256c-9de8-4a3c-a12a-ef377f12e024'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.getenv('DEBUG', 'True').lower() in ('1', 'true', 'yes')
+_allowed = os.getenv('ALLOWED_HOSTS', '').strip()
+if _allowed:
+    ALLOWED_HOSTS = [h.strip() for h in _allowed.split(',') if h.strip()]
+else:
+    ALLOWED_HOSTS = ['127.0.0.1', 'localhost']
 
-ALLOWED_HOSTS = []
+# Add internal host used by Oryx that sometimes appears on Azure (avoid DisallowedHost)
+if os.getenv('INCLUDE_AZURE_INTERNAL_HOST', '1') in ('1', 'true', 'True'):
+    # Oryx often uses a 169.254.* internal address; include it to avoid DisallowedHost on boot
+    if '169.254.130.2' not in ALLOWED_HOSTS:
+        ALLOWED_HOSTS.append('169.254.130.2')
 
 # Application references
 # https://docs.djangoproject.com/en/2.1/ref/settings/#std:setting-INSTALLED_APPS

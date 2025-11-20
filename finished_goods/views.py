@@ -12,7 +12,7 @@ from io import BytesIO
 import qrcode
 from django.template.loader import render_to_string
 from weasyprint import HTML
-
+import logging
 
 # List of Inward Materials
 def finished_inward_material_list(request):
