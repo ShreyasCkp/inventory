@@ -14,9 +14,15 @@ if config('ALLOW_LOCALHOST', default='0') in ('1', 'true', 'True'):
     ALLOWED_HOSTS += ['127.0.0.1', 'localhost']
 
 # Ensure Oryx internal host present (safe default)
-if config('INCLUDE_AZURE_INTERNAL_HOST', default='1') in ('1', 'true', 'True'):
-    if '169.254.130.2' not in ALLOWED_HOSTS:
-        ALLOWED_HOSTS.append('169.254.130.2')
+_internal_hosts = config('AZURE_INTERNAL_HOSTS', default='').strip()
+if _internal_hosts:
+    for h in [x.strip() for x in _internal_hosts.split(',') if x.strip()]:
+        if h not in ALLOWED_HOSTS:
+            ALLOWED_HOSTS.append(h)
+elif config('INCLUDE_AZURE_INTERNAL_HOST', default='1') in ('1', 'true', 'True'):
+    for ip in ('169.254.130.1', '169.254.130.2', '169.254.130.3'):
+        if ip not in ALLOWED_HOSTS:
+            ALLOWED_HOSTS.append(ip)
 
 # CSRF Trusted Origins: ensure https scheme for domains
 CSRF_TRUSTED_ORIGINS = []

@@ -39,11 +39,16 @@ if _allowed:
 else:
     ALLOWED_HOSTS = ['127.0.0.1', 'localhost']
 
-# Add internal host used by Oryx that sometimes appears on Azure (avoid DisallowedHost)
-if os.getenv('INCLUDE_AZURE_INTERNAL_HOST', '1') in ('1', 'true', 'True'):
-    # Oryx often uses a 169.254.* internal address; include it to avoid DisallowedHost on boot
-    if '169.254.130.3' not in ALLOWED_HOSTS:
-        ALLOWED_HOSTS.append('169.254.130.3')
+_internal_hosts = os.getenv('AZURE_INTERNAL_HOSTS', '').strip()
+if _internal_hosts:
+    for h in [x.strip() for x in _internal_hosts.split(',') if x.strip()]:
+        if h not in ALLOWED_HOSTS:
+            ALLOWED_HOSTS.append(h)
+elif os.getenv('INCLUDE_AZURE_INTERNAL_HOST', '1') in ('1', 'true', 'True'):
+    # fallback defaults (common internal addresses used by Azure/Oryx)
+    for ip in ('169.254.130.1', '169.254.130.2', '169.254.130.3'):
+        if ip not in ALLOWED_HOSTS:
+            ALLOWED_HOSTS.append(ip)
 
 # Application references
 # https://docs.djangoproject.com/en/2.1/ref/settings/#std:setting-INSTALLED_APPS
