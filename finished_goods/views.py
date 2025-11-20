@@ -11,8 +11,9 @@ import base64
 from io import BytesIO
 import qrcode
 from django.template.loader import render_to_string
-from weasyprint import HTML
+# from weasyprint import HTML
 import logging
+# from django.http import HttpResponse
 
 # List of Inward Materials
 def finished_inward_material_list(request):
