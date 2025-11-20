@@ -1,7 +1,3 @@
-# Docs for the Azure Web Apps Deploy action: https://github.com/Azure/webapps-deploy
-# More GitHub Actions for Azure: https://github.com/Azure/actions
-# More info on Python, GitHub Actions, and Azure App Service: https://aka.ms/python-webapps-actions
-
 name: Build and deploy Python app to Azure Web App - inventory1
 
 on:
@@ -10,67 +6,162 @@ on:
       - main
   workflow_dispatch:
 
+env:
+  # Make sure your Django settings module is correct
+  DJANGO_SETTINGS_MODULE: LG.deployment
+  PYTHONUNBUFFERED: 1
+
 jobs:
   build:
     runs-on: ubuntu-latest
     permissions:
-      contents: read #This is required for actions/checkout
+      contents: read
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout repo
+        uses: actions/checkout@v4
 
-      - name: Set up Python version
+      - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: '3.10'
 
-      # 🛠️ Local Build Section (Optional)
-      # The following section in your workflow is designed to catch build issues early on the client side, before deployment. This can be helpful for debugging and validation. However, if this step significantly increases deployment time and early detection is not critical for your workflow, you may remove this section to streamline the deployment process.
-      - name: Create and Start virtual environment and Install dependencies
+      - name: Install dependencies
         run: |
-          python -m venv antenv
-          source antenv/bin/activate
+          python -m pip install --upgrade pip
           pip install -r requirements.txt
-                
-      # By default, when you enable GitHub CI/CD integration through the Azure portal, the platform automatically sets the SCM_DO_BUILD_DURING_DEPLOYMENT application setting to true. This triggers the use of Oryx, a build engine that handles application compilation and dependency installation (e.g., pip install) directly on the platform during deployment. Hence, we exclude the antenv virtual environment directory from the deployment artifact to reduce the payload size. 
-      - name: Upload artifact for deployment jobs
+
+      - name: Run linters / tests (optional)
+        run: |
+          # uncomment/replace with actual test command if you have tests
+          # pytest -q
+          echo "Skipping tests (none configured)"
+
+      - name: Collect static (local check)
+        env:
+          SECRET_KEY: ${{ secrets.SECRET_KEY }}
+          DB_NAME: ${{ secrets.DB_NAME }}
+          DB_USER: ${{ secrets.DB_USER }}
+          DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+          DB_HOST: ${{ secrets.DB_HOST }}
+          DB_PORT: ${{ secrets.DB_PORT }}
+          DB_SSLMODE: ${{ secrets.DB_SSLMODE }}
+          ALLOWED_HOSTS: ${{ secrets.ALLOWED_HOSTS }}
+        run: |
+          # collectstatic in CI to validate static collection can run (will attempt to connect DB only if apps require it)
+          python manage.py collectstatic --noinput || true
+
+      - name: Upload repo file-list artifact
         uses: actions/upload-artifact@v4
         with:
-          name: python-app
-          path: |
-            .
-            !antenv/
+          name: repo-file-list
+          path: file-list.txt
 
-      # 🚫 Opting Out of Oryx Build
-      # If you prefer to disable the Oryx build process during deployment, follow these steps:
-      # 1. Remove the SCM_DO_BUILD_DURING_DEPLOYMENT app setting from your Azure App Service Environment variables.
-      # 2. Refer to sample workflows for alternative deployment strategies: https://github.com/Azure/actions-workflow-samples/tree/master/AppService
-      
+      - name: Create file list for inspection
+        run: |
+          echo "==== FILE LIST ====" > file-list.txt
+          echo "" >> file-list.txt
+          echo "Top-level files:" >> file-list.txt
+          ls -la >> file-list.txt
+          echo "" >> file-list.txt
+          echo "All files (recursive):" >> file-list.txt
+          find . -maxdepth 4 -type f -not -path "./antenv/*" -print >> file-list.txt
 
   deploy:
     runs-on: ubuntu-latest
     needs: build
     permissions:
-      id-token: write #This is required for requesting the JWT
-      contents: read #This is required for actions/checkout
+      id-token: write
+      contents: read
 
     steps:
       - name: Download artifact from build job
         uses: actions/download-artifact@v4
         with:
-          name: python-app
-      
+          name: repo-file-list
+          path: .
+
+      - name: Checkout repo (again for deploy)
+        uses: actions/checkout@v4
+
+      - name: Set up Python (deploy)
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+
+      - name: Install dependencies (deploy)
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Prepare environment variables for Django
+        run: |
+          echo "DJANGO_SETTINGS_MODULE=${{ env.DJANGO_SETTINGS_MODULE }}" >> $GITHUB_ENV
+          # pass secrets into the environment for manage.py commands
+          echo "SECRET_KEY=${{ secrets.SECRET_KEY }}" >> $GITHUB_ENV
+          echo "DB_NAME=${{ secrets.DB_NAME }}" >> $GITHUB_ENV
+          echo "DB_USER=${{ secrets.DB_USER }}" >> $GITHUB_ENV
+          echo "DB_PASSWORD=${{ secrets.DB_PASSWORD }}" >> $GITHUB_ENV
+          echo "DB_HOST=${{ secrets.DB_HOST }}" >> $GITHUB_ENV
+          echo "DB_PORT=${{ secrets.DB_PORT }}" >> $GITHUB_ENV
+          echo "DB_SSLMODE=${{ secrets.DB_SSLMODE }}" >> $GITHUB_ENV
+          echo "ALLOWED_HOSTS=${{ secrets.ALLOWED_HOSTS }}" >> $GITHUB_ENV
+
+      - name: Run migrations (retry until DB ready)
+        env:
+          # reuse secrets from $GITHUB_ENV
+          DJANGO_SETTINGS_MODULE: ${{ env.DJANGO_SETTINGS_MODULE }}
+          SECRET_KEY: ${{ secrets.SECRET_KEY }}
+          DB_NAME: ${{ secrets.DB_NAME }}
+          DB_USER: ${{ secrets.DB_USER }}
+          DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+          DB_HOST: ${{ secrets.DB_HOST }}
+          DB_PORT: ${{ secrets.DB_PORT }}
+          DB_SSLMODE: ${{ secrets.DB_SSLMODE }}
+        run: |
+          set -e
+          # try to apply migrations; retry if DB not yet ready (up to ~5 minutes)
+          n=0
+          until [ $n -ge 10 ]
+          do
+            python manage.py migrate --noinput && break
+            n=$((n+1))
+            echo "migrate failed - retry $n/10, sleeping 15s..."
+            sleep 15
+          done
+          if [ $n -ge 10 ]; then
+            echo "migrate did not succeed after retries" >&2
+            exit 1
+          fi
+
+      - name: Collect static (deploy)
+        env:
+          DJANGO_SETTINGS_MODULE: ${{ env.DJANGO_SETTINGS_MODULE }}
+          SECRET_KEY: ${{ secrets.SECRET_KEY }}
+        run: |
+          python manage.py collectstatic --noinput
+
+      - name: List deployed files (sanity)
+        run: |
+          echo "==== Deployed file list (artifact already created in build job) ===="
+          ls -la
+          find . -maxdepth 4 -type f | sed -n '1,200p'
+
       - name: Login to Azure
         uses: azure/login@v2
         with:
-          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_F721D08E227C4465B8064C8F12C58231 }}
-          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_90612C5029B74B51948B534C6FA8810E }}
-          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_FDD0674D0AF64AFA8206CDE03A26DB14 }}
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
 
-      - name: 'Deploy to Azure Web App'
-        uses: azure/webapps-deploy@v3
+      - name: Deploy to Azure Web App
+        uses: azure/webapps-deploy@v4
         id: deploy-to-webapp
         with:
-          app-name: 'inventory1'
-          slot-name: 'Production'
-          
+          app-name: 'inventory1'          # <-- keep or change to your Azure App name
+          slot-name: 'production'        # production slot
+          package: '.'                   # deploy current repo contents
+
+      - name: Show Azure deployment result
+        run: |
+          echo "Deployment finished. Check Azure Portal Log Stream for runtime logs."
