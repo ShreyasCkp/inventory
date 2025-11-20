@@ -13,6 +13,23 @@ from io import BytesIO
 import qrcode
 from django.template.loader import render_to_string
 # from django.http import HttpResponse
+import logging
+from django.http import HttpResponse, HttpResponseServerError
+
+logger = logging.getLogger(__name__)
+
+def _get_weasyprint_HTML():
+    """
+    Lazy import of WeasyPrint's HTML class.
+    Returns the HTML class or None if import failed (missing native libs).
+    """
+    try:
+        from weasyprint import HTML
+        return HTML
+    except Exception as e:
+        # Log the actual exception for debugging (will show missing lib error)
+        logger.exception("WeasyPrint import failed: %s", e)
+        return None
 
 # List of Inward Materials
 def finished_inward_material_list(request):
@@ -532,7 +549,7 @@ def generate_qr_code(data):
 
 def print_fg_label(request, pk):
     label = get_object_or_404(FGLabelGeneration, pk=pk)
-    
+
     # Generate QR code data
     qr_data = (
         f"Item Code: {label.item_code.item_code}\n"
@@ -543,13 +560,20 @@ def print_fg_label(request, pk):
         f"Date of Packing: {label.date_of_packing}\n"
         f"Date of Expiry: {label.date_of_expiry}"
     )
-    
+
     # Generate three QR codes
     qr_code_base64_1 = generate_qr_code(qr_data)
     qr_code_base64_2 = generate_qr_code(qr_data)
     qr_code_base64_3 = generate_qr_code(qr_data)
-    
-    from weasyprint import HTML
+
+    # Lazy import WeasyPrint
+    HTML = _get_weasyprint_HTML()
+    if not HTML:
+        # Return a clear error response — safe for server startup even if libs missing
+        return HttpResponseServerError(
+            "PDF generation is currently unavailable on this server (missing system libraries)."
+        )
+
     # Render the HTML template with the label data and QR codes
     html_string = render_to_string('finished_goods/print_fg_label.html', {
         'label': label,
@@ -557,15 +581,16 @@ def print_fg_label(request, pk):
         'qr_code_base64_2': qr_code_base64_2,
         'qr_code_base64_3': qr_code_base64_3,
     })
-    from weasyprint import HTML
+
     # Convert the HTML to PDF
     html = HTML(string=html_string)
     pdf = html.write_pdf()
-    
+
     # Return the PDF as a response
     response = HttpResponse(pdf, content_type='application/pdf')
     response['Content-Disposition'] = f'inline; filename="label_{pk}.pdf"'
     return response
+
 from django.shortcuts import render, get_object_or_404
 from finished_goods.models import FGLabelGeneration, ItemDetail
 from finished_goods.forms import FGLabelGenerationForm  # Assuming you have this form
@@ -575,8 +600,8 @@ def fg_label_view(request, pk):
     item_master = ItemDetail.objects.all()
 
     form = FGLabelGenerationForm(instance=label)  # Bind the form to the model instance
-    from weasyprint import HTML
-    # Pass view_mode as True to disable form fields in view mode
+
+    # NOTE: we do NOT import WeasyPrint here — this view is read-only and shouldn't need PDF libs.
     return render(request, 'finished_goods/create_fg_label.html', {
         'form': form,
         'item_master': item_master,
