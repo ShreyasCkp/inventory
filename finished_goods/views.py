@@ -1,29 +1,33 @@
 ﻿import logging
-from django.shortcuts import render
-from django.shortcuts import render, redirect, get_object_or_404
-from django.contrib import messages
-from master.models import ItemDetail, StoreDetail
-from .forms import FGInwardMaterialForm, FGInwardMaterialSubForm
-from .models import FGInwardMaterial, FGInwardMaterialSub
-from django.forms import modelformset_factory
-from django.forms import inlineformset_factory
 import base64
 from io import BytesIO
-import qrcode
+from decimal import Decimal
+
+from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib import messages
 from django.template.loader import render_to_string
+from django.http import HttpResponse
+from master.models import ItemDetail, StoreDetail
+from .forms import FGInwardMaterialForm, FGInwardMaterialSubForm, FGLabelGenerationForm
+from .models import FGInwardMaterial, FGInwardMaterialSub, PackingSlip, PackingSlipItem, FGLabelGeneration
 
-import logging
-from django.http import HttpResponseServerError
+# Packing slip helpers
+from .forms import PackingSlipForm, PackingSlipItem
+import qrcode
 
-logger = logging.getLogger(__name__)
+# Single logger used throughout this module
+logger = logging.getLogger('finished_goods')
 
+# Optional helper to lazy-import WeasyPrint (not required if you prefer inline try/except)
 def _get_weasyprint_HTML():
     try:
         from weasyprint import HTML
         return HTML
-    except Exception as e:
-        logger.exception("WeasyPrint import failed: %s", e)
+    except Exception:
+        logger.exception("WeasyPrint import failed (native libs may be missing).")
         return None
+
+
 
 
 # List of Inward Materials
@@ -545,6 +549,7 @@ def generate_qr_code(data):
 def print_fg_label(request, pk):
     label = get_object_or_404(FGLabelGeneration, pk=pk)
 
+    # Generate QR code data
     qr_data = (
         f"Item Code: {label.item_code.item_code}\n"
         f"Item Name: {label.item_code.item_name}\n"
@@ -555,16 +560,32 @@ def print_fg_label(request, pk):
         f"Date of Expiry: {label.date_of_expiry}"
     )
 
+    # Generate three QR codes
     qr_code_base64_1 = generate_qr_code(qr_data)
     qr_code_base64_2 = generate_qr_code(qr_data)
     qr_code_base64_3 = generate_qr_code(qr_data)
 
-    HTML = _get_weasyprint_HTML()
-    if not HTML:
-        return HttpResponseServerError(
-            "PDF generation is currently unavailable on this server (missing system libraries)."
-        )
+    # Lazy import WeasyPrint so missing system libs don't break app import at startup
+    try:
+        from weasyprint import HTML
+    except Exception as e:
+        # Log the real error for debugging
+        logger = logging.getLogger(__name__)
+        logger.error("WeasyPrint import failed: %s", e, exc_info=True)
 
+        # Render the template with QR images and show a friendly message instead of PDF
+        # (This avoids a 500 when WeasyPrint or its native dependencies are missing.)
+        html_string = render_to_string('finished_goods/print_fg_label.html', {
+            'label': label,
+            'qr_code_base64_1': qr_code_base64_1,
+            'qr_code_base64_2': qr_code_base64_2,
+            'qr_code_base64_3': qr_code_base64_3,
+            'weasy_error': str(e),
+        })
+        # Return the HTML (so the user can still see label preview) with a 200 status.
+        return HttpResponse(html_string)
+
+    # If we have WeasyPrint, render PDF
     html_string = render_to_string('finished_goods/print_fg_label.html', {
         'label': label,
         'qr_code_base64_1': qr_code_base64_1,
@@ -578,6 +599,7 @@ def print_fg_label(request, pk):
     response = HttpResponse(pdf, content_type='application/pdf')
     response['Content-Disposition'] = f'inline; filename="label_{pk}.pdf"'
     return response
+
 
 
 from django.shortcuts import render, get_object_or_404
