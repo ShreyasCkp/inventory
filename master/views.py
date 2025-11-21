@@ -290,7 +290,14 @@ def item_list(request):
     """Display all items with options to add, edit, and delete."""
     item_master = ItemDetail.objects.all()
     return render(request, 'master/item_list.html', {'item_master': item_master})
- 
+from django.shortcuts import render, redirect, get_object_or_404
+from django.forms import inlineformset_factory
+from django.contrib import messages
+from django.db import transaction
+from django.db.utils import DatabaseError
+
+from master.models import ItemDetail, BillOfMaterials, UnitOfMeasurement
+from master.forms import ItemDetailForm, BillOfMaterialsForm 
 def item_add(request):
     """
     Add a new Item with BOM details.
