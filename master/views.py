@@ -203,7 +203,7 @@ def customer_add(request):
     
      """Add a new customer."""
      with connection.cursor() as cursor:
-        cursor.execute("SELECT id, tradersname FROM traders")
+        cursor.execute("SELECT id, name FROM traders")
         traders_list = cursor.fetchall()  # Fetch all traders from DB
 
     # Convert list of tuples to a list of dictionaries
@@ -292,66 +292,65 @@ def item_list(request):
     return render(request, 'master/item_list.html', {'item_master': item_master})
  
 def item_add(request):
-    """Add a new Item with BOM details."""
+    """
+    Add a new Item with BOM details.
+    Uses Django ORM to fetch UnitOfMeasurement and inline formset for BOM.
+    """
     BOMFormSet = inlineformset_factory(
-        ItemDetail, BillOfMaterials, form=BillOfMaterialsForm, extra=1, can_delete=True
+        ItemDetail,
+        BillOfMaterials,
+        form=BillOfMaterialsForm,
+        extra=1,
+        can_delete=True
     )
-    with connection.cursor() as cursor:
-       cursor.execute("SELECT id, name FROM unitofmeasurement")
-       unitofmeasurement_list = cursor.fetchall()  # Fetch all traders from DB
-       unitofmeasurement_list = [{'id': row[0], 'name': row[1]} for row in unitofmeasurement_list]
- 
+
+    # Fetch UOMs via ORM (returns QuerySet). Convert to list of dicts so template expects same shape.
+    try:
+        uom_qs = UnitOfMeasurement.objects.values('id', 'name')
+        unitofmeasurement_list = [{'id': u['id'], 'name': u['name']} for u in uom_qs]
+    except DatabaseError:
+        # If the table does not exist or DB is misconfigured, fallback to empty list.
+        unitofmeasurement_list = []
+
     if request.method == 'POST':
         form = ItemDetailForm(request.POST)
-        formset = BOMFormSet(request.POST)
- 
+        formset = BOMFormSet(request.POST)  # we'll bind instance after saving parent
+
         if form.is_valid():
-            # Save parent ItemDetail first
-            item = form.save(commit=False)
-            item.save()  # Now commit the save for ItemDetail
- 
-            # Link the formset instance with the saved ItemDetail
-            formset.instance = item
- 
-            # Check if the BOM formset is valid
-            if formset.is_valid():
-                formset.save()  # Save the BOM details
- 
-                # Saving child records (BOM details) manually if needed
-                item_codes = request.POST.getlist('item_code[]')
-                item_names = request.POST.getlist('item_name[]')
-                required_qty = request.POST.getlist('required_qty[]')
- 
-                # Loop through each BOM entry and save it manually
-                for i in range(len(item_codes)):
-                    if item_codes[i]:
-                        BillOfMaterials.objects.create(
-                            item=item,  # Link to the parent item
-                            item_code=item_codes[i],
-                            item_name=item_names[i],
-                            required_qty=required_qty[i],
-                        )
- 
-                messages.success(request, "Item and BOM details added successfully!")
-                return redirect('item_list')  # Redirect after saving
-            else:
-                # Debugging: print BOM formset errors
-                print("BOM Formset Errors:", formset.errors)
-                messages.error(request, "Failed to add BOM details. Please correct the errors.")
+            try:
+                # Use a transaction so either both parent and children save or none
+                with transaction.atomic():
+                    item = form.save(commit=False)
+                    item.save()  # commit parent
+
+                    # bind formset to saved parent instance and POST data
+                    formset = BOMFormSet(request.POST, instance=item)
+                    if formset.is_valid():
+                        formset.save()
+                        messages.success(request, "Item and BOM details added successfully!")
+                        return redirect('item_list')  # change to your actual item list URL name
+                    else:
+                        # show formset errors for debugging
+                        print("BOM Formset Errors:", formset.errors)
+                        messages.error(request, "Failed to add BOM details. Please correct the errors.")
+            except Exception as e:
+                # log or print exception for debugging
+                print("Exception saving item + BOM:", e)
+                messages.error(request, "An error occurred while saving. Please try again.")
         else:
             # Debugging: print Item form errors
             print("Item Form Errors:", form.errors)
             messages.error(request, "Failed to add the Item. Please correct the errors.")
- 
     else:
-        form = ItemDetailForm()  # Empty form to display
-        formset = BOMFormSet()  # Empty formset for BOM details
- 
+        # GET: unbound forms
+        form = ItemDetailForm()
+        formset = BOMFormSet()
+
     return render(request, 'master/item_form.html', {
         'form': form,
         'bom_formset': formset,
         'title': 'Add New Item',
-        'uoms': unitofmeasurement_list
+        'uoms': unitofmeasurement_list,
     })
  
  
