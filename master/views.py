@@ -203,7 +203,7 @@ def customer_add(request):
     
      """Add a new customer."""
      with connection.cursor() as cursor:
-        cursor.execute("SELECT tradersid, tradersname FROM traders")
+        cursor.execute("SELECT id, tradersname FROM traders")
         traders_list = cursor.fetchall()  # Fetch all traders from DB
 
     # Convert list of tuples to a list of dictionaries
@@ -297,7 +297,7 @@ def item_add(request):
         ItemDetail, BillOfMaterials, form=BillOfMaterialsForm, extra=1, can_delete=True
     )
     with connection.cursor() as cursor:
-       cursor.execute("SELECT uomid, uomname FROM unitofmeasurement")
+       cursor.execute("SELECT id, name FROM unitofmeasurement")
        unitofmeasurement_list = cursor.fetchall()  # Fetch all traders from DB
        unitofmeasurement_list = [{'id': row[0], 'name': row[1]} for row in unitofmeasurement_list]
  
