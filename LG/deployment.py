@@ -61,14 +61,20 @@ WSGI_APPLICATION = 'LG.wsgi.application'
 ROOT_URLCONF = 'LG.urls'
 
 
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+
+# If your proxy sets X-Forwarded-Host and you rely on it:
+USE_X_FORWARDED_HOST = True
+
+# Only enable SSL redirect if you are sure proxy headers are set correctly.
+# If enabling, ensure SECURE_PROXY_SSL_HEADER is present (above).
 SECURE_SSL_REDIRECT = True
+
+# Cookie security
 SESSION_COOKIE_SECURE = True
 CSRF_COOKIE_SECURE = True
 
-SECURE_BROWSER_XSS_FILTER = True
-SECURE_CONTENT_TYPE_NOSNIFF = True
-
-# Enables HSTS (Strict-Transport-Security)
-SECURE_HSTS_SECONDS = 31536000  # 1 year
+# HSTS etc (optional but recommended)
+SECURE_HSTS_SECONDS = 31536000
 SECURE_HSTS_INCLUDE_SUBDOMAINS = True
 SECURE_HSTS_PRELOAD = True
