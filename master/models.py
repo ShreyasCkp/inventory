@@ -112,3 +112,43 @@ class Bag_BoxesDetails(models.Model):
 
     def __str__(self):
         return self.code
+
+
+
+class Location(models.Model):
+    city_name = models.CharField(max_length=255)
+    # ...
+    class Meta:
+        db_table = 'location'   # <-- note if present
+        managed = True          # <-- should normally be True
+
+
+
+
+
+class Trader(models.Model):
+    id = models.AutoField(primary_key=True)
+    name = models.CharField(max_length=255)
+
+    class Meta:
+        db_table = 'traders'
+        managed = True
+
+    def __str__(self):
+        return self.name
+
+
+
+
+
+class UnitOfMeasurement(models.Model):
+    id = models.AutoField(primary_key=True)
+    name = models.CharField(max_length=255)
+
+    class Meta:
+        db_table = 'unit_of_measurement'
+        managed = True
+
+    def __str__(self):
+        return self.name
+
